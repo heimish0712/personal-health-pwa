@@ -83,3 +83,28 @@ button { cursor: pointer; }
   box-shadow: var(--shadow);
   font-size: 14px;
 }
+
+.compact-card { padding-top: 14px; padding-bottom: 14px; }
+.status-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.status-normal { color: #147a42; }
+.status-warning { color: #9a5a00; }
+.warning-text { color: #9a5a00; font-size: 13px; }
+.error-card { border-color: #efc9c9; background: #fffafa; }
+.error-code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }
+.full-width-button { width: 100%; margin-top: 16px; }
+
+.diagnostic-list { margin: 8px 0 0; }
+.diagnostic-list > div {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(0, 1.4fr);
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+.diagnostic-list dt { color: var(--muted); }
+.diagnostic-list dd { margin: 0; text-align: right; font-weight: 700; overflow-wrap: anywhere; }
+
+@media (max-width: 420px) {
+  .diagnostic-list > div { grid-template-columns: 1fr; gap: 4px; }
+  .diagnostic-list dd { text-align: left; }
+}

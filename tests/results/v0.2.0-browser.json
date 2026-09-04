@@ -1,0 +1,270 @@
+{
+  "version": "0.2.0",
+  "suite": "browser-runtime",
+  "executedAt": "2026-09-04T15:23:20.788Z",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36",
+  "basePath": "/personal-health-pwa-v0.2.0/",
+  "summary": {
+    "total": 51,
+    "passed": 51,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "DB-001",
+      "status": "PASS",
+      "evidence": "DB version is 1."
+    },
+    {
+      "id": "DB-002",
+      "status": "PASS",
+      "evidence": "14 Object Stores exist."
+    },
+    {
+      "id": "DB-003",
+      "status": "PASS",
+      "evidence": "All real Object Store key paths and Index definitions match the approved schema."
+    },
+    {
+      "id": "DB-005",
+      "status": "PASS",
+      "evidence": "Test database is separate from the production database."
+    },
+    {
+      "id": "PROFILE-001",
+      "status": "PASS",
+      "evidence": "One local Profile was created."
+    },
+    {
+      "id": "PROFILE-002-ID",
+      "status": "PASS",
+      "evidence": "Profile ID is UUID v4."
+    },
+    {
+      "id": "PROFILE-003",
+      "status": "PASS",
+      "evidence": "Current profile pointer and IdentityContext are aligned."
+    },
+    {
+      "id": "SEED-001",
+      "status": "PASS",
+      "evidence": "One default Pilates type exists."
+    },
+    {
+      "id": "SEED-002",
+      "status": "PASS",
+      "evidence": "Pilates template v1 exists."
+    },
+    {
+      "id": "UUID-001",
+      "status": "PASS",
+      "evidence": "Seed entities use UUID v4."
+    },
+    {
+      "id": "TIME-001",
+      "status": "PASS",
+      "evidence": "Entity timestamps use UTC ISO format."
+    },
+    {
+      "id": "PROFILE-002",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate profiles."
+    },
+    {
+      "id": "SEED-003",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate seed records."
+    },
+    {
+      "id": "SEED-004",
+      "status": "PASS",
+      "evidence": "Seed upgrade does not overwrite a user rename."
+    },
+    {
+      "id": "SEED-005",
+      "status": "PASS",
+      "evidence": "Soft-deleted seed is not restored automatically."
+    },
+    {
+      "id": "SCOPE-CREATE-001",
+      "status": "PASS",
+      "evidence": "Repository ignores an untrusted input profile_id."
+    },
+    {
+      "id": "REV-001",
+      "status": "PASS",
+      "evidence": "New entity revision is 1."
+    },
+    {
+      "id": "REV-002",
+      "status": "PASS",
+      "evidence": "Update increments revision and preserves created_at."
+    },
+    {
+      "id": "REV-003",
+      "status": "PASS",
+      "evidence": "Stale expectedRevision is rejected."
+    },
+    {
+      "id": "PROTECTED-001",
+      "status": "PASS",
+      "evidence": "A caller cannot move an entity to another Profile through an update patch."
+    },
+    {
+      "id": "REV-004",
+      "status": "PASS",
+      "evidence": "Soft-delete rejects a stale expectedRevision."
+    },
+    {
+      "id": "DELETE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted record is excluded from normal get."
+    },
+    {
+      "id": "DELETE-002",
+      "status": "PASS",
+      "evidence": "Deleted record remains queryable through explicit include-deleted path."
+    },
+    {
+      "id": "REV-005",
+      "status": "PASS",
+      "evidence": "Restore rejects a stale expectedRevision."
+    },
+    {
+      "id": "DELETE-003",
+      "status": "PASS",
+      "evidence": "Restore keeps ID and increments revision."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-001",
+      "status": "PASS",
+      "evidence": "Multiple user-created exercises without system_key are allowed."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-002",
+      "status": "PASS",
+      "evidence": "Multiple schedules without completed_exercise_log_id are allowed."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-003",
+      "status": "PASS",
+      "evidence": "Multiple manual weights without source_ref_id are allowed."
+    },
+    {
+      "id": "SCOPE-001",
+      "status": "PASS",
+      "evidence": "Profile A cannot read Profile B data."
+    },
+    {
+      "id": "SCOPE-002",
+      "status": "PASS",
+      "evidence": "Profile A cannot update Profile B data."
+    },
+    {
+      "id": "UNIQUE-001",
+      "status": "PASS",
+      "evidence": "Duplicate profile/system_key is rejected by a unique compound index."
+    },
+    {
+      "id": "UNIQUE-002",
+      "status": "PASS",
+      "evidence": "Duplicate profile/exercise/version is rejected."
+    },
+    {
+      "id": "UNIQUE-003",
+      "status": "PASS",
+      "evidence": "Duplicate pass/exercise usage is rejected."
+    },
+    {
+      "id": "TX-002",
+      "status": "PASS",
+      "evidence": "Explicit abort leaves no partial records."
+    },
+    {
+      "id": "TX-001",
+      "status": "PASS",
+      "evidence": "Bootstrap failure rolls back Profile, seed, and device pointer together."
+    },
+    {
+      "id": "PROFILE-004",
+      "status": "PASS",
+      "evidence": "Invalid profile pointer is repaired without creating another Profile."
+    },
+    {
+      "id": "DB-004",
+      "status": "PASS",
+      "evidence": "Record survives database close and reopen."
+    },
+    {
+      "id": "LOG-001",
+      "status": "PASS",
+      "evidence": "App log records can be written and read."
+    },
+    {
+      "id": "LOG-002",
+      "status": "PASS",
+      "evidence": "App log retention is capped at 200 records."
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only diagnostic reports a healthy database."
+    },
+    {
+      "id": "PWA-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The application boots successfully from a GitHub Pages-style repository subpath."
+    },
+    {
+      "id": "MANIFEST-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The manifest resolves inside the repository subpath."
+    },
+    {
+      "id": "MANIFEST-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Chromium parses the manifest without errors and resolves standalone scope to the repository subpath."
+    },
+    {
+      "id": "NAV-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "All five approved bottom navigation tabs render."
+    },
+    {
+      "id": "NAV-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Hash routing changes the active page without a server route."
+    },
+    {
+      "id": "DIAG-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The read-only settings diagnostic reports 14/14 stores and a connected Profile."
+    },
+    {
+      "id": "SW-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The Service Worker activates and controls the GitHub Pages-style scope."
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The v0.2.0 App Shell cache exists."
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-002",
+      "status": "PASS",
+      "evidence": "Activation removes the simulated v0.1.0 App Shell cache without clearing unrelated cache names."
+    },
+    {
+      "id": "OFFLINE-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The cached App Shell and IndexedDB-backed home screen reload while network access is disabled."
+    },
+    {
+      "id": "OFFLINE-DIAG-001",
+      "status": "PASS",
+      "evidence": "The Profile and 14-store diagnostic remain available offline."
+    }
+  ]
+}

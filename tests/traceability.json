@@ -1,0 +1,253 @@
+{
+  "APP-001": [
+    "PWA-LOCAL-001",
+    "APP-001"
+  ],
+  "APP-002": [
+    "MANIFEST-RUNTIME-002",
+    "APP-002"
+  ],
+  "APP-003": [
+    "APP-003"
+  ],
+  "APP-004": [
+    "OFFLINE-RUNTIME-001",
+    "OFFLINE-DIAG-001",
+    "APP-004"
+  ],
+  "NAV-001": [
+    "NAV:홈",
+    "NAV:캘린더",
+    "NAV:운동",
+    "NAV:식단",
+    "NAV:체중",
+    "NAV-RUNTIME-001"
+  ],
+  "NAV-002": [
+    "NAV-RUNTIME-002"
+  ],
+  "NAV-004": [
+    "NAV-004",
+    "DIAG-RUNTIME-001"
+  ],
+  "ARCH-001": [
+    "ARCH-001",
+    "ARCH-003",
+    "ARCH-006"
+  ],
+  "ARCH-002": [
+    "ARCH-002"
+  ],
+  "ARCH-003": [
+    "ARCH-004",
+    "ARCH-004-ID",
+    "ARCH-004-LOGGER"
+  ],
+  "ARCH-004": [
+    "ARCH-005"
+  ],
+  "ARCH-006": [
+    "CONTRACT-NO:hardDelete",
+    "CONTRACT-NO:clear",
+    "CONTRACT-NO:upsert",
+    "CONTRACT-NO:put"
+  ],
+  "ARCH-007": [
+    "ARCH-003-CONTEXT",
+    "ARCH-007"
+  ],
+  "PROFILE-001": [
+    "PROFILE-001"
+  ],
+  "PROFILE-002": [
+    "PROFILE-002"
+  ],
+  "PROFILE-003": [
+    "PROFILE-003"
+  ],
+  "PROFILE-004": [
+    "PROFILE-004"
+  ],
+  "DATA-SCOPE-001": [
+    "SCHEMA-003",
+    "SCOPE-001"
+  ],
+  "DATA-SCOPE-002": [
+    "SCOPE-CREATE-001",
+    "PROTECTED-001"
+  ],
+  "DATA-SCOPE-003": [
+    "SCOPE-001",
+    "SCOPE-002"
+  ],
+  "DATA-ID-001": [
+    "PROFILE-002-ID",
+    "UUID-001"
+  ],
+  "DATA-TIME-001": [
+    "TIME-001"
+  ],
+  "DATA-TIME-002": [
+    "REV-002"
+  ],
+  "DATA-REV-002": [
+    "REV-001"
+  ],
+  "DATA-REV-003": [
+    "REV-002",
+    "REV-003",
+    "REV-004",
+    "REV-005",
+    "DELETE-003"
+  ],
+  "DATA-REV-004": [
+    "REV-003",
+    "REV-004",
+    "REV-005"
+  ],
+  "DATA-DEL-001": [
+    "DELETE-001",
+    "DELETE-002"
+  ],
+  "DATA-DEL-002": [
+    "DELETE-001"
+  ],
+  "DATA-DEL-003": [
+    "DELETE-002",
+    "DELETE-003"
+  ],
+  "DATA-DEL-004": [
+    "CONTRACT-NO:hardDelete",
+    "DATA-DEL-004"
+  ],
+  "DB-003": [
+    "DB-002",
+    "SCHEMA-001",
+    "SCHEMA-002"
+  ],
+  "DB-004": [
+    "SCHEMA-003",
+    "SCHEMA-004"
+  ],
+  "DB-005": [
+    "DB-003",
+    "INDEX-UNIQUE:exercise_types:uq_profile_system_key",
+    "INDEX-UNIQUE:pass_usage_logs:uq_profile_pass_exercise"
+  ],
+  "DB-006": [
+    "DB-005"
+  ],
+  "MIG-002": [
+    "MIG-SAFE-001"
+  ],
+  "MIG-003": [
+    "DATA-DEL-004"
+  ],
+  "MIG-004": [
+    "DB-004"
+  ],
+  "SEED-001": [
+    "SEED-001"
+  ],
+  "SEED-002": [
+    "SEED-002"
+  ],
+  "SEED-003": [
+    "SEED-003"
+  ],
+  "SEED-004": [
+    "SEED-004"
+  ],
+  "SEED-005": [
+    "SEED-005"
+  ],
+  "SEED-006": [
+    "UNIQUE-OPTIONAL-001"
+  ],
+  "TX-001": [
+    "TX-001"
+  ],
+  "TX-002": [
+    "TX-002"
+  ],
+  "UNIQUE-001": [
+    "UNIQUE-001",
+    "UNIQUE-OPTIONAL-001"
+  ],
+  "UNIQUE-002": [
+    "UNIQUE-002"
+  ],
+  "UNIQUE-003": [
+    "UNIQUE-003"
+  ],
+  "SET-001": [
+    "SCHEMA-003",
+    "SCHEMA-004"
+  ],
+  "LOG-001": [
+    "LOG-001"
+  ],
+  "LOG-002": [
+    "LOG-002"
+  ],
+  "LOG-003": [
+    "ARCH-008"
+  ],
+  "DIAG-001": [
+    "DIAG-001",
+    "DIAG-RUNTIME-001",
+    "OFFLINE-DIAG-001"
+  ],
+  "UPD-001": [
+    "UPD-001"
+  ],
+  "UPD-002": [
+    "UPD-002"
+  ],
+  "CACHE-001": [
+    "CACHE-001",
+    "CACHE-RUNTIME-LOCAL-002",
+    "CACHE-RUNTIME-001"
+  ],
+  "CACHE-002": [
+    "CACHE-002",
+    "OFFLINE-DIAG-001"
+  ],
+  "CACHE-003": [
+    "CACHE-REVALIDATE-001"
+  ],
+  "CACHE-004": [
+    "CACHE-RUNTIME-LOCAL-002"
+  ],
+  "ERROR-001": [
+    "ERROR-001"
+  ],
+  "ERROR-002": [
+    "ERROR-001"
+  ],
+  "ERROR-003": [
+    "DATA-DEL-004"
+  ],
+  "VERSION-001": [
+    "VERSION-001",
+    "DB-CONFIG-001",
+    "SCHEMA-CONFIG-001",
+    "SEED-CONFIG-001"
+  ],
+  "TEST-001": [
+    "AGGREGATE-RUNNER"
+  ],
+  "TEST-002": [
+    "RESULT-MISSING"
+  ],
+  "TEST-003": [
+    "APP-001",
+    "APP-002",
+    "APP-003",
+    "APP-004",
+    "CACHE-RUNTIME-001"
+  ],
+  "TEST-004": [
+    "DB-005"
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "version": "0.2.0",
+  "cases": [
+    {
+      "id": "ARCH-003-CONTEXT",
+      "type": "automated-static",
+      "purpose": "UI cannot reach the concrete container"
+    },
+    {
+      "id": "PROFILE-002",
+      "type": "automated-browser",
+      "purpose": "Repeated bootstrap does not duplicate Profile"
+    },
+    {
+      "id": "PROFILE-004",
+      "type": "automated-browser",
+      "purpose": "Invalid current Profile pointer is repaired"
+    },
+    {
+      "id": "SCOPE-001",
+      "type": "automated-browser",
+      "purpose": "Profile A cannot read Profile B data"
+    },
+    {
+      "id": "SCOPE-002",
+      "type": "automated-browser",
+      "purpose": "Profile A cannot update Profile B data"
+    },
+    {
+      "id": "SEED-003",
+      "type": "automated-browser",
+      "purpose": "Seed is idempotent"
+    },
+    {
+      "id": "SEED-004",
+      "type": "automated-browser",
+      "purpose": "Seed does not overwrite user rename"
+    },
+    {
+      "id": "SEED-005",
+      "type": "automated-browser",
+      "purpose": "Seed does not restore user-deleted default"
+    },
+    {
+      "id": "REV-003",
+      "type": "automated-browser",
+      "purpose": "Stale update revision is rejected"
+    },
+    {
+      "id": "REV-004",
+      "type": "automated-browser",
+      "purpose": "Stale delete revision is rejected"
+    },
+    {
+      "id": "REV-005",
+      "type": "automated-browser",
+      "purpose": "Stale restore revision is rejected"
+    },
+    {
+      "id": "PROTECTED-001",
+      "type": "automated-browser",
+      "purpose": "Protected ownership metadata cannot be patched"
+    },
+    {
+      "id": "DELETE-001",
+      "type": "automated-browser",
+      "purpose": "Soft-delete hides record from normal reads"
+    },
+    {
+      "id": "DELETE-003",
+      "type": "automated-browser",
+      "purpose": "Restore keeps ID and increments revision"
+    },
+    {
+      "id": "UNIQUE-003",
+      "type": "automated-browser",
+      "purpose": "Pass usage duplicate is rejected"
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-001",
+      "type": "automated-browser",
+      "purpose": "Missing optional unique keys do not collide"
+    },
+    {
+      "id": "TX-001",
+      "type": "automated-browser",
+      "purpose": "Bootstrap failure leaves no partial seed"
+    },
+    {
+      "id": "TX-002",
+      "type": "automated-browser",
+      "purpose": "Multi-store abort leaves no partial data"
+    },
+    {
+      "id": "DB-004",
+      "type": "automated-browser",
+      "purpose": "Data survives close/reopen"
+    },
+    {
+      "id": "PWA-LOCAL-001",
+      "type": "automated-browser",
+      "purpose": "App boots from a GitHub Pages-style subpath"
+    },
+    {
+      "id": "SW-RUNTIME-001",
+      "type": "automated-browser",
+      "purpose": "Service Worker controls repository subpath"
+    },
+    {
+      "id": "OFFLINE-RUNTIME-001",
+      "type": "automated-browser",
+      "purpose": "App Shell and IndexedDB reload with network disabled"
+    },
+    {
+      "id": "APP-002",
+      "type": "manual-device",
+      "purpose": "Galaxy Chrome installation/update"
+    },
+    {
+      "id": "APP-004",
+      "type": "manual-device",
+      "purpose": "Offline installed-app relaunch"
+    }
+  ]
+}
