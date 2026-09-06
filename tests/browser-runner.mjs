@@ -6,8 +6,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.2.0-browser.json');
-const basePath = '/personal-health-pwa-v0.2.0/';
+const outputPath = path.join(root, 'tests/results/v0.3.0-browser.json');
+const basePath = '/personal-health-pwa-v0.3.0/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -66,7 +66,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.2.0',
+    version: '0.3.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -364,7 +364,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.2.0 · DB 1'),
+      (value) => value?.title === '홈' && value.body.includes('v0.3.0 · DB 1'),
       30000
     );
 
@@ -411,6 +411,33 @@ try {
       return value.hash === '#/exercise';
     }, 'Hash routing changes the active page without a server route.');
 
+    await runtimeTest('EX-UI-RUNTIME-001', async () => {
+      await cdp.send('Page.navigate', { url: `${origin}${basePath}index.html#/exercise` });
+      const value = await pollEvaluate(
+        cdp,
+        `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
+        (state) => state?.title === '운동' && state.body.includes('필라테스') && state.body.includes('+ 운동 기록'),
+        15000
+      );
+      return value.title === '운동';
+    }, 'Exercise main page renders the default Pilates seed and actual record controls.');
+
+    await runtimeTest('EX-UI-RUNTIME-002', async () => {
+      await cdp.evaluate("document.querySelector('#exercise-type-add')?.click()");
+      const value = await pollEvaluate(
+        cdp,
+        `({ hash: location.hash, title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
+        (state) => state?.hash === '#/exercise/type/new' && state.title === '새 운동' && state.body.includes('기록 양식'),
+        10000
+      );
+      return value.hash === '#/exercise/type/new';
+    }, 'Exercise type creation route and dynamic template editor render.');
+
+    await runtimeTest('EX-UI-RUNTIME-003', async () => cdp.evaluate(`(() => {
+      const labels = [...document.querySelectorAll('[data-standard-field]')].map((node) => node.dataset.standardField);
+      return ['duration_minutes', 'distance_km', 'steps', 'pace', 'calories'].every((key) => labels.includes(key));
+    })()`), 'Exercise template editor is data-driven from the approved field catalog.');
+
     await runtimeTest('DIAG-RUNTIME-001', async () => {
       await cdp.evaluate("document.querySelector('#settings-button')?.click()");
       const value = await pollEvaluate(
@@ -450,8 +477,8 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.2.0');
-    }, 'The v0.2.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.3.0');
+    }, 'The v0.3.0 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
@@ -482,7 +509,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.2.0 · DB 1'),
+        (state) => state?.title === '홈' && state.body.includes('v0.3.0 · DB 1'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -513,7 +540,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.2.0',
+      version: '0.3.0',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -531,7 +558,7 @@ try {
   })(), 120000, 'Browser runtime suite exceeded the 120 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.2.0',
+    version: '0.3.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },

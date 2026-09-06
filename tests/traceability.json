@@ -249,5 +249,95 @@
   ],
   "TEST-004": [
     "DB-005"
+  ],
+  "EX-001": [
+    "EX-TYPE-001",
+    "ARCH-EX-004"
+  ],
+  "EX-002": [
+    "UNIT-EX-001",
+    "EX-TYPE-002"
+  ],
+  "EX-003": [
+    "UNIT-EX-001",
+    "EX-TPL-001"
+  ],
+  "EX-004": [
+    "ARCH-EX-004",
+    "EX-UI-RUNTIME-003"
+  ],
+  "EX-005": [
+    "UNIT-LOG-001",
+    "EX-LOG-002"
+  ],
+  "EX-006": [
+    "UNIT-EX-002",
+    "EX-TPL-007"
+  ],
+  "EX-007": [
+    "UNIT-TPL-002",
+    "EX-TPL-007-KEY"
+  ],
+  "EX-008": [
+    "UNIT-TPL-001",
+    "EX-TPL-003",
+    "EX-TPL-004"
+  ],
+  "EX-009": [
+    "UNIT-LOG-002",
+    "EX-TPL-005"
+  ],
+  "EX-010": [
+    "UNIT-LOG-003",
+    "EX-LOG-014"
+  ],
+  "EX-011": [
+    "UNIT-TYPE-002",
+    "UNIT-LOG-006",
+    "EX-TYPE-007",
+    "EX-LOG-010"
+  ],
+  "EX-012": [
+    "ARCH-EX-005",
+    "EX-TPL-001",
+    "EX-TPL-002"
+  ],
+  "EX-013": [
+    "ARCH-EX-005",
+    "UNIT-TPL-001",
+    "EX-TPL-003",
+    "EX-TPL-004"
+  ],
+  "EX-014": [
+    "UNIT-TPL-003",
+    "EX-TPL-009"
+  ],
+  "EX-015": [
+    "UNIT-LOG-004",
+    "UNIT-LOG-006",
+    "UNIT-LOG-007",
+    "EX-LOG-009"
+  ],
+  "EX-016": [
+    "UNIT-VAL-002",
+    "EX-VAL-002",
+    "EX-VAL-003"
+  ],
+  "EX-017": [
+    "UNIT-QUERY-001"
+  ],
+  "EX-018": [
+    "ARCH-EX-004"
+  ],
+  "EX-019": [
+    "UNIT-TIME-001"
+  ],
+  "EX-020": [
+    "EX-UI-RUNTIME-002"
+  ],
+  "ERROR-004": [
+    "ERROR-001",
+    "UNIT-TPL-003",
+    "UNIT-LOG-004"
   ]
 }

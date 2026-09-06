@@ -1,135 +1,227 @@
-# Release Report - v0.2.0
+# Release Report - v0.3.0
 
-## 1. 릴리스 요약
+## 1. 릴리스 개요
 
-v0.1.0의 설치형 PWA 화면과 라우팅을 유지하면서, 향후 Supabase 멀티유저·멀티기기 동기화에 대비한 로컬 우선 데이터 기반을 추가했습니다.
+- 이전 버전: `v0.2.0`
+- 현재 버전: `v0.3.0`
+- 목적: 실제 Exercise Core 기능 추가
+- App Version: `0.2.0 -> 0.3.0`
+- DB Version: `1 -> 1`
+- Schema Version: `1 -> 1`
+- Seed Version: `1 -> 1`
+- DB Migration: **없음**
 
-```text
-Previous App    0.1.0
-Current App     0.2.0
-Cache           personal-health-pwa-v0.2.0
-DB Version      1
-Schema Version  1
-Seed Version    1
-```
-
-이번 버전은 실제 운동·식단·체중 입력 기능을 열지 않습니다. 사용자 화면의 주요 변화는 홈 상태 표시와 설정의 읽기 전용 DB 진단입니다.
+v0.2.0에서 구축한 Local-first 데이터 계층을 유지하면서 운동 종류, 버전형 Template, 동적 운동기록 CRUD를 Application Service와 semantic Command 경계 위에 추가했다.
 
 ## 2. 변경 파일
 
-- 신규 파일: 54개
-- 수정 파일: 11개
-- 삭제 파일: 0개
-- 전체 소스: 71개
-- 변경 산출물 포함 파일: 65개
+v0.2.0 전체 소스 대비:
 
-변경 파일명은 `changed.zip`의 상대경로가 기준이며, `.git`은 전체 ZIP에 포함하지 않습니다.
+```text
+신규 파일   22개
+수정 파일   27개
+삭제 파일    0개
+변경 합계   49개
+```
+
+삭제 파일은 없다. `.git`은 full ZIP에 포함하지 않는다.
 
 ## 3. 주요 변경
 
-- IndexedDB 14개 Object Store와 누적 Migration
-- Local Profile 및 `IdentityContext`
-- UUID, `profile_id`, UTC timestamp, `deleted_at`, `revision`
-- Repository Contract / IndexedDB Adapter / DI Container
-- expectedRevision 기반 수정·삭제·복원 충돌 차단
-- Profile 범위 격리 및 위조 `profile_id` 무시
-- Profile·필라테스·Template·기기 포인터 원자적 Seed
-- 사용자 변경/삭제 Seed 원복 방지
-- 사용자 설정과 기기 설정 분리
-- 식단 사진 메타데이터와 향후 Blob 저장 경계 분리
-- 로컬 오류로그 최대 200건
-- DB 진단 및 실패 시 데이터 비삭제 오류 화면
-- GitHub Pages 하위 경로/Service Worker/오프라인 자동검증
+### 운동 종류
 
-## 4. DB 및 Migration
+- 기본 필라테스 Seed 실제 UI 표시
+- 사용자 운동 종류 생성/수정
+- active / inactive
+- soft-delete / restore
+- Profile 격리 및 revision 충돌 규칙 유지
+
+### 기록 양식
+
+- 표준 필드 Catalog
+- 사용자 정의 number/text/textarea/boolean/select
+- 사용자 정의 field key를 UUID 기반으로 고정
+- 운동 생성 + Template v1을 하나의 semantic Command transaction으로 처리
+- Template 변경 시 이전 버전 보존 + 신규 version 생성
+- Template 변경 충돌을 `expectedTemplateId + expectedTemplateRevision` 쌍으로 검사
+
+### 운동 기록
+
+- 실제 생성/조회/수정/soft-delete
+- 공통 memo
+- Template 기반 동적 폼
+- 과거 기록의 historical `template_id` 유지
+- 과거 기록 수정 시 최신 Template 자동변환 금지
+- Profile timezone 입력을 UTC ISO로 저장
+- 최근 기록 / 종류 필터 / 주간 요약
+
+### 구조/품질
+
+- Page -> Application Service -> Contract/Command -> IndexedDB Adapter 경계 유지
+- Application Service의 직접 IndexedDB 의존 없음
+- 여러 Store 원자 작업만 semantic Command로 분리
+- 내부 DB/Conflict 오류 문자열의 직접 UI 노출 방지
+- 입력 중 이탈 방지 Dirty Form Guard
+
+## 4. DB / Migration
 
 ```text
-oldVersion 0 -> newVersion 1
+DB_VERSION     1 유지
+SCHEMA_VERSION 1 유지
+SEED_VERSION   1 유지
+Object Store   14 유지
+신규 Index     없음
+Migration      없음
 ```
 
-v0.1.0은 IndexedDB를 사용하지 않았으므로 기존 DB 행 변환은 없습니다. 최초 실행 시 DB v1과 Local Profile, 기본 필라테스, Template v1을 하나의 transaction으로 생성합니다.
+v0.3.0 기능은 기존 `exercise_types`, `exercise_templates`, `exercise_logs` 구조와 Index를 그대로 사용한다. 기능 버전 상승만으로 IndexedDB Version을 올리지 않았다.
 
-Migration 정책:
+기존 다음 데이터는 재생성하거나 변환하지 않는다.
 
-- Store 삭제/clear 없음
-- 실패 시 DB 자동삭제 없음
-- 사용자 데이터 초기화 버튼 없음
-- Service Worker 캐시 정리와 IndexedDB 분리
-- 다음 DB Version부터 대표 구버전 데이터를 만든 뒤 보존 Migration 검증
+```text
+Local Profile
+current_profile_id
+필라테스 Seed
+필라테스 Template v1
+device_id
+기존 v0.2 데이터
+```
 
-## 5. 영향 범위
+## 5. Supabase 확장성 영향
 
-### 유지되는 기능
+기존 local-first 기준선을 유지한다.
 
-- GitHub Pages 상대경로
-- 설치형 PWA
-- 홈/캘린더/운동/식단/체중 5탭
-- Hash Router
-- 설정 헤더 진입
-- 사용자 선택형 앱 업데이트
-- 오프라인 App Shell
+```text
+현재
+UI
+ -> Application Service
+ -> Repository Contract / Semantic Command Port
+ -> IndexedDB Adapter
+ -> IndexedDB
 
-### 새 내부 기반
+향후
+IndexedDB
+ -> Sync Outbox
+ -> Sync Engine
+ -> Supabase Gateway
+ -> Auth / PostgreSQL / Storage
+```
 
-- 앱 시작 전에 DB open/Migration/Profile/Seed 검증
-- UI에는 구체 Container·Repository·IndexedDB를 노출하지 않음
-- 모든 향후 도메인 저장은 Repository/Command 경계를 사용
-- Supabase는 IndexedDB 대체가 아니라 향후 Sync 계층으로 추가
-
-### 아직 없는 기능
-
-- 운동·이용권·예약 실제 화면
-- 식단 및 사진 Blob 저장
-- 체중·인바디 입력/그래프
-- 캘린더 원본 데이터 조회
-- 백업/복원
-- 로그인·Supabase·Outbox·충돌해결 UI
+특히 Template의 multi-row 원자 변경은 generic IndexedDB transaction을 Service에 노출하지 않고 `ExerciseManagementCommand`라는 업무 경계로 처리했다. 향후 원격 구현에서는 동일 업무 경계를 PostgreSQL function/RPC로 대응할 수 있다.
 
 ## 6. 검증 결과
 
 ```text
-Automated PASS     189
-Automated FAIL       0
-Manual NOT RUN       5
+Smoke / App Shell              72 PASS
+Architecture                   29 PASS
+Schema                         60 PASS
+Exercise Application Service  19 PASS
+Browser Runtime                 1 NOT RUN
+Manual GitHub/Galaxy            5 NOT RUN
+---------------------------------------
+TOTAL                          186
+PASS                           180
+FAIL                             0
+NOT RUN                          6
 ```
 
-자동검증에는 실제 Chromium의 IndexedDB, 복합 unique Index, Profile 격리, revision 충돌, soft-delete/restore, transaction rollback, 하위 경로 PWA, Service Worker, Cache Storage, 네트워크 차단 후 재실행이 포함됩니다.
+브라우저 Runtime Suite는 코드 실패가 아니다. 현재 실행환경의 Chromium 조직 관리정책이 `localhost`, `127.0.0.1` 및 로컬 HTTPS 별칭을 모두 차단하여 실행하지 못했다. 이를 PASS로 허위기록하지 않고 `BROWSER-POLICY = NOT_RUN`으로 남겼다.
 
-아직 PASS로 처리하지 않은 항목은 사용자 GitHub Pages 배포와 갤럭시 실기기 검증 5건입니다. 상세 결과는 `REGRESSION_TEST.md` 및 `tests/results/v0.2.0.json`을 기준으로 합니다.
+브라우저 Suite 코드에는 기존 v0.2 IndexedDB/PWA 회귀와 v0.3 Exercise Core 시나리오가 모두 누적되어 있다.
 
-## 7. 적용 절차
+## 7. 구현 중 발견·수정한 설계 결함
 
-1. 현재 v0.1.0 repository를 commit하거나 tag로 보존합니다.
-2. `personal-health-pwa-v0.2.0-changed.zip`의 내부 파일을 repository 루트에 상대경로 그대로 덮어씁니다. 처음부터 다시 올릴 때는 full ZIP을 사용합니다.
-3. 삭제할 파일은 없습니다.
-4. 변경 파일을 commit하고 `main`에 push합니다.
-5. GitHub Pages 배포가 끝나면 기존 설치 앱을 엽니다.
-6. 업데이트 배너가 표시되면 작성 중 데이터가 없는 상태에서 `업데이트`를 누릅니다.
-7. 홈에서 `v0.2.0 · DB 1`을 확인합니다.
-8. 설정에서 `상태 정상`, `Object Store 14 / 14`, `Current Profile 연결됨`, `Profile Seed 1`을 확인합니다.
-9. 앱을 종료·재실행한 뒤 같은 Profile ID 앞 8자리가 유지되는지 확인합니다.
-10. 네트워크를 끄고 다시 실행합니다.
-
-## 8. 복구 절차
-
-코드 이상이 있으면 GitHub에서 v0.2.0 배포 commit을 revert하거나 v0.1.0 tag/commit으로 되돌립니다.
-
-중요:
-
-- 브라우저 개발자도구에서 IndexedDB를 삭제하지 않습니다.
-- 앱 데이터 초기화·사이트 데이터 삭제를 하지 않습니다.
-- v0.1.0은 DB v1을 사용하지 않지만 기존 IndexedDB는 브라우저에 그대로 남습니다.
-- 이후 v0.2.0을 다시 배포하면 같은 DB v1과 Profile을 재사용합니다.
-- 단순히 modified 파일만 되돌리면 신규 v0.2 파일이 repository에 남을 수 있으므로, 깨끗한 복구는 `git revert`를 우선합니다.
-
-## 9. 배포 후 완료 조건
-
-다음 5건까지 확인되면 v0.2.0을 운영 완료로 판정합니다.
+Template 양식 충돌을 revision 숫자만으로 판단하면 다음을 구분할 수 없다.
 
 ```text
-APP-001 GitHub Pages 접속
-APP-002 갤럭시 업데이트/설치
+Template v1 / revision 1
+Template v2 / revision 1
+```
+
+신규 Template 행은 revision 1부터 시작하기 때문이다.
+
+따라서 v0.3.0 구현 중 충돌 키를 다음으로 강화했다.
+
+```text
+expectedTemplateId
++
+expectedTemplateRevision
+```
+
+현재 active Template의 ID와 revision을 모두 확인한다. 이 규칙은 향후 멀티기기/Supabase 동기화에서도 유지할 수 있다.
+
+## 8. 기존 v0.2 기능 영향
+
+유지 대상:
+
+- GitHub Pages 하위경로
+- 설치형 PWA / standalone
+- 오프라인 App Shell
+- 홈/캘린더/운동/식단/체중 5탭
+- Hash Router
+- Service Worker 사용자 승인 업데이트
+- DB v1 / 14 Store / 기존 Index
+- Profile / IdentityContext
+- UUID / timestamp / soft-delete / revision
+- Repository Contract / DI Container
+- app_logs / DB 진단
+
+기존 회귀 테스트는 삭제하지 않고 v0.3 테스트와 함께 누적 실행한다.
+
+## 9. 아직 구현하지 않은 기능
+
+- 횟수권 / 필라테스 자동 차감
+- 운동 예약 / 예정 / 완료 전환
+- 체중 / 인바디
+- 식단 / 사진 Blob
+- 캘린더 실제 데이터 조회
+- 홈 통계 확장
+- 백업 / 복원
+- Supabase Auth / Sync Outbox / Sync Engine
+
+## 10. 적용 절차
+
+1. 현재 정상 동작하는 v0.2.0 repository 상태를 commit/tag로 보존한다.
+2. `personal-health-pwa-v0.3.0-changed.zip` 내부 파일을 repository 루트에 상대경로 그대로 덮어쓴다.
+3. 삭제할 파일은 없다.
+4. 또는 clean v0.2.0 상태에서 patch를 `git apply --check` 후 적용한다.
+5. 변경사항을 commit하고 `main`에 push한다.
+6. GitHub Pages 배포가 끝나면 기존 설치 앱을 연다.
+7. 업데이트 배너에서 v0.3.0을 적용한다.
+8. 홈에서 `v0.3.0 · DB 1`을 확인한다.
+9. 설정에서 기존 Profile ID와 `14 / 14` Store가 유지되는지 확인한다.
+10. 운동 탭에서 기본 필라테스가 표시되는지 확인한다.
+11. 러닝 등 새 운동을 추가하고 기록을 1건 저장·수정·삭제해본다.
+12. 네트워크 OFF 상태에서도 운동 탭과 기존 기록이 열리는지 확인한다.
+
+## 11. 복구 절차
+
+문제가 발생하면 v0.3.0 commit을 `git revert`하여 코드만 v0.2.0으로 복구한다.
+
+```bash
+git revert <v0.3.0-commit>
+git push
+```
+
+DB_VERSION은 v0.2와 v0.3 모두 1이므로 별도 DB downgrade가 필요하지 않다.
+
+복구 시 다음은 하지 않는다.
+
+- IndexedDB 삭제
+- 사이트 데이터 삭제
+- DB 초기화
+- 일부 파일만 임의 복사하여 혼합 버전 만들기
+
+v0.3에서 생성한 운동 데이터도 DB v1의 기존 Schema를 사용하므로 코드 v0.2로 잠시 돌아가도 DB 자체는 삭제하지 않는다. 다시 v0.3을 배포하면 해당 데이터를 재사용할 수 있다.
+
+## 12. 배포 후 미검증 항목
+
+```text
+APP-001 GitHub Pages v0.3.0 접속
+APP-002 갤럭시 Chrome 업데이트/설치
 APP-003 standalone 실행
 APP-004 네트워크 OFF 재실행
-CACHE-RUNTIME-001 실제 v0.1 -> v0.2 교체
+CACHE-RUNTIME-001 실제 v0.2 -> v0.3 App Shell 교체
 ```
+
+배포 후 결과는 `REGRESSION_TEST.md`에 PASS/FAIL로 추가한다.

@@ -8,8 +8,9 @@ import {
   STORE_NAMES
 } from '../../js/data/indexeddb/schema.js';
 
-const TEST_DB_NAME = 'personal-health-pwa-test-v0.2.0';
-const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.2.0-rollback';
+const TEST_DB_NAME = 'personal-health-pwa-test-v0.3.0';
+const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.3.0-rollback';
+const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.3.0-exercise-rollback';
 const resultNode = document.querySelector('#test-result');
 const cases = [];
 
@@ -66,6 +67,7 @@ async function rawCount(database, storeName) {
 async function run() {
   await deleteDatabase(TEST_DB_NAME);
   await deleteDatabase(ROLLBACK_DB_NAME);
+  await deleteDatabase(EXERCISE_ROLLBACK_DB_NAME);
 
   const clock = new StepClock();
   let container = createContainer({ dbName: TEST_DB_NAME, clock });
@@ -358,6 +360,164 @@ async function run() {
   const persisted = await container.repositories.exerciseType.getById(created.id);
   await test('DB-004', () => persisted?.name === '달리기' && persisted.revision === 4, 'Record survives database close and reopen.');
 
+  // v0.3.0 Exercise Core
+  const currentTypesBeforeExercise = await container.exerciseQueryService.listActiveTypes();
+  await test('EX-TYPE-001', () => currentTypesBeforeExercise.some((item) => item.system_key === 'default.pilates'), 'Default Pilates seed is visible through the exercise query service.');
+
+  const runningBundle = await container.exerciseManagementService.createExerciseType({
+    name: '러닝',
+    icon: '🏃',
+    fields: [
+      { key: 'duration_minutes' },
+      { key: 'distance_km' },
+      { label: '라운드 수', type: 'number', unit: 'round', required: false }
+    ]
+  });
+  const running = runningBundle.exerciseType;
+  const runningV1 = runningBundle.template;
+  const customFieldV1 = runningV1.fields.find((field) => field.key.startsWith('custom_'));
+  await test('EX-TYPE-002', () => running.name === '러닝' && running.revision === 1, 'A user-created exercise type is created through the application service.');
+  await test('EX-TPL-001', () => runningV1.version === 1 && runningV1.status === 'active' && runningV1.exercise_type_id === running.id, 'Exercise creation atomically creates template v1.');
+  await test('EX-TPL-007', () => Boolean(customFieldV1?.key) && customFieldV1.key.startsWith('custom_'), 'Custom fields receive a stable UUID-based key.');
+
+  const logV1 = await container.exerciseLogService.create({
+    exercise_type_id: running.id,
+    performed_at_local: '2026-09-05T08:00',
+    values: {
+      duration_minutes: '30',
+      distance_km: '3.2',
+      [customFieldV1.key]: '2'
+    },
+    memo: 'v1 기록'
+  });
+  await test('EX-LOG-001', () => logV1.exercise_type_id === running.id && logV1.template_id === runningV1.id, 'Exercise log is created against the current active template.');
+  await test('EX-LOG-002', () => logV1.memo === 'v1 기록', 'Exercise memo is stored as a common fixed field.');
+  await test('EX-LOG-003', () => logV1.values.distance_km === 3.2 && logV1.values[customFieldV1.key] === 2, 'Dynamic exercise values are validated and normalized.');
+
+  const v2Fields = runningV1.fields.map((field) => (
+    field.key === customFieldV1.key ? { ...field, label: '스파링 라운드' } : field
+  ));
+  v2Fields.push({ key: 'pace' });
+  const versionResult = await container.exerciseManagementService.createTemplateVersion(
+    running.id,
+    v2Fields,
+    { expectedTemplateId: runningV1.id, expectedTemplateRevision: runningV1.revision }
+  );
+  const runningV2 = versionResult.template;
+  const runningV1After = await container.repositories.exerciseTemplate.getById(runningV1.id);
+  await test('EX-TPL-003', () => runningV2.version === 2 && runningV2.status === 'active', 'Template edit creates a new active version.');
+  await test('EX-TPL-004', () => runningV1After.status === 'superseded' && runningV1After.revision === 2, 'Previous template is retained as superseded.');
+  await test('EX-TPL-007-KEY', () => runningV2.fields.find((field) => field.label === '스파링 라운드')?.key === customFieldV1.key, 'Changing a custom field label preserves its internal key.');
+  await test('EX-TPL-009', () => expectReject(
+    () => container.exerciseManagementService.createTemplateVersion(running.id, v2Fields, { expectedTemplateId: runningV1.id, expectedTemplateRevision: runningV1.revision }),
+    (error) => error?.code === 'REVISION_CONFLICT'
+  ), 'Stale template ID/revision pair is rejected.');
+
+  const oldDetail = await container.exerciseLogService.getDetail(logV1.id);
+  await test('EX-TPL-005', () => oldDetail.template.id === runningV1.id && oldDetail.template.version === 1, 'Existing record keeps its original template after a newer template is created.');
+  const updatedOldLog = await container.exerciseLogService.update(logV1.id, {
+    performed_at_local: '2026-09-05T08:10',
+    values: {
+      duration_minutes: '35',
+      distance_km: '3.5',
+      [customFieldV1.key]: '3'
+    },
+    memo: 'v1 수정 기록'
+  }, logV1.revision);
+  await test('EX-LOG-014', () => updatedOldLog.template_id === runningV1.id && updatedOldLog.values.distance_km === 3.5, 'Historical record can still be edited with its historical template.');
+  await test('EX-LOG-006', () => updatedOldLog.created_at === logV1.created_at, 'Exercise log update preserves created_at.');
+  await test('EX-LOG-007', () => updatedOldLog.updated_at !== logV1.updated_at && updatedOldLog.revision === 2, 'Exercise log update changes updated_at and revision.');
+  await test('EX-LOG-009', () => expectReject(
+    () => container.exerciseLogService.update(logV1.id, {
+      performed_at_local: '2026-09-05T08:20', values: updatedOldLog.values, memo: ''
+    }, logV1.revision),
+    (error) => error?.code === 'REVISION_CONFLICT'
+  ), 'Stale exercise log revision is rejected.');
+
+  const logV2 = await container.exerciseLogService.create({
+    exercise_type_id: running.id,
+    performed_at_local: '2026-09-06T09:00',
+    values: {
+      duration_minutes: 40,
+      distance_km: 5,
+      [customFieldV1.key]: 4,
+      pace: '6:10'
+    },
+    memo: 'v2 기록'
+  });
+  await test('EX-TPL-006', () => logV2.template_id === runningV2.id && logV2.values.pace === '6:10', 'New record uses the latest active template.');
+  await test('EX-VAL-004', () => expectReject(
+    () => container.exerciseLogService.create({
+      exercise_type_id: running.id,
+      performed_at_local: '2026-09-06T10:00',
+      values: { duration_minutes: 'not-a-number' },
+      memo: ''
+    }),
+    (error) => error?.code === 'EXERCISE_VALUE_NUMBER_INVALID'
+  ), 'Invalid numeric dynamic value is rejected by the application service.');
+  await test('EX-VAL-008', () => expectReject(
+    () => container.exerciseManagementService.createExerciseType({ name: '   ', fields: [] }),
+    (error) => error?.code === 'EXERCISE_NAME_REQUIRED'
+  ), 'Blank exercise name is rejected.');
+
+  const runningBeforeInactive = await container.repositories.exerciseType.getById(running.id);
+  const inactiveRunning = await container.exerciseManagementService.setExerciseTypeStatus(running.id, 'inactive', runningBeforeInactive.revision);
+  await test('EX-TYPE-005', () => inactiveRunning.status === 'inactive', 'Exercise type can be deactivated.');
+  await test('EX-VAL-003', () => expectReject(
+    () => container.exerciseLogService.create({ exercise_type_id: running.id, performed_at_local: '2026-09-06T11:00', values: {}, memo: '' }),
+    (error) => error?.code === 'EXERCISE_TYPE_INACTIVE'
+  ), 'Inactive exercise cannot receive a new log.');
+  const reactivatedRunning = await container.exerciseManagementService.setExerciseTypeStatus(running.id, 'active', inactiveRunning.revision);
+  await test('EX-TYPE-006', () => reactivatedRunning.status === 'active', 'Exercise type can be reactivated.');
+
+  const deletedRunning = await container.exerciseManagementService.softDeleteExerciseType(running.id, reactivatedRunning.revision);
+  await test('EX-TYPE-007', () => deletedRunning.deleted_at !== null, 'Exercise type uses soft-delete.');
+  await test('EX-TYPE-008', async () => !(await container.exerciseQueryService.listActiveTypes()).some((item) => item.id === running.id), 'Soft-deleted exercise is excluded from active list.');
+  await test('EX-VAL-002', () => expectReject(
+    () => container.exerciseLogService.create({ exercise_type_id: running.id, performed_at_local: '2026-09-06T12:00', values: {}, memo: '' }),
+    (error) => error?.code === 'EXERCISE_TYPE_NOT_FOUND'
+  ), 'Deleted exercise cannot receive a new log.');
+  const restoredRunning = await container.exerciseManagementService.restoreExerciseType(running.id, deletedRunning.revision);
+  await test('EX-TYPE-RESTORE-001', () => restoredRunning.deleted_at === null && restoredRunning.id === running.id, 'Soft-deleted exercise can be restored without changing ID.');
+
+  const deletedLog = await container.exerciseLogService.softDelete(logV2.id, logV2.revision);
+  await test('EX-LOG-010', () => deletedLog.deleted_at !== null, 'Exercise log uses soft-delete.');
+  await test('EX-LOG-011', () => expectReject(
+    () => container.exerciseLogService.getDetail(logV2.id),
+    (error) => error?.code === 'EXERCISE_LOG_NOT_FOUND'
+  ), 'Deleted exercise log is excluded from normal detail lookup.');
+  await test('EX-LOG-012', async () => (await container.exerciseLogService.getDetail(logV2.id, { includeDeleted: true })).log.deleted_at !== null, 'Deleted exercise log is available through explicit include-deleted lookup.');
+  const restoredLog = await container.exerciseLogService.restore(logV2.id, deletedLog.revision);
+  await test('EX-LOG-RESTORE-001', () => restoredLog.deleted_at === null && restoredLog.id === logV2.id, 'Deleted exercise log restores with the same ID.');
+
+  container.identityContext.setCurrentProfileId(profileB.id);
+  await test('EX-TYPE-009', async () => !(await container.exerciseQueryService.listAllTypes({ includeDeleted: true })).some((item) => item.id === running.id), 'Exercise query service keeps Profile data isolated.');
+  await test('EX-LOG-013', () => expectReject(
+    () => container.exerciseLogService.getDetail(logV1.id),
+    (error) => error?.code === 'EXERCISE_LOG_NOT_FOUND'
+  ), 'Exercise log service cannot read another Profile log.');
+  container.identityContext.setCurrentProfileId(profileAId);
+
+  const exerciseRollbackContainer = createContainer({
+    dbName: EXERCISE_ROLLBACK_DB_NAME,
+    clock: new StepClock(),
+    faultInjector(step) {
+      if (step === 'after-exercise-type') throw new Error('Injected exercise creation failure');
+    }
+  });
+  await exerciseRollbackContainer.database.open();
+  await exerciseRollbackContainer.logger.attachRepository(exerciseRollbackContainer.repositories.appLog);
+  await exerciseRollbackContainer.bootstrapService.initialize();
+  await expectReject(() => exerciseRollbackContainer.exerciseManagementService.createExerciseType({
+    name: '롤백 운동', icon: 'X', fields: [{ key: 'duration_minutes' }]
+  }));
+  await test('EX-TPL-002', async () => {
+    const types = await exerciseRollbackContainer.repositories.exerciseType.list({ includeDeleted: true });
+    const templates = await exerciseRollbackContainer.repositories.exerciseTemplate.list({ includeDeleted: true });
+    return types.length === 1 && templates.length === 1 && types[0].system_key === 'default.pilates';
+  }, 'Exercise type + template creation rolls back together on mid-command failure.');
+  exerciseRollbackContainer.database.close();
+
   for (let index = 0; index < 205; index += 1) {
     await container.repositories.appLog.append({
       level: 'INFO',
@@ -375,6 +535,7 @@ async function run() {
   container.database.close();
   await deleteDatabase(TEST_DB_NAME);
   await deleteDatabase(ROLLBACK_DB_NAME);
+  await deleteDatabase(EXERCISE_ROLLBACK_DB_NAME);
 }
 
 try {
@@ -386,7 +547,7 @@ try {
 const passed = cases.filter((item) => item.status === 'PASS').length;
 const failed = cases.filter((item) => item.status === 'FAIL').length;
 const result = {
-  version: '0.2.0',
+  version: '0.3.0',
   suite: 'browser-indexeddb',
   executedAt: new Date().toISOString(),
   userAgent: navigator.userAgent,

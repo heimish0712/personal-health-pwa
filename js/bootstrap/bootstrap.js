@@ -51,7 +51,10 @@ export async function bootstrapApplication(options = {}) {
     diagnostic,
     logger,
     services: Object.freeze({
-      databaseDiagnostic: container.databaseDiagnosticService
+      databaseDiagnostic: container.databaseDiagnosticService,
+      exerciseManagement: container.exerciseManagementService,
+      exerciseLog: container.exerciseLogService,
+      exerciseQuery: container.exerciseQueryService
     })
   });
 }

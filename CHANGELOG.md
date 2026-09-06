@@ -1,5 +1,67 @@
 # Changelog
 
+## v0.3.0 - 2026-09-05
+
+### Added
+- 실제 `운동` 탭: 주간 요약, 운동 종류 필터, 최근 기록, 운동 기록/관리 진입
+- 운동 종류 생성·수정·활성/비활성·soft-delete·restore
+- 운동 종류 생성과 Template v1 생성을 하나의 semantic Command / IndexedDB transaction으로 처리
+- Template 수정 시 기존 버전을 `superseded`로 보존하고 신규 버전을 생성하는 원자적 Command
+- 표준 운동 필드 Catalog: 운동시간, 거리, 걸음수, 페이스, 칼로리
+- 사용자 정의 필드: number / text / textarea / boolean / select
+- 사용자 정의 필드의 UUID 기반 고정 key와 label 변경 독립성
+- Template 기반 동적 운동 기록 폼
+- 운동 기록 생성·조회·수정·soft-delete 및 Service-level restore
+- 과거 운동 기록의 생성 당시 `template_id` 보존 및 과거 양식 기준 수정
+- 공통 운동 메모 필드
+- Profile timezone 기반 로컬 입력 ↔ UTC ISO 변환 유틸리티
+- 입력 중 이탈 방지 Dirty Form Guard
+- 운동 Application Service 단위검사 및 브라우저 IndexedDB 운동 회귀 케이스
+- 사용자 작업 오류용 안전한 오류 메시지 매핑
+
+### Changed
+- APP_VERSION `0.2.0 -> 0.3.0`
+- CACHE_VERSION `personal-health-pwa-v0.2.0 -> personal-health-pwa-v0.3.0`
+- 운동 placeholder를 실제 Exercise Core 화면으로 교체
+- Hash Router를 운동 상세/입력/관리 동적 경로까지 확장
+- 중첩 운동 화면에서도 하단 `운동` 탭이 활성 상태를 유지하도록 변경
+- Application Service는 IndexedDB Adapter를 직접 알지 않고 기존 Repository Contract / semantic Command Port를 계속 사용
+- Template 양식 수정 충돌검사를 `expectedTemplateId + expectedTemplateRevision` 쌍으로 강화
+- Service Worker App Shell에 신규 운동 모듈을 추가하되 테스트 파일은 캐시하지 않음
+
+### Fixed
+- Template 버전마다 `revision = 1`부터 시작할 수 있어 revision 숫자만 비교하면 `v1/rev1`과 `v2/rev1`을 구분하지 못하는 충돌 판정 공백을 제거
+- 운동 이름별 분기 하드코딩 없이 Template 데이터만으로 폼이 구성되도록 고정
+- 과거 기록 수정 시 최신 Template으로 자동 마이그레이션되어 필드가 손실될 수 있는 경로를 차단
+- 내부 Conflict/DB 오류 문자열이 사용자 Toast에 그대로 노출될 수 있는 경로를 안전한 작업 오류 메시지로 매핑
+
+### DB
+- DB_VERSION: `1` 유지
+- SCHEMA_VERSION: `1` 유지
+- SEED_VERSION: `1` 유지
+- Object Store: `14` 유지
+- 신규 Store / Index: 없음
+- 기존 Profile / 필라테스 Seed / Template v1 재생성 없음
+
+### Migration
+- 없음
+- v0.2.0의 DB v1을 그대로 사용
+- 기능 버전 상승만으로 DB_VERSION을 올리지 않음
+
+### Verification
+- Node 정적/아키텍처/Schema/Application Service: `180 PASS / 0 FAIL`
+- Browser runtime suite: 실행 환경의 Chromium 관리정책으로 로컬 URL이 차단되어 `1 NOT RUN`
+- GitHub Pages/갤럭시 실기기: `5 NOT RUN`
+- 총합: `186 cases / 180 PASS / 0 FAIL / 6 NOT RUN`
+- 브라우저 Suite를 PASS로 허위기록하지 않고 정책 제한을 증적으로 유지
+
+### Known Issues
+- 필라테스 횟수권 차감과 운동 예약/예정은 v0.4.0 예정
+- 캘린더 실제 데이터 연결, 홈 통계 확장은 후속 버전 예정
+- 운동 기록 휴지통/복원 UI는 아직 없으며 Service/Repository 기반만 유지
+- 식단, 사진 Blob, 체중, 인바디, 백업/복원, Supabase Sync 미구현
+- 실제 GitHub Pages 및 갤럭시에서 v0.2.0 -> v0.3.0 업데이트 검증 필요
+
 ## v0.2.0 - 2026-09-04
 
 ### Added

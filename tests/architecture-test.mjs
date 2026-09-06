@@ -5,7 +5,7 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('architecture');
-const output = path.join(root, 'tests/results/v0.2.0-architecture.json');
+const output = path.join(root, 'tests/results/v0.3.0-architecture.json');
 
 function walk(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -59,6 +59,25 @@ reporter.check('ARCH-006', !pageDirectRepository, 'Page/UI code does not call re
 const bootstrapSource = fs.readFileSync(path.join(root, 'js/bootstrap/bootstrap.js'), 'utf8');
 reporter.check('ARCH-007', !/return\s+Object\.freeze\(\{\s*container[,}]/s.test(bootstrapSource), 'Bootstrap does not expose the concrete container to the UI.');
 reporter.check('ARCH-008', bootstrapSource.includes('const applicationLogger = new AppLogger()'), 'Startup log memory survives an application bootstrap retry.');
+
+
+const exercisePageFiles = jsFiles.filter((file) => relative(file).startsWith('js/pages/exercise/'));
+const exercisePageDirectData = exercisePageFiles
+  .filter((file) => /data\/indexeddb\/|repositories\.|repositoryProvider/.test(fs.readFileSync(file, 'utf8')))
+  .map(relative);
+reporter.check('ARCH-EX-001', exercisePageDirectData.length === 0, `Exercise pages do not access repositories/adapters directly: ${exercisePageDirectData.join(', ') || 'none'}`);
+
+const exerciseServiceFiles = applicationFiles.filter((file) => /exercise-/.test(relative(file)));
+const exerciseServiceAdapterImports = exerciseServiceFiles
+  .filter((file) => /data\/indexeddb\//.test(fs.readFileSync(file, 'utf8')))
+  .map(relative);
+reporter.check('ARCH-EX-003', exerciseServiceAdapterImports.length === 0, `Exercise services have no IndexedDB adapter imports: ${exerciseServiceAdapterImports.join(', ') || 'none'}`);
+
+const exerciseFormSource = fs.readFileSync(path.join(root, 'js/pages/exercise/exercise-log-form.page.js'), 'utf8');
+reporter.check('ARCH-EX-004', !/exercise\.name\s*===|===\s*['"](필라테스|러닝|걷기|복싱)['"]/.test(exerciseFormSource), 'Dynamic exercise log form has no exercise-name branching.');
+
+const exerciseCommandSource = fs.readFileSync(path.join(root, 'js/data/indexeddb/commands/exercise-management.command.js'), 'utf8');
+reporter.check('ARCH-EX-005', exerciseCommandSource.includes('EXERCISE_TYPES') && exerciseCommandSource.includes('EXERCISE_TEMPLATES'), 'Exercise management command owns the multi-store atomic boundary.');
 
 const migrationSource = fs.readFileSync(path.join(root, 'js/data/indexeddb/migrations.js'), 'utf8');
 reporter.check('MIG-SAFE-001', !/deleteObjectStore\s*\(|\.clear\s*\(/.test(migrationSource), 'Migration code neither deletes nor clears existing stores.');

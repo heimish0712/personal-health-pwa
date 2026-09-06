@@ -5,7 +5,7 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('smoke');
-const output = path.join(root, 'tests/results/v0.2.0-smoke.json');
+const output = path.join(root, 'tests/results/v0.3.0-smoke.json');
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -32,11 +32,16 @@ const requiredFiles = [
   'css/variables.css', 'css/common.css', 'css/layout.css',
   'js/config.js', 'js/app.js', 'js/router.js', 'js/components/bottom-nav.js',
   'js/bootstrap/bootstrap.js', 'js/bootstrap/container.js',
+  'js/application/exercise-management.service.js', 'js/application/exercise-log.service.js', 'js/application/exercise-query.service.js',
+  'js/core/exercise-fields.js', 'js/core/datetime.js', 'js/components/dirty-form-guard.js',
+  'js/data/contracts/exercise-management-command.contract.js', 'js/data/indexeddb/commands/exercise-management.command.js',
+  'js/pages/exercise/exercise.router.js', 'js/pages/exercise/exercise.page.js', 'js/pages/exercise/exercise-management.page.js',
+  'js/pages/exercise/exercise-type-form.page.js', 'js/pages/exercise/exercise-log-form.page.js', 'js/pages/exercise/exercise-log-detail.page.js', 'js/pages/exercise/exercise-view.js',
   'js/data/indexeddb/database.js', 'js/data/indexeddb/schema.js',
   'icons/icon-192.png', 'icons/icon-512.png',
   'README.md', 'CHANGELOG.md', 'REQUIREMENTS.md', 'REGRESSION_TEST.md', 'RELEASE_REPORT.md',
   'docs/ARCHITECTURE.md', 'docs/DATA_MODEL.md', 'docs/MIGRATION_POLICY.md',
-  'tests/architecture-test.mjs', 'tests/schema-test.mjs',
+  'tests/architecture-test.mjs', 'tests/schema-test.mjs', 'tests/exercise-service-test.mjs',
   'tests/browser/db-test.html', 'tests/browser/db-test.js'
 ];
 
@@ -51,7 +56,7 @@ reporter.check('APP-002-SCOPE', manifest.scope === './', 'Relative GitHub Pages 
 reporter.check('APP-002-ICONS', Array.isArray(manifest.icons) && manifest.icons.length >= 2, '192/512 icons are defined.');
 
 const config = read('js/config.js');
-reporter.check('VERSION-001', config.includes("APP_VERSION: '0.2.0'"), 'App version is v0.2.0.');
+reporter.check('VERSION-001', config.includes("APP_VERSION: '0.3.0'"), 'App version is v0.3.0.');
 reporter.check('DB-CONFIG-001', config.includes('DB_VERSION: 1'), 'DB version is 1.');
 reporter.check('SCHEMA-CONFIG-001', config.includes('SCHEMA_VERSION: 1'), 'Schema version is 1.');
 reporter.check('SEED-CONFIG-001', config.includes('SEED_VERSION: 1'), 'Seed version is 1.');
@@ -80,6 +85,11 @@ const app = read('js/app.js');
 reporter.check('UPD-002', app.includes("waitingWorker.postMessage({ type: 'SKIP_WAITING' })"), 'Skip waiting is requested only by update action.');
 const errors = read('js/core/errors.js');
 reporter.check('ERROR-001', errors.includes('기존 데이터는 삭제되지 않았습니다.'), 'Public failure message preserves data semantics.');
+
+const errorsSource = read('js/core/errors.js');
+reporter.check('ERROR-004', errorsSource.includes('getActionErrorMessage') && errorsSource.includes('REVISION_CONFLICT'), 'CRUD conflicts are mapped to safe public operation messages.');
+reporter.check('EX-UI-001', app.includes('renderExerciseRoute'), 'Exercise route is delegated to the exercise page module.');
+reporter.check('EX-UI-002', sw.includes("'./js/pages/exercise/exercise.router.js'"), 'Exercise route modules are part of the offline App Shell.');
 reporter.check('DIAG-001', app.includes('저장소 다시 진단'), 'Read-only DB diagnostic action exists.');
 reporter.check('NAV-004', app.includes("navigate('/settings')"), 'Settings remains a header entry.');
 

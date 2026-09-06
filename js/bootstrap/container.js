@@ -4,11 +4,15 @@ import { CryptoIdGenerator } from '../core/id-generator.js';
 import { IdentityContext } from '../core/identity-context.js';
 import { BootstrapService } from '../application/bootstrap.service.js';
 import { DatabaseDiagnosticService } from '../application/database-diagnostic.service.js';
+import { ExerciseManagementService } from '../application/exercise-management.service.js';
+import { ExerciseLogService } from '../application/exercise-log.service.js';
+import { ExerciseQueryService } from '../application/exercise-query.service.js';
 import { RepositoryProvider } from '../data/repository-provider.js';
 import { IndexedDbDatabase } from '../data/indexeddb/database.js';
 import { EXPECTED_STORE_NAMES, SCHEMA_VERSION } from '../data/indexeddb/schema.js';
 import { IndexedDbUnitOfWork } from '../data/indexeddb/indexeddb-unit-of-work.js';
 import { IndexedDbBootstrapCommand } from '../data/indexeddb/commands/bootstrap.command.js';
+import { IndexedDbExerciseManagementCommand } from '../data/indexeddb/commands/exercise-management.command.js';
 import { ProfileRepository } from '../data/indexeddb/repositories/profile.repository.js';
 import { ExerciseTypeRepository } from '../data/indexeddb/repositories/exercise-type.repository.js';
 import { ExerciseTemplateRepository } from '../data/indexeddb/repositories/exercise-template.repository.js';
@@ -74,6 +78,34 @@ export function createContainer({
     faultInjector
   });
   const bootstrapService = new BootstrapService({ bootstrapCommand, identityContext });
+  const exerciseManagementCommand = new IndexedDbExerciseManagementCommand({
+    unitOfWork,
+    identityContext,
+    clock,
+    idGenerator,
+    faultInjector
+  });
+  const exerciseManagementService = new ExerciseManagementService({
+    exerciseTypeRepository: repositories.exerciseType,
+    exerciseTemplateRepository: repositories.exerciseTemplate,
+    exerciseManagementCommand,
+    idGenerator
+  });
+  const exerciseLogService = new ExerciseLogService({
+    exerciseTypeRepository: repositories.exerciseType,
+    exerciseTemplateRepository: repositories.exerciseTemplate,
+    exerciseLogRepository: repositories.exerciseLog,
+    profileRepository: repositories.profile,
+    identityContext
+  });
+  const exerciseQueryService = new ExerciseQueryService({
+    exerciseTypeRepository: repositories.exerciseType,
+    exerciseTemplateRepository: repositories.exerciseTemplate,
+    exerciseLogRepository: repositories.exerciseLog,
+    profileRepository: repositories.profile,
+    identityContext,
+    clock
+  });
   const databaseDiagnosticService = new DatabaseDiagnosticService({
     database,
     identityContext,
@@ -94,7 +126,11 @@ export function createContainer({
     repositories: repositoryProvider.all(),
     repositoryProvider,
     bootstrapCommand,
+    exerciseManagementCommand,
     bootstrapService,
-    databaseDiagnosticService
+    databaseDiagnosticService,
+    exerciseManagementService,
+    exerciseLogService,
+    exerciseQueryService
   });
 }

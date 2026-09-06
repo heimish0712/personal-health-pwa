@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "cases": [
     {
       "id": "ARCH-003-CONTEXT",
@@ -120,6 +120,72 @@
       "id": "APP-004",
       "type": "manual-device",
       "purpose": "Offline installed-app relaunch"
+    },
+    {
+      "id": "ARCH-EX-001",
+      "type": "automated-static",
+      "purpose": "Exercise pages do not directly access repositories or IndexedDB adapters"
+    },
+    {
+      "id": "ARCH-EX-004",
+      "type": "automated-static",
+      "purpose": "Dynamic exercise form has no exercise-name branching"
+    },
+    {
+      "id": "UNIT-EX-001",
+      "type": "automated-unit",
+      "purpose": "Exercise type and template v1 are created through application boundaries"
+    },
+    {
+      "id": "UNIT-TPL-001",
+      "type": "automated-unit",
+      "purpose": "Template edit creates v2 and retains superseded v1"
+    },
+    {
+      "id": "UNIT-TPL-002",
+      "type": "automated-unit",
+      "purpose": "Custom field label change preserves internal key"
+    },
+    {
+      "id": "UNIT-TPL-003",
+      "type": "automated-unit",
+      "purpose": "Stale template ID/revision pair is rejected"
+    },
+    {
+      "id": "UNIT-LOG-002",
+      "type": "automated-unit",
+      "purpose": "Historical exercise log keeps original template"
+    },
+    {
+      "id": "UNIT-LOG-003",
+      "type": "automated-unit",
+      "purpose": "Historical log edit keeps historical template and increments revision"
+    },
+    {
+      "id": "UNIT-LOG-004",
+      "type": "automated-unit",
+      "purpose": "Stale exercise log revision is rejected"
+    },
+    {
+      "id": "UNIT-LOG-005",
+      "type": "automated-unit",
+      "purpose": "New exercise log uses current active template"
+    },
+    {
+      "id": "UNIT-TYPE-002",
+      "type": "automated-unit",
+      "purpose": "Exercise type deletion uses soft-delete"
+    },
+    {
+      "id": "UNIT-LOG-006",
+      "type": "automated-unit",
+      "purpose": "Deleted exercise log is hidden from normal read"
+    },
+    {
+      "id": "UNIT-QUERY-001",
+      "type": "automated-unit",
+      "purpose": "Weekly exercise summary is derived from source logs"
     }
-  ]
+  ],
+  "previousVersion": "0.2.0"
 }

@@ -1,78 +1,107 @@
 # Personal Health PWA
 
-운동, 식단 사진, 체중, 인바디를 기록하기 위한 개인용 로컬 우선 PWA입니다.
+운동, 식단 사진, 체중, 인바디를 기록하기 위한 개인용 **local-first PWA**입니다.
 
 ## 현재 버전
 
-- App: v0.2.0
-- IndexedDB: v1
-- Logical Schema: v1
-- Seed: v1
+- App: **v0.3.0**
+- IndexedDB: **v1**
+- Logical Schema: **v1**
+- Seed: **v1**
 
-## v0.2.0 목적
+v0.3.0부터 `운동` 탭을 실제로 사용할 수 있습니다. 필라테스 기본 Seed를 그대로 사용하고, 사용자가 러닝·걷기·복싱 등의 운동과 기록 양식을 직접 추가할 수 있습니다.
 
-화면 기능을 늘리기 전에 향후 Supabase 멀티유저/멀티기기 확장을 견딜 로컬 데이터 기반을 구축합니다.
+## 현재 가능한 기능
 
-- 14개 IndexedDB Object Store
-- UUID 기반 ID
-- 로컬 Profile과 `profile_id` 범위 격리
-- `created_at`, `updated_at`, `deleted_at`, `revision`
-- soft-delete / restore
-- expectedRevision 기반 충돌 차단
-- Repository Contract / IndexedDB Adapter 분리
-- Dependency Injection Container
-- 누적 Migration
-- 멱등적인 필라테스 Seed
-- Bootstrap 다중 Store transaction
-- 로컬 오류로그 최대 200건
-- 설정 화면 읽기 전용 DB 진단
-- GitHub Pages형 하위 경로, Service Worker, 완전 오프라인 런타임 자동검증
+- GitHub Pages 설치형 PWA / standalone / 오프라인 App Shell
+- 홈 / 캘린더 / 운동 / 식단 / 체중 5탭
+- Local Profile, UUID, Profile 격리, soft-delete, revision 충돌 방지
+- 운동 종류 생성·수정·활성/비활성·soft-delete/restore 기반
+- 운동별 Template v1 생성 및 변경 시 version 증가
+- 표준 필드 + 사용자 정의 필드 기반 동적 운동 입력폼
+- 운동 기록 생성·조회·수정·soft-delete
+- 운동 공통 메모
+- 과거 기록의 역사적 Template 보존
+- 운동 종류 필터 / 최근 기록 / 주간 운동 횟수·시간 계산
+- 설정 화면 DB 진단
 
-실제 운동·식단·체중 입력 화면은 아직 구현하지 않았습니다.
+아직 없는 기능은 **횟수권/예약(v0.4), 체중·인바디, 식단·사진, 캘린더 실제 연결, 백업·복원, Supabase Sync**입니다.
 
-## 로컬 우선 구조
+## Local-first 구조
 
 ```text
-UI
+UI / Page
   -> Application Service
-  -> Contract / Command Port
+  -> Repository Contract / Semantic Command Port
   -> IndexedDB Adapter
   -> IndexedDB
 ```
 
-향후 Supabase는 IndexedDB를 교체하지 않습니다. IndexedDB를 로컬 원장으로 유지하고 Sync Outbox, Sync Engine, Supabase Gateway를 추가합니다.
+여러 Store를 동시에 바꾸는 작업은 generic IndexedDB transaction을 Service에 노출하지 않고 업무 의미를 가진 Command Port로 묶습니다.
+
+예:
+
+```text
+운동 종류 + Template v1 생성
+-> ExerciseManagementCommand
+-> IndexedDB transaction
+
+Template 버전 교체
+-> 기존 active Template superseded
+-> 신규 version 생성
+-> 동일 transaction
+```
+
+향후 Supabase는 IndexedDB를 교체하지 않습니다.
+
+```text
+IndexedDB (local source)
+  -> future sync_outbox
+  -> future Sync Engine
+  -> Supabase Auth / PostgreSQL / Storage
+```
+
+UUID, `profile_id`, `created_at`, `updated_at`, `deleted_at`, `revision`을 이미 로컬 데이터 모델에 사용하므로 서버화 시 기존 화면과 업무규칙을 유지하는 것을 목표로 합니다.
+
+## 운동 Template 정책
+
+- `performed_at`, `memo`는 운동 공통 필드입니다.
+- 운동별 추가 필드는 `exercise_templates.fields`에 저장합니다.
+- 사용자 정의 필드는 UUID 기반 고정 key를 사용합니다.
+- label을 바꿔도 기존 key는 유지합니다.
+- Template 변경은 기존 행을 덮어쓰지 않고 새 version을 만듭니다.
+- 과거 운동기록은 생성 당시 `template_id`를 유지합니다.
+- Template 충돌은 `expectedTemplateId + expectedTemplateRevision`으로 검사합니다. 버전마다 revision이 1부터 시작할 수 있으므로 revision 숫자만으로 판정하지 않습니다.
 
 ## GitHub Pages 배포
 
-1. 전체 소스의 파일과 폴더를 repository 루트에 반영합니다.
-2. GitHub `Settings > Pages`에서 `Deploy from a branch`를 선택합니다.
-3. Branch `main`, Folder `/(root)`를 지정합니다.
-4. 배포된 Pages URL을 열고 설정 화면의 DB 진단을 확인합니다.
+1. 변경 ZIP을 쓸 경우 내부 파일을 repository 루트에 상대경로 그대로 덮어씁니다.
+2. 또는 full ZIP의 전체 소스를 repository 루트에 반영합니다.
+3. `main`에 commit/push합니다.
+4. `Settings > Pages > Deploy from a branch > main / (root)`를 확인합니다.
+5. 기존 설치 앱에서 업데이트 배너가 뜨면 입력 중 데이터가 없는 상태에서 업데이트합니다.
+6. 홈에서 `v0.3.0 · DB 1`을 확인합니다.
+7. 운동 탭에서 기본 필라테스와 운동 추가/기록 기능을 확인합니다.
 
-기존 v0.1.0 위에 적용할 때는 patch 또는 changed ZIP의 상대경로를 유지하여 덮어씁니다. DB v1은 최초 실행 시 자동 생성되며 v0.1.0의 Cache Storage 정리와 분리됩니다.
-
-## 갤럭시 검증
-
-1. Pages 주소를 Chrome에서 엽니다.
-2. 설치된 기존 앱이면 새 버전 배너에서 `업데이트`를 선택합니다.
-3. 홈에서 `v0.2.0 · DB 1`을 확인합니다.
-4. 설정에서 `상태 정상`, `Object Store 14 / 14`, `Current Profile 연결됨`을 확인합니다.
-5. 앱을 완전히 종료한 뒤 다시 열어 동일 Profile이 유지되는지 확인합니다.
-6. 네트워크를 끄고 재실행합니다.
+DB_VERSION은 v0.2.0과 동일한 1이므로 **DB Migration은 없습니다. 기존 Profile과 Seed를 그대로 재사용합니다.**
 
 ## 로컬 실행
 
-Windows에서는 `run-local.bat`을 실행하거나 프로젝트 루트에서 다음 명령을 사용합니다.
+Windows:
+
+```bat
+run-local.bat
+```
+
+또는:
 
 ```bat
 py -3 -m http.server 8080
 ```
 
-그 후 `http://localhost:8080/`으로 접속합니다. `file://`에서는 Service Worker가 정상 동작하지 않습니다.
+`http://localhost:8080/`으로 접속합니다. `file://`에서는 Service Worker가 정상 동작하지 않습니다.
 
 ## 자동검증
-
-Node.js와 Chrome/Edge 중 하나가 설치된 환경에서:
 
 ```bat
 run-tests.bat
@@ -84,34 +113,27 @@ run-tests.bat
 node tests/run-all-tests.mjs
 ```
 
-외부 npm 패키지 없이 다음을 검사합니다. 브라우저 자동검증까지 실행하려면 WebSocket API가 포함된 Node.js 22 이상을 권장합니다. 구버전 Node.js에서는 정적 Suite를 실행하고 브라우저 Suite를 `NOT_RUN`으로 기록합니다.
+검사 범위:
 
-- PWA 정적 구성
-- 계층 의존성
-- Schema/Index 정의
-- 실제 브라우저 IndexedDB 생성
-- Profile/Seed 멱등성
-- Profile 범위 격리
-- revision 충돌
-- soft-delete/restore
-- unique 복합 Index
-- transaction rollback
-- close/reopen 데이터 보존
-- app_logs 보존량
-- GitHub Pages 형태의 repository 하위 경로
-- Manifest 파싱, Service Worker scope, Cache Storage
-- 네트워크 차단 후 App Shell 및 DB 진단 재실행
+- PWA App Shell / 버전 / 오프라인 모듈 포함 여부
+- 계층 의존성(Page -> Service -> Contract/Command -> Adapter)
+- 14 Store / Index Schema 회귀
+- 운동 Application Service 단위검사
+- Template version / 역사적 Template 보존
+- custom field key 안정성
+- revision 충돌 / soft-delete / Profile 격리
+- 브라우저 IndexedDB 운동 회귀 시나리오(실행 가능한 환경에서)
 
-현재 릴리스 검증 결과는 `189 PASS / 0 FAIL / 5 NOT RUN`입니다. 실제 GitHub Pages 배포, 갤럭시 설치, standalone, 오프라인 재실행은 자동검증과 별도로 실기기 결과를 기록합니다.
+v0.3.0 현재 자동결과는 **180 PASS / 0 FAIL / 6 NOT RUN**입니다. 이 실행환경의 Chromium 관리정책이 로컬 URL을 차단하여 브라우저 runtime suite 1건을 `NOT_RUN`으로 남겼고, GitHub Pages/갤럭시 실기기 5건도 실제 배포 전이라 `NOT_RUN`입니다. PASS로 허위기록하지 않습니다.
 
 ## 문서
 
-- `REQUIREMENTS.md`: 고정 요구사항과 추적 ID
-- `CHANGELOG.md`: 버전별 변경 이력
-- `REGRESSION_TEST.md`: 자동/수동 회귀검증 결과
-- `RELEASE_REPORT.md`: 변경 파일 수, 영향 범위, 적용·복구 절차
-- `docs/ARCHITECTURE.md`: 계층 및 향후 동기화 경계
-- `docs/DATA_MODEL.md`: Store와 공통 메타데이터
-- `docs/MIGRATION_POLICY.md`: 데이터 보존형 Migration 원칙
-- `tests/traceability.json`: 요구사항과 테스트 연결
-- `tests/results/v0.2.0.json`: 기계 판독 가능한 실행 결과
+- `REQUIREMENTS.md` — 고정 요구사항
+- `CHANGELOG.md` — 버전별 변경이력
+- `REGRESSION_TEST.md` — 회귀검증 결과
+- `RELEASE_REPORT.md` — 영향 범위·적용·복구
+- `docs/ARCHITECTURE.md` — 계층 및 Supabase 확장 경계
+- `docs/DATA_MODEL.md` — Store와 운동 Template/Log 관계
+- `docs/MIGRATION_POLICY.md` — 데이터 보존형 Migration 원칙
+- `tests/traceability.json` — 요구사항 ↔ 테스트 ID
+- `tests/results/v0.3.0.json` — 기계 판독 실행결과

@@ -18,6 +18,25 @@ oldVersion 0 -> newVersion 1
 
 v0.1.0은 IndexedDB를 사용하지 않았으므로 이번 Migration은 14개 Store와 Index의 최초 생성이다. 구버전 DB 데이터 보존을 통과했다고 과장하지 않고, v1에서 저장한 데이터의 close/reopen 보존을 별도 검증한다.
 
+
+## v0.3.0
+
+```text
+DB_VERSION 1 -> 1
+SCHEMA_VERSION 1 -> 1
+SEED_VERSION 1 -> 1
+```
+
+운동 기능은 v0.2.0에서 이미 생성한 `exercise_types`, `exercise_templates`, `exercise_logs`와 기존 Index만 사용하므로 DB Migration을 만들지 않는다. 앱 기능 버전이 올라갔다는 이유만으로 DB Version을 증가시키지 않는다.
+
+검증 기준:
+
+- 기존 Profile ID 유지
+- 기존 필라테스 Seed/Template v1 유지
+- 14개 Store/Index 변화 없음
+- 새 Store/Index 없음
+- Service Worker 캐시 업데이트가 IndexedDB에 영향 없음
+
 ## 향후 검증
 
 v1 -> v2부터 다음 절차를 고정한다.

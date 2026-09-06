@@ -111,7 +111,32 @@
 - **ERROR-001** 내부 브라우저/DB 오류 문자열을 사용자에게 그대로 노출하지 않는다.
 - **ERROR-002** DB 초기화 실패 시 흰 화면 대신 재시도 가능한 오류 상태를 표시한다.
 - **ERROR-003** DB 오류 시 사용자 DB를 자동 초기화하지 않는다.
+- **ERROR-004** 일반 CRUD 충돌·검증 오류는 내부 DB 오류 문자열 대신 작업 맥락에 맞는 안전한 사용자 메시지로 표시한다.
 - **VERSION-001** 앱·캐시·DB·Schema·Seed 버전은 `js/config.js`에서 중앙 관리한다.
+
+
+## Exercise Core
+
+- **EX-001** 필라테스는 최초 Seed 운동으로 표시하되 코드에서 특별 분기하지 않는다.
+- **EX-002** 사용자는 Profile 범위 안에서 새로운 운동 종류를 생성할 수 있다.
+- **EX-003** 운동 종류(`exercise_types`)와 기록 양식(`exercise_templates`)을 분리한다.
+- **EX-004** 운동 기록 입력 폼은 Template 데이터 기반으로 동적으로 생성한다.
+- **EX-005** `performed_at`과 `memo`는 모든 운동 기록의 공통 고정 필드다.
+- **EX-006** 사용자 정의 필드는 number/text/textarea/boolean/select 타입을 지원한다.
+- **EX-007** 사용자 정의 필드의 내부 key는 label 변경과 독립적으로 유지한다.
+- **EX-008** Template 변경 시 기존 Template 행을 덮어쓰지 않고 새 version을 생성한다.
+- **EX-009** 과거 운동기록은 생성 당시 `template_id`를 계속 참조한다.
+- **EX-010** 과거 기록 수정 시 최신 Template으로 자동 변환하지 않는다.
+- **EX-011** 운동 종류와 운동 기록의 삭제는 공통 soft-delete 정책을 따른다.
+- **EX-012** 운동 종류 생성 + Template v1 생성은 하나의 semantic Command transaction으로 처리한다.
+- **EX-013** Template 교체는 기존 active Template supersede + 신규 Template 생성이 하나의 transaction이어야 한다.
+- **EX-014** Template 변경의 낙관적 충돌검사는 `expectedTemplateId + expectedTemplateRevision`을 함께 검증한다.
+- **EX-015** 운동 기록 수정·삭제·복원은 기존 `expectedRevision` 규칙을 유지한다.
+- **EX-016** 비활성 또는 soft-delete된 운동에는 신규 기록을 생성하지 않는다.
+- **EX-017** 운동 주간 요약은 원본 `exercise_logs`에서 계산하고 별도 카운터로 저장하지 않는다.
+- **EX-018** 운동 화면과 동적 폼은 `필라테스`, `러닝` 등 특정 운동 이름에 의존한 조건 분기를 두지 않는다.
+- **EX-019** 날짜/시간 UI는 Profile timezone 기준으로 입력하고 DB에는 UTC ISO 시각으로 저장한다.
+- **EX-020** 운동 입력 중 변경사항이 있으면 라우트 이동·앱 업데이트 전에 이탈을 확인한다.
 
 ## Test / Release Discipline
 

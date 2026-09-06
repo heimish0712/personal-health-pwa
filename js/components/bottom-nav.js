@@ -8,9 +8,9 @@ const ITEMS = [
 
 export function renderBottomNav(container, currentRoute) {
   container.innerHTML = ITEMS.map((item) => `
-    <a class="nav-item ${currentRoute === item.route ? 'active' : ''}"
+    <a class="nav-item ${(currentRoute === item.route || currentRoute.startsWith(`${item.route}/`)) ? 'active' : ''}"
        href="#${item.route}"
-       ${currentRoute === item.route ? 'aria-current="page"' : ''}>
+       ${(currentRoute === item.route || currentRoute.startsWith(`${item.route}/`)) ? 'aria-current="page"' : ''}>
       <span class="nav-icon" aria-hidden="true">${item.icon}</span>
       <span>${item.label}</span>
     </a>
