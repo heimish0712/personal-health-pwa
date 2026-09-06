@@ -1,0 +1,18 @@
+{
+  "version": "0.3.0",
+  "suite": "browser-runtime",
+  "executedAt": "2026-09-04T16:13:45.997Z",
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 0,
+    "notRun": 1
+  },
+  "cases": [
+    {
+      "id": "BROWSER-POLICY",
+      "status": "NOT_RUN",
+      "evidence": "The installed browser blocked the local test URL by administrative policy."
+    }
+  ]
+}

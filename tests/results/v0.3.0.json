@@ -1,0 +1,1180 @@
+{
+  "version": "0.3.0",
+  "previousVersion": "0.2.0",
+  "executedAt": "2026-09-04T16:13:48.005Z",
+  "environments": {
+    "node": "v22.16.0",
+    "browser": "not available"
+  },
+  "summary": {
+    "total": 186,
+    "passed": 180,
+    "failed": 0,
+    "notRun": 6
+  },
+  "suites": [
+    {
+      "suite": "smoke",
+      "summary": {
+        "total": 72,
+        "passed": 72,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "architecture",
+      "summary": {
+        "total": 29,
+        "passed": 29,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "schema",
+      "summary": {
+        "total": 60,
+        "passed": 60,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "exercise-service",
+      "summary": {
+        "total": 19,
+        "passed": 19,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "browser-runtime",
+      "summary": {
+        "total": 1,
+        "passed": 0,
+        "failed": 0,
+        "notRun": 1
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "FILE:index.html",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:manifest.json",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:service-worker.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:css/variables.css",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:css/common.css",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:css/layout.css",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/config.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/app.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/router.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/components/bottom-nav.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/bootstrap/bootstrap.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/bootstrap/container.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/application/exercise-management.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/application/exercise-log.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/application/exercise-query.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/core/exercise-fields.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/core/datetime.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/components/dirty-form-guard.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/contracts/exercise-management-command.contract.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/indexeddb/commands/exercise-management.command.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise.router.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-management.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-type-form.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-log-form.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-log-detail.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-view.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/indexeddb/database.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/indexeddb/schema.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:icons/icon-192.png",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:icons/icon-512.png",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:README.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:CHANGELOG.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:REQUIREMENTS.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:REGRESSION_TEST.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:RELEASE_REPORT.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:docs/ARCHITECTURE.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:docs/DATA_MODEL.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:docs/MIGRATION_POLICY.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/architecture-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/schema-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/exercise-service-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/browser/db-test.html",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/browser/db-test.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002",
+      "status": "PASS",
+      "evidence": "manifest display=standalone",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002-START",
+      "status": "PASS",
+      "evidence": "Relative GitHub Pages start_url.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002-SCOPE",
+      "status": "PASS",
+      "evidence": "Relative GitHub Pages scope.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002-ICONS",
+      "status": "PASS",
+      "evidence": "192/512 icons are defined.",
+      "suite": "smoke"
+    },
+    {
+      "id": "VERSION-001",
+      "status": "PASS",
+      "evidence": "App version is v0.3.0.",
+      "suite": "smoke"
+    },
+    {
+      "id": "DB-CONFIG-001",
+      "status": "PASS",
+      "evidence": "DB version is 1.",
+      "suite": "smoke"
+    },
+    {
+      "id": "SCHEMA-CONFIG-001",
+      "status": "PASS",
+      "evidence": "Schema version is 1.",
+      "suite": "smoke"
+    },
+    {
+      "id": "SEED-CONFIG-001",
+      "status": "PASS",
+      "evidence": "Seed version is 1.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:홈",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:캘린더",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:운동",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:식단",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:체중",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-004",
+      "status": "PASS",
+      "evidence": "App Shell is cached.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-001",
+      "status": "PASS",
+      "evidence": "Only this app's old caches are removed.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-002",
+      "status": "PASS",
+      "evidence": "Cache lifecycle does not delete IndexedDB.",
+      "suite": "smoke"
+    },
+    {
+      "id": "UPD-001",
+      "status": "PASS",
+      "evidence": "Update remains user-triggered.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-ASSET-001",
+      "status": "PASS",
+      "evidence": "New application modules are in App Shell.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-ASSET-002",
+      "status": "PASS",
+      "evidence": "All application modules are cached: no missing modules",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-ASSET-003",
+      "status": "PASS",
+      "evidence": "Test files are excluded from the production App Shell.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-REVALIDATE-001",
+      "status": "PASS",
+      "evidence": "A new Service Worker revalidates App Shell files while installing.",
+      "suite": "smoke"
+    },
+    {
+      "id": "UPD-002",
+      "status": "PASS",
+      "evidence": "Skip waiting is requested only by update action.",
+      "suite": "smoke"
+    },
+    {
+      "id": "ERROR-001",
+      "status": "PASS",
+      "evidence": "Public failure message preserves data semantics.",
+      "suite": "smoke"
+    },
+    {
+      "id": "ERROR-004",
+      "status": "PASS",
+      "evidence": "CRUD conflicts are mapped to safe public operation messages.",
+      "suite": "smoke"
+    },
+    {
+      "id": "EX-UI-001",
+      "status": "PASS",
+      "evidence": "Exercise route is delegated to the exercise page module.",
+      "suite": "smoke"
+    },
+    {
+      "id": "EX-UI-002",
+      "status": "PASS",
+      "evidence": "Exercise route modules are part of the offline App Shell.",
+      "suite": "smoke"
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only DB diagnostic action exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV-004",
+      "status": "PASS",
+      "evidence": "Settings remains a header entry.",
+      "suite": "smoke"
+    },
+    {
+      "id": "ARCH-001",
+      "status": "PASS",
+      "evidence": "Direct IndexedDB API outside adapter: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-002",
+      "status": "PASS",
+      "evidence": "Application service adapter imports: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-003",
+      "status": "PASS",
+      "evidence": "UI entry imports neither repositories nor IndexedDB adapters.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-003-CONTEXT",
+      "status": "PASS",
+      "evidence": "UI receives a narrow application context instead of the concrete container.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-004",
+      "status": "PASS",
+      "evidence": "Container binds concrete adapters to application services.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-004-ID",
+      "status": "PASS",
+      "evidence": "IdentityContext is injected through the container.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-004-LOGGER",
+      "status": "PASS",
+      "evidence": "A logger can be injected and reused across bootstrap retries.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:getById",
+      "status": "PASS",
+      "evidence": "getById is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:getByIdIncludingDeleted",
+      "status": "PASS",
+      "evidence": "getByIdIncludingDeleted is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:list",
+      "status": "PASS",
+      "evidence": "list is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:count",
+      "status": "PASS",
+      "evidence": "count is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:create",
+      "status": "PASS",
+      "evidence": "create is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:update",
+      "status": "PASS",
+      "evidence": "update is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:softDelete",
+      "status": "PASS",
+      "evidence": "softDelete is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:restore",
+      "status": "PASS",
+      "evidence": "restore is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:hardDelete",
+      "status": "PASS",
+      "evidence": "hardDelete is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:clear",
+      "status": "PASS",
+      "evidence": "clear is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:upsert",
+      "status": "PASS",
+      "evidence": "upsert is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:put",
+      "status": "PASS",
+      "evidence": "put is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-005",
+      "status": "PASS",
+      "evidence": "Generic transaction use in application services: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-006",
+      "status": "PASS",
+      "evidence": "Page/UI code does not call repositories directly.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-007",
+      "status": "PASS",
+      "evidence": "Bootstrap does not expose the concrete container to the UI.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-008",
+      "status": "PASS",
+      "evidence": "Startup log memory survives an application bootstrap retry.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-001",
+      "status": "PASS",
+      "evidence": "Exercise pages do not access repositories/adapters directly: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-003",
+      "status": "PASS",
+      "evidence": "Exercise services have no IndexedDB adapter imports: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-004",
+      "status": "PASS",
+      "evidence": "Dynamic exercise log form has no exercise-name branching.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-005",
+      "status": "PASS",
+      "evidence": "Exercise management command owns the multi-store atomic boundary.",
+      "suite": "architecture"
+    },
+    {
+      "id": "MIG-SAFE-001",
+      "status": "PASS",
+      "evidence": "Migration code neither deletes nor clears existing stores.",
+      "suite": "architecture"
+    },
+    {
+      "id": "DATA-DEL-004",
+      "status": "PASS",
+      "evidence": "Production application code does not delete the user database.",
+      "suite": "architecture"
+    },
+    {
+      "id": "SCHEMA-001",
+      "status": "PASS",
+      "evidence": "Exactly 14 Object Stores are defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-002",
+      "status": "PASS",
+      "evidence": "Store definition count matches expected count.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-003",
+      "status": "PASS",
+      "evidence": "12 stores are classified as future sync targets.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-004",
+      "status": "PASS",
+      "evidence": "2 stores are classified as local-only.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-005",
+      "status": "PASS",
+      "evidence": "Profile keyPath is id.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-006",
+      "status": "PASS",
+      "evidence": "Device settings keyPath is key.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile_status_sort",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile_name",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:uq_profile_system_key",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_templates:by_profile_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_templates:by_profile_exercise_status",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_templates:uq_profile_exercise_version",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_performed_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_exercise_performed_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_template",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_status_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_exercise_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:uq_profile_completed_log",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:passes:by_profile_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:passes:by_profile_status",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:passes:by_profile_expiry",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_pass",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_pass_status",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_exercise_log",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:uq_profile_pass_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_logs:by_profile_eaten_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_logs:by_profile_meal_eaten_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_photos:by_profile_diet_sort",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_photos:uq_profile_storage_key",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:weight_logs:by_profile_measured_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:weight_logs:by_profile_source",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:weight_logs:uq_profile_source_ref",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:inbody_logs:by_profile_measured_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:user_settings:uq_profile_key",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:app_logs:by_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:app_logs:by_level_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:app_logs:by_event_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_types:uq_profile_system_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_templates:uq_profile_exercise_version",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_schedules:uq_profile_completed_log",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:pass_usage_logs:uq_profile_pass_exercise",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:diet_photos:uq_profile_storage_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:weight_logs:uq_profile_source_ref",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:user_settings:uq_profile_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:profiles",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_types",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_templates",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_schedules",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:passes",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:pass_usage_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:diet_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:diet_photos",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:weight_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:inbody_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:user_settings",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:device_settings",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:app_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "UNIT-EX-001",
+      "status": "PASS",
+      "evidence": "Exercise type and template v1 are created through contracts.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-EX-002",
+      "status": "PASS",
+      "evidence": "Custom field receives stable generated key.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-001",
+      "status": "PASS",
+      "evidence": "New log uses active template and normalizes numeric values.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TIME-001",
+      "status": "PASS",
+      "evidence": "Asia/Seoul datetime conversion is deterministic.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TPL-001",
+      "status": "PASS",
+      "evidence": "Template change creates v2 and supersedes v1.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TPL-002",
+      "status": "PASS",
+      "evidence": "Custom field label change preserves key.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TPL-003",
+      "status": "PASS",
+      "evidence": "Stale template ID/revision pair is rejected.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-002",
+      "status": "PASS",
+      "evidence": "Historical log keeps template v1.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-003",
+      "status": "PASS",
+      "evidence": "Historical log update keeps original template ID and increments revision.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-004",
+      "status": "PASS",
+      "evidence": "Stale log revision is rejected.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-005",
+      "status": "PASS",
+      "evidence": "New log uses latest active template.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-VAL-001",
+      "status": "PASS",
+      "evidence": "Invalid number is rejected.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TYPE-001",
+      "status": "PASS",
+      "evidence": "Exercise type can be deactivated.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-VAL-002",
+      "status": "PASS",
+      "evidence": "Inactive exercise rejects new logs.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TYPE-002",
+      "status": "PASS",
+      "evidence": "Exercise type soft-delete is used.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TYPE-003",
+      "status": "PASS",
+      "evidence": "Exercise type restore keeps ID.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-006",
+      "status": "PASS",
+      "evidence": "Deleted log is hidden from normal read.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-007",
+      "status": "PASS",
+      "evidence": "Deleted log can be restored.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-QUERY-001",
+      "status": "PASS",
+      "evidence": "Weekly summary is calculated from source logs, not stored counters.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "BROWSER-POLICY",
+      "status": "NOT_RUN",
+      "evidence": "The installed browser blocked the local test URL by administrative policy.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "APP-001",
+      "status": "NOT_RUN",
+      "evidence": "Deploy v0.3.0 to the user GitHub Pages repository.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-002",
+      "status": "NOT_RUN",
+      "evidence": "Verify install/update behavior on Galaxy Chrome.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-003",
+      "status": "NOT_RUN",
+      "evidence": "Verify standalone launch on the installed app.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-004",
+      "status": "NOT_RUN",
+      "evidence": "Verify offline relaunch on the deployed installed app.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "CACHE-RUNTIME-001",
+      "status": "NOT_RUN",
+      "evidence": "Verify v0.2.0 App Shell replacement by v0.3.0 on the deployed origin.",
+      "suite": "manual-deployment"
+    }
+  ]
+}
