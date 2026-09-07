@@ -7,6 +7,8 @@ export const BACKUP_STORE_NAMES = Object.freeze([
 ]);
 export const BACKUP_MAX_BYTES = 50 * 1000 * 1000;
 export const BACKUP_MESSAGES = Object.freeze({
+  BACKUP_ZIP_INVALID: 'ZIP 백업이 손상되었거나 지원하지 않는 압축 방식입니다. 앱에서 내보낸 원본 ZIP을 선택하세요.',
+  BACKUP_MEDIA_INVALID: '사진 파일이 누락·손상되었거나 사진 연결 정보가 일치하지 않습니다. 전체 복원을 거부했습니다.',
   BACKUP_DOWNLOAD_REQUIRED: '다운로드한 현재 데이터 백업 파일을 다시 선택해 확인해야 합니다. 아직 초기화하거나 교체하지 않았습니다.',
   BACKUP_MULTIPLE_PROFILES: '현재 JSON 백업은 한 Profile만 포함합니다. 여러 Profile이 있는 전체 데이터는 먼저 각각 보관해야 합니다. 초기화하거나 교체하지 않았습니다.',
   RESTORE_TARGET_CHANGED: '확인 중 현재 데이터가 변경되었습니다. 다시 미리보고 백업한 뒤 실행하세요. 기존 데이터는 유지됩니다.',

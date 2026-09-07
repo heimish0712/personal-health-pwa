@@ -5,15 +5,15 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('schema');
-const output = path.join(root, 'tests/results/v0.6.0-schema.json');
+const output = path.join(root, 'tests/results/v0.7.0-schema.json');
 
 await import(pathToFileURL(path.join(root, 'js/config.js')));
 const schema = await import(pathToFileURL(path.join(root, 'js/data/indexeddb/schema.js')));
 
-reporter.check('SCHEMA-001', schema.EXPECTED_STORE_COUNT === 14, 'Exactly 14 Object Stores are defined.');
-reporter.check('SCHEMA-002', Object.keys(schema.STORE_DEFINITIONS).length === 14, 'Store definition count matches expected count.');
+reporter.check('SCHEMA-001', schema.EXPECTED_STORE_COUNT === 15, 'Exactly 15 Object Stores are defined.');
+reporter.check('SCHEMA-002', Object.keys(schema.STORE_DEFINITIONS).length === 15, 'Store definition count matches expected count.');
 reporter.check('SCHEMA-003', schema.SYNC_STORE_NAMES.length === 12, '12 stores are classified as future sync targets.');
-reporter.check('SCHEMA-004', schema.LOCAL_ONLY_STORE_NAMES.length === 2, '2 stores are classified as local-only.');
+reporter.check('SCHEMA-004', schema.LOCAL_ONLY_STORE_NAMES.length === 3, '3 stores are classified as local-only.');
 reporter.check('SCHEMA-005', schema.STORE_DEFINITIONS.profiles.keyPath === 'id', 'Profile keyPath is id.');
 reporter.check('SCHEMA-006', schema.STORE_DEFINITIONS.device_settings.keyPath === 'key', 'Device settings keyPath is key.');
 

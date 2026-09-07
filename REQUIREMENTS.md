@@ -223,3 +223,22 @@
 - **HEALTH-BACKUP** JSON Backup v1에서 모든 측정값/UUID/revision/deleted_at/source/source_ref_id/link_weight 보존. 명시적 연동 의도가 있는 데이터는 쌍의 상태·값·시간·메모를 검증한다. 필드 없는 정상 v0.4/0.5 백업 호환 유지. 일반 pristine 복원/별도 강제 replace·초기화 정책 유지.
 - **HEALTH-DB** APP0.6.0, DB1/Schema1/Seed1/Backup1, 기존 14 Store 유지. 인덱스/Store 변경 없음, Migration 없음. 기존 스키마리스 행의 선택 payload 추가만 사용.
 - **HEALTH-QA** 자동/실기기 QA 분리. 새 버전 실기기 8건과 기존 25건은 미실행이면 NOT RUN. 이전 FINAL v0.3 186/0/0과 과거 결과 파일은 보존하며 새 버전 자동 결과로 덮어쓰지 않는다.
+
+
+## v0.7.0 Diet + Media + Backup v2 — 최신 규칙
+
+- **DIET-CRUD** diet_log는 먹은 한 끼/간식 1건. eaten_at UTC ISO, meal_type=breakfast/lunch/dinner/snack/other, content/memo 문자열 최대2000자. 같은 날짜/식사구분 여러 건 허용. Profile/UUID/revision/soft-delete 유지. 날짜 입력/목록은 Profile timezone, 날짜 조회는 by_profile_eaten_at 반개방 구간.
+- **DIET-PHOTO** 한 식단 최대12장. JPEG/PNG/WebP 파일 최대25MB/50MP. 카메라 capture=environment와 갤러리 multiple, 미리보기/개별 제거 지원. 여러 장 순차 처리 전체가 성공한 경우에만 임시 목록에 반영, 저장 전 DB 쓰기 없음. 원본을 앱 DB에 보관하지 않는다.
+- **MEDIA-PROCESS** transaction 전에 createImageBitmap(imageOrientation=from-image), 방향 정상화, 긴변1280/thumbnail320, 확대 없음, WebP 품질0.82/thumbnail0.75, JPEG 재인코딩 fallback, SHA-256 생성. 상수는 APP_CONFIG.MEDIA에 중앙화. HEIC/기타형식은 명확히 거절하며 원본 저장 fallback 금지.
+- **MEDIA-SEPARATION** diet_photos는 portable metadata만. storage_key/thumbnail_storage_key/mime_type/width/height/byte_size/checksum/sort_order 및 thumbnail 크기/hash/metadata/removed_from_diet 보존. media_blobs는 storage_key keyPath, blob/byte_size/checksum/created_at만 저장. binary에 Profile/식단 relation 중복 금지. Page는 MediaService를 통해 조회하고 IndexedDB에 직접 접근하지 않는다.
+- **DIET-ATOMIC** DietCommand Contract가 diet_logs+diet_photos+media_blobs를 하나의 readwrite transaction으로 변경한다. CPU/crypto는 밖에서 완료. 기존 사진 유지+신규 사진 추가, 제거 tombstone, 순서 유지, expectedRevision/Profile 검증. 중간 failure/Quota 시 기존값/모든 row/Blob 상태 보존.
+- **MEDIA-RETENTION** 식단 삭제 시 연결 photo soft-delete, binary는 복원을 위해 보관. removed_from_diet=false로 함께 삭제한 사진만 식단 복원에서 되살리고, 먼저 개별 제거한 사진은 제외한다. 복원할 파일 누락 시 전체 복원 거부.
+- **MEDIA-GC** active 사진 미참조 목록과 어느 metadata(다른 Profile/삭제 행 포함)에서도 미참조인 orphan 목록 구분. 정리는 metadata와 binary를 함께 잠그는 transaction에서 다시 확인 후 진짜 orphan만 물리삭제. tombstone binary는 복원/완전 백업을 위해 유지하고 명시적 전체 초기화/강제 교체 때 제거한다. 사용자가 사진 삭제만 했다고 즉시 저장공간이 회수되지는 않는다.
+- **MEDIA-STORAGE** 입력 저장 전후 storage estimate 확인. 설정에는 브라우저 전체 usage/quota(확인 불가 구분), 모든 Profile 합산 사진 bytes/count, 지원 환경/영구 저장 상태, persist 요청과 orphan GC 제공. QuotaExceededError는 내부 문자열을 숨기고 기존 데이터 유지 및 사진 수/용량 축소 후 재시도를 안내한다.
+- **DIET-VIEW** 날짜 이동/식사구분/시각/내용/메모/썸네일. 목록과 입력의 기존 사진은 thumbnail, 상세만 큰 압축본. Blob URL은 화면 이동/재렌더 때 해제. Calendar Store 없이 diet_logs projection과 원본 상세 이동. Calendar 썸네일은 이번 버전에서 생략하고 식단 상세에서 확인한다.
+- **BACKUP-V2** 사진(삭제 이력 포함)이 있으면 ZIP v2 자동 export. 없으면 JSON v1 유지, Service에서 명시적 v2 export도 가능. ZIP은 이미 압축된 이미지를 다시 압축하지 않는 표준 STORE 방식; manifest.json/data.json/media/<storage_key>.webp|jpg. 자체 압축 codec/CDN 의존성 없음. ZIP64/암호화/외부 재압축 archive는 미지원. ZIP 최대250MB/10002 entries, JSON v1 최대50MB. 파일 시스템으로 압축 해제하지 않는다.
+- **BACKUP-V2-VALIDATION** format/version/Schema1, portable checksum/count/UUID/관계, ZIP CRC/header/path/중복, data.json SHA-256, media manifest 수/합계/파일 존재/중복 key/MIME/크기/SHA-256, 원본/thumbnail 참조와 active photo→active diet 관계 검증 후 쓰기. 누락/손상/extra media/불일치1개면 전체 거절. deleted photo의 binary도 필수로 포함한다.
+- **BACKUP-V2-RESTORE** 일반 pristine 제한, 별도 사용자 명시 force replace와 reset 유지. portable12+media_blobs+device_settings(current_profile_id) 14 Store transaction. 기존 device_id/기타device_settings/app_logs 유지. UUID/revision/created/updated/deleted/storage_key/checksum 그대로 저장. commit 후 실제 Blob hash와 canonical portable hash 재검증. 백업 후 초기화는 실제 다운로드 파일을 재선택해 portable hash와 media manifest가 모두 일치해야 허용한다.
+- **BACKUP-V1-COMPAT** 기존 정상 JSON v1 계속 검증/복원한다. Portable Schema는1로 유지하므로 UUID/revision을 바꾸는 데이터 변환이 필요 없다. 기존 v1이 원래 지원하지 않던 사진 metadata-only 백업은 계속 거절한다. v1 파일의 빈 새 media store를 포함한 DB2 복원 허용.
+- **DIET-MIGRATION** DB1→2 누적 Migration은 media_blobs만 추가. 기존14 Store/Index/행/Profile/Seed를 삭제·clear·재생성하지 않는다. 새 설치는 v1 생성 후 v2 추가. Portable Schema1/Seed1 유지. Migration 실패는 upgrade transaction abort, DB 자동 삭제 없음. 이전 버전 앱 파일만 다시 배포하여 DB2를 DB1로 downgrade하지 않는다.
+- **DIET-QA** v0.6 원본 데이터(Template v1/v2, 로그, 이용권/usage, 예약, 인바디 연동, tombstone) upgrade 전후100% 비교. 실패 upgrade도 보존. 이미지/수정/삭제/복원/Quota/restore/force rollback, offline UI, 실제 ZIP 다운로드와 별도 Chrome Profile 복원 검증. 사용자 카메라·갤러리·PC→폰·Pages/Galaxy는 별도8건 NOT RUN.

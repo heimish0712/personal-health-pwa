@@ -1,10 +1,11 @@
+import { validateMedia } from '../../../core/backup/backup-media.js';
 import { createProfileEntity, createScopedEntity } from '../../../core/entity-metadata.js';
 import { BackupRestoreCommandContract } from '../../contracts/backup-restore-command.contract.js';
 import { BACKUP_STORE_NAMES, backupError } from '../../../core/backup/backup-format.js';
 import { validateBackupRows } from '../../../core/backup/backup-validator.js';
 import { requestToPromise } from '../idb-request.js';
 
-const RESTORE_STORES = Object.freeze([...BACKUP_STORE_NAMES, 'device_settings']);
+const RESTORE_STORES = Object.freeze([...BACKUP_STORE_NAMES, 'media_blobs', 'device_settings']);
 
 export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract {
   constructor({ unitOfWork, inspector, clock, idGenerator, faultInjector = null }) {
@@ -20,7 +21,8 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
   async restore({ document, expectedFingerprint, mode = 'pristine' }) {
     if (!['pristine', 'replace'].includes(mode)) throw backupError('RESTORE_PREVIEW_EXPIRED');
     validateBackupRows(document);
-    if (document.data.diet_photos.length) throw backupError('BACKUP_MEDIA_UNSUPPORTED');
+    if (document.backupVersion === 2) await validateMedia(document, document._media);
+    else if (document.data.diet_photos.length) throw backupError('BACKUP_MEDIA_UNSUPPORTED');
     try {
       await this.unitOfWork.run(RESTORE_STORES, 'readwrite', async ({ store }) => {
         const target = await this.inspector.inspect(store);
@@ -42,6 +44,8 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
           }
           this.checkpoint(`restore-after:${name}`);
         }
+        for (const row of document._media ?? []) { await requestToPromise(store('media_blobs').add(row)); this.checkpoint('restore-media-row'); }
+        this.checkpoint('restore-after-media');
         const deviceStore = store('device_settings');
         const pointer = await requestToPromise(deviceStore.get('current_profile_id'));
         await requestToPromise(deviceStore.put({ ...pointer, key: 'current_profile_id', value: document.scope.profileId, created_at: pointer?.created_at ?? this.clock.nowIso(), updated_at: this.clock.nowIso() }));
@@ -55,7 +59,7 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
   }
   // Explicit reset/replace exception: ordinary CRUD repositories never expose clear.
   async clearPortable(store) {
-    for (const name of BACKUP_STORE_NAMES) {
+    for (const name of [...BACKUP_STORE_NAMES, 'media_blobs']) {
       await requestToPromise(store(name).clear());
       this.checkpoint(`replace-cleared:${name}`);
     }

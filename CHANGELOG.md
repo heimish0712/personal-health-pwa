@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.7.0 - 2026-09-07
+
+- 식단 탭에 날짜별 목록, 식사 구분/내용/메모, CRUD와 삭제/복원, 같은 식사구분 여러 기록 추가.
+- 카메라/갤러리 다중 사진 입력, JPEG/PNG/WebP decode 및 EXIF 방향 정상화, 1280px 압축본/320px 썸네일 생성. WebP 우선, 미지원 시 재인코딩 JPEG fallback. 원본 저장 없음.
+- portable diet_photos와 storage_key 기반 local media_blobs 분리, MediaStorage Contract 제공. 목록은 thumbnail, 상세는 압축본만 조회.
+- DietCommand가 diet_logs+diet_photos+media_blobs를 원자적으로 저장. 변경 시 기존/신규 사진 혼합과 순서 유지, stale/Profile/Quota 실패 시 rollback.
+- 식단 삭제 시 사진 tombstone과 binary를 복원용으로 보존. 개별 제거 사진은 식단 복원에서 제외. 모든 metadata에서도 미참조인 orphan만 안전하게 GC.
+- 설정의 전체/사진 사용량, 브라우저 한도, 영구 저장 요청, 고아 파일 정리 기능 추가.
+- 사진 포함 ZIP Backup v2: manifest.json/data.json/media, JSON SHA-256/CRC32/파일 존재/크기/checksum/참조/count 검증. 손상된 사진 1개도 전체 복원 거부.
+- JSON v1 import 및 사진 없는 v1 export 호환 유지. 사진이 있으면 자동 v2 ZIP. pristine/명시적 강제 교체/초기화는 portable+media+pointer transaction, device identity 유지.
+- 기존 monthly Calendar에 식단 원본 projection과 상세 이동 추가. Profile+eaten_at / Profile+diet+sort index 재사용.
+- APP/cache0.7.0 / DB2 / Portable Schema1 / Seed1 / Backup v2(v1 호환). 누적 Migration은 media_blobs만 추가하며 기존 14 Store와 행을 변경하지 않음.
+- 상세 회귀와 실제 Pages/Galaxy NOT RUN은 REGRESSION_TEST.md와 MANUAL_QA.md 참조.
+
 ## v0.6.0 - 2026-09-07
 
 - 체중 탭: 일반 체중/인바디 생성·조회·수정·soft-delete·복원, 메모, 같은 날 여러 측정 지원.

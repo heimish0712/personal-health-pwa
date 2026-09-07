@@ -1,3 +1,7 @@
+import { IndexedDbDietCommand } from '../data/indexeddb/commands/diet.command.js';
+import { IndexedDbMediaStorage } from '../data/indexeddb/media-storage.js';
+import { MediaService } from '../application/media.service.js';
+import { DietService } from '../application/diet.service.js';
 import { HealthService } from '../application/health.service.js';
 import { IndexedDbInbodyCommand } from '../data/indexeddb/commands/inbody.command.js';
 import { IndexedDbActivityCommand } from '../data/indexeddb/commands/activity.command.js';
@@ -80,6 +84,10 @@ export function createContainer({
     appLog: new AppLogRepository({ database, clock, idGenerator })
   };
 
+  const mediaStorage = new IndexedDbMediaStorage({ database });
+  const mediaService = new MediaService({ storage: mediaStorage, photoRepository: repositories.dietPhoto, idGenerator, clock });
+  const dietCommand = new IndexedDbDietCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
+  const dietService = new DietService({ repositories, command: dietCommand, media: mediaService, identityContext });
   const repositoryProvider = new RepositoryProvider(repositories);
   const backupSnapshotReader = new IndexedDbBackupSnapshotReader({ unitOfWork, identityContext });
   const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(), clock, idGenerator, faultInjector });
@@ -155,6 +163,10 @@ export function createContainer({
     activityCommand,
     inbodyCommand,
     healthService,
+    mediaStorage,
+    mediaService,
+    dietCommand,
+    dietService,
     passScheduleService,
     exerciseQueryService,
     backupSnapshotReader,

@@ -183,3 +183,14 @@ weight_logs: measured_at UTC ISO, weight 양수, memo 문자열, source=manual|i
 inbody_logs: measured_at, memo, link_weight(boolean 선택 의도), weight/skeletal_muscle_mass/body_fat_mass/body_fat_percentage/bmi/visceral_fat_level/basal_metabolic_rate(number|null). 구버전 link_weight 누락 행은 기존 관계로 추론하고 다음 Command 저장 시 명시한다. 필드 추가는 기존 자유형 payload 안에서 수행하며 Store/Index/Schema 버전 변경이 아니다.
 
 두 엔티티의 UUID/profile_id/created_at은 불변, 변경마다 revision+1. 연동 ON 쌍은 측정시각/체중/메모가 일치한다. 삭제 상태에서 ON 의도는 보존하여 함께 복원한다. OFF 의도는 원본만 복원한다. 그래프 및 Calendar는 원본 조회 projection이며 별도 저장하지 않는다.
+
+
+## v0.7.0 local media (DB2 / Portable Schema1)
+
+diet_logs: eaten_at, meal_type, content, memo + 기존 UUID/Profile/revision/tombstone. 기존 by_profile_eaten_at 사용.
+
+diet_photos: 기존 metadata 엔티티 유지. storage_key/thumbnail_storage_key(각 UUID+webp|jpg), mime_type, width/height/byte_size/checksum, thumbnail_width/height/byte_size/checksum, sort_order, metadata.processing_version, removed_from_diet. 기존 by_profile_diet_sort/uq_profile_storage_key 사용. Blob 및 원본 사진은 포함하지 않는다.
+
+media_blobs: keyPath=storage_key, blob/byte_size/checksum/created_at. Profile/식단 relation은 저장하지 않는다. 총15 Store: portable12 + local device_settings/app_logs/media_blobs3. 사진 소유권은 MediaService가 scoped diet_photos 조회로 검증한다.
+
+삭제 정책: 개별 제거는 removed_from_diet=true와 photo tombstone. 식단 삭제는 활성 photo만 removed_from_diet=false로 함께 tombstone. 복원은 false인 사진만 binary 존재를 확인해 복귀. tombstone참조binary도 ZIP에 포함. GC의 orphan은 활성 참조 부재만이 아니라 **모든 metadata참조 부재**인 파일이며, 정리 transaction에서 모든Profile/삭제사진을 재확인한다.

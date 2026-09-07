@@ -1,3 +1,4 @@
+import { MEAL_TYPES } from '../media-rules.js';
 import { HEALTH_METRICS } from '../health-rules.js';
 import { isUuid } from '../id-generator.js';
 import { canonicalJson } from './canonical-json.js';
@@ -122,7 +123,13 @@ export function validateBackupRows(document) {
       activeUsageIds.add(log.id);
     }
   }
-  for (const row of data.diet_logs) assert(isUtcIso(row.eaten_at) && text(row.meal_type));
+  for (const row of data.diet_logs) {
+    assert(isUtcIso(row.eaten_at) && text(row.meal_type));
+    if (document.backupVersion === 2) {
+      assert(Object.hasOwn(MEAL_TYPES, row.meal_type));
+      for (const key of ['content','memo']) assert(row[key] == null || (text(row[key]) && row[key].length <= 2000));
+    }
+  }
   for (const row of data.diet_photos) ref('diet_logs', row.diet_log_id);
   for (const row of data.weight_logs) {
     assert(isUtcIso(row.measured_at) && finite(row.weight) && row.weight > 0 && text(row.source));
@@ -162,7 +169,7 @@ export function validateBackupRows(document) {
 export class BackupValidator {
   async validate(document) {
     assert(object(document) && document.format === BACKUP_FORMAT, 'BACKUP_FORMAT_INVALID');
-    assert(document.backupVersion === 1, 'BACKUP_VERSION_UNSUPPORTED');
+    assert([1, 2].includes(document.backupVersion), 'BACKUP_VERSION_UNSUPPORTED');
     assert(object(document.source) && document.source.schemaVersion === 1, 'BACKUP_SCHEMA_UNSUPPORTED');
     assert(text(document.source.appVersion) && positive(document.source.dbVersion) && positive(document.source.seedVersion));
     assert(isUtcIso(document.exportedAt));
@@ -177,7 +184,7 @@ export class BackupValidator {
     assert(document.integrity?.algorithm === 'SHA-256' && /^[a-f0-9]{64}$/.test(document.integrity?.payloadHash ?? ''), 'BACKUP_CHECKSUM_MISMATCH');
     assert(await payloadHash(document) === document.integrity.payloadHash, 'BACKUP_CHECKSUM_MISMATCH');
     validateBackupRows(document);
-    assert(document.data.diet_photos.length === 0, 'BACKUP_MEDIA_UNSUPPORTED');
+    if (document.backupVersion === 1) assert(document.data.diet_photos.length === 0, 'BACKUP_MEDIA_UNSUPPORTED');
     return document;
   }
 }

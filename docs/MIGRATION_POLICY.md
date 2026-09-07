@@ -69,3 +69,8 @@ v0.5 데이터가 생긴 뒤 v0.4에서 운동을 수정/삭제하면 원장을 
 ## v0.5.1 사용자 QA에 따른 명시적 확장
 
 일반 pristine 복원 경로를 유지하면서 별도 replace restore와 전체 초기화를 지원한다. portable Store 삭제/삽입과 current_profile_id 전환은 전용 BackupRestore Command transaction 한 번으로 수행한다. 일반 CRUD나 DB Migration에 clear를 추가하지 않으며 device_id 등 기기 데이터는 유지한다. 백업 후 실행은 저장된 파일 재검증, 대상 fingerprint 재확인 후에만 진행한다. DB1/Schema1/Seed1/Backup1 유지, Migration 없음. 자세한 구현은 [QA_V051_DESIGN.md](QA_V051_DESIGN.md)를 따른다.
+
+
+## DB2: media_blobs만 추가
+
+oldVersion<1이면 원래14Store를 생성하고, oldVersion<2이면 media_blobs(storage_key)를 추가한다. 기존 Store/Index 삭제·재생성/clear/사용자row수정 없음. 실패는 versionchange abort이며 DB자동삭제 금지. 실제 DB1 fixture의 portable JSON/UUID/revision/relation/tombstone/device_id를 전후 비교하고 실패후DB1재개도 검증한다. DB2를 연 뒤 v0.6(DB1전용) 앱 파일만 되돌리는 downgrade는 지원하지 않는다. 복구는 원본을 유지하고 업데이트전JSON을 별도환경에서 확인하는 경로를 따른다.

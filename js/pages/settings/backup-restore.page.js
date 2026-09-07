@@ -12,9 +12,9 @@ export function mountBackupSettings(root, { services, showToast, isCurrent, relo
   section.className = 'card';
   section.id = 'backup-settings';
   section.innerHTML = `<h2>데이터 백업</h2>
-    <p>현재 Profile의 기록을 JSON v1 파일로 보관합니다. 현재 버전은 사진 파일을 지원하지 않습니다. 백업 파일은 암호화되지 않습니다.</p>
+    <p>현재 Profile의 사진이 있으면 ZIP v2, 사진이 없으면 JSON v1으로 보관합니다. 기존 JSON v1과 사진 포함 ZIP v2를 복원할 수 있습니다. 백업 파일은 암호화되지 않습니다.</p>
     <div class="form-actions backup-actions"><button id="backup-export" class="button" type="button">백업 내보내기</button><button id="backup-select" class="button button-secondary" type="button">백업 복원</button></div>
-    <input id="backup-file" type="file" accept=".json,application/json" hidden aria-label="백업 JSON 파일 선택">
+    <input id="backup-file" type="file" accept=".json,.zip,application/json,application/zip" hidden aria-label="백업 JSON 또는 ZIP 파일 선택">
     <p id="backup-status" class="section-description" role="status" aria-live="polite"></p>
     <div id="backup-preview"></div><hr><h3>데이터 초기화</h3><p>모든 Profile의 기록을 지우고 기본 Profile과 운동으로 돌아갑니다. 기기 정보는 유지합니다.</p><button id="data-reset" class="button button-danger" type="button">전체 데이터 초기화</button><div id="data-operation"></div>`;
   root.append(section);
@@ -74,7 +74,7 @@ export function mountBackupSettings(root, { services, showToast, isCurrent, relo
     });
   }
   function download(result) {
-    const url = URL.createObjectURL(new Blob([result.content], { type: 'application/json;charset=utf-8' }));
+    const url = URL.createObjectURL(result.blob ?? new Blob([result.content], { type: 'application/json;charset=utf-8' }));
     try {
       const link = document.createElement('a'); link.href = url; link.download = result.filename;
       section.append(link); link.click(); link.remove();
@@ -103,7 +103,7 @@ export function mountBackupSettings(root, { services, showToast, isCurrent, relo
   function startReplacement(kind) {
     if (busy || pending) return;
     pending = { kind };
-    operationRoot.innerHTML = `<div class="form-section" role="region" aria-label="데이터 교체 확인"><h3>${kind === 'reset' ? '초기화 전에 현재 데이터를 백업하시겠습니까?' : '현재 기록이 모두 백업 파일의 내용으로 교체됩니다.'}</h3><p>모든 Profile의 기록·이용권·예약·삭제 이력을 ${kind === 'reset' ? '삭제하고 기본 상태로 초기화합니다.' : '교체합니다. 병합하지 않습니다.'}</p><div class="form-stack"><button id="data-backup-first" class="button" type="button">${kind === 'reset' ? '예 · 백업 후 초기화' : '현재 데이터를 먼저 백업하고 강제 복원'}</button><button id="data-without-backup" class="button button-danger" type="button">${kind === 'reset' ? '아니오 · 백업 없이 초기화' : '백업 없이 강제 복원'}</button><button id="data-cancel" class="button button-secondary" type="button">취소</button></div></div>`;
+    operationRoot.innerHTML = `<div class="form-section" role="region" aria-label="데이터 교체 확인"><h3>${kind === 'reset' ? '초기화 전에 현재 데이터를 백업하시겠습니까?' : '현재 기록이 모두 백업 파일의 내용으로 교체됩니다.'}</h3><p>모든 Profile의 기록·사진·이용권·예약·삭제 이력을 ${kind === 'reset' ? '삭제하고 기본 상태로 초기화합니다.' : '교체합니다. 병합하지 않습니다.'}</p><div class="form-stack"><button id="data-backup-first" class="button" type="button">${kind === 'reset' ? '예 · 백업 후 초기화' : '현재 데이터를 먼저 백업하고 강제 복원'}</button><button id="data-without-backup" class="button button-danger" type="button">${kind === 'reset' ? '아니오 · 백업 없이 초기화' : '백업 없이 강제 복원'}</button><button id="data-cancel" class="button button-secondary" type="button">취소</button></div></div>`;
     section.querySelector('#data-cancel').addEventListener('click', cancelReplacement);
     const prepare = async (backupFirst) => {
       if (busy) return;
@@ -115,7 +115,7 @@ export function mountBackupSettings(root, { services, showToast, isCurrent, relo
         if (!backupFirst) { await executeReplacement(); return; }
         download(prepared.backup);
         status.textContent = '백업을 생성했습니다. 다운로드한 파일을 보관한 뒤 아래에서 다시 선택하세요. 파일 확인 전에는 데이터를 변경하지 않습니다.';
-        operationRoot.innerHTML = '<div class="form-section"><h3>다운로드한 백업 확인</h3><p>방금 내려받은 JSON을 선택하면 무결성과 현재 데이터 일치를 검증한 후 요청한 초기화/강제 복원을 실행합니다.</p><label for="replacement-file">저장된 백업 파일 확인 후 실행</label><input id="replacement-file" type="file" accept=".json,application/json"><button id="data-cancel" class="button button-secondary" type="button">취소</button></div>';
+        operationRoot.innerHTML = '<div class="form-section"><h3>다운로드한 백업 확인</h3><p>방금 내려받은 JSON 또는 ZIP을 선택하면 무결성과 현재 데이터 일치를 검증한 후 요청한 초기화/강제 복원을 실행합니다.</p><label for="replacement-file">저장된 백업 파일 확인 후 실행</label><input id="replacement-file" type="file" accept=".json,.zip,application/json,application/zip"><button id="data-cancel" class="button button-secondary" type="button">취소</button></div>';
         section.querySelector('#data-cancel').addEventListener('click', cancelReplacement);
         section.querySelector('#replacement-file').addEventListener('change', async (event) => { if (!busy && event.target.files?.[0]) await executeReplacement(event.target.files[0]); });
       } catch (error) { errorMessage(error); }

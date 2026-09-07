@@ -16,7 +16,7 @@ export async function runQaFeedbackTests(test) {
   try {
     const c = await make('source');
     const type = (await c.exerciseQueryService.listActiveTypes())[0];
-    const services = { health: c.healthService, activity: c.passScheduleService, exerciseQuery: c.exerciseQueryService, exerciseLog: c.exerciseLogService };
+    const services = { diet: c.dietService, health: c.healthService, activity: c.passScheduleService, exerciseQuery: c.exerciseQueryService, exerciseLog: c.exerciseLogService };
     const context = { root, services, isCurrent: () => true, setTitle() {}, showToast() {}, showError(message, error) { throw error; }, navigate() {} };
     const today = nowLocalInput('Asia/Seoul').slice(0, 10), month = today.slice(0, 7);
     const passInput = { exercise_type_id: type.id, name: 'QA 활성 이용권', total_count: 60, start_date: '2000-01-01', expiry_date: '2099-12-31', status: 'active' };

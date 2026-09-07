@@ -698,5 +698,105 @@
     "HEALTH-MANUAL-06",
     "HEALTH-MANUAL-07",
     "HEALTH-MANUAL-08"
+  ],
+  "DIET-CRUD": [
+    "DIET-01-CRUD",
+    "DIET-02-EDIT",
+    "DIET-03-SAME-MEAL",
+    "DIET-04-STALE",
+    "DIET-16-PROFILE"
+  ],
+  "DIET-PHOTO": [
+    "DIET-05-PROCESS",
+    "DIET-07-PROCESS-FAIL",
+    "DIET-09-MIXED",
+    "DIET-UI-01-OFFLINE"
+  ],
+  "MEDIA-PROCESS": [
+    "DIET-05-PROCESS",
+    "DIET-06-CHECKSUM",
+    "DIET-22-WEBP-FALLBACK",
+    "DIET-23-ORIENTATION"
+  ],
+  "MEDIA-SEPARATION": [
+    "DIET-08-ONE-PHOTO",
+    "DIET-19-THUMBNAIL",
+    "DIET-20-DETAIL"
+  ],
+  "DIET-ATOMIC": [
+    "DIET-14-ROLLBACK-diet-after-log",
+    "DIET-14-ROLLBACK-diet-after-photo",
+    "DIET-14-ROLLBACK-diet-after-blob",
+    "DIET-14-ROLLBACK-diet-before-commit",
+    "DIET-24-save-ROLLBACK",
+    "DIET-24-delete-ROLLBACK",
+    "DIET-24-restore-ROLLBACK",
+    "DIET-15-QUOTA"
+  ],
+  "MEDIA-RETENTION": [
+    "DIET-10-REMOVE",
+    "DIET-11-DELETE",
+    "DIET-12-RESTORE"
+  ],
+  "MEDIA-GC": [
+    "DIET-13-GC",
+    "DIET-BACKUP-09-RESET"
+  ],
+  "MEDIA-STORAGE": [
+    "DIET-15-QUOTA",
+    "DIET-UI-07-ZIP-DOWNLOAD"
+  ],
+  "DIET-VIEW": [
+    "DIET-18-INDEX",
+    "DIET-19-THUMBNAIL",
+    "DIET-20-DETAIL",
+    "DIET-21-CALENDAR",
+    "DIET-UI-02-LIST",
+    "DIET-UI-06-CALENDAR"
+  ],
+  "BACKUP-V2": [
+    "DIET-BACKUP-01",
+    "DIET-BACKUP-02",
+    "DIET-BACKUP-03",
+    "DIET-UI-08-SECOND-BROWSER"
+  ],
+  "BACKUP-V2-VALIDATION": [
+    "DIET-BACKUP-04-missing",
+    "DIET-BACKUP-04-tampered",
+    "DIET-BACKUP-04-extra",
+    "DIET-BACKUP-04-json",
+    "DIET-BACKUP-04-duplicate",
+    "DIET-BACKUP-04-relation"
+  ],
+  "BACKUP-V2-RESTORE": [
+    "DIET-BACKUP-05-FORCE",
+    "DIET-BACKUP-06-restore-media-row",
+    "DIET-BACKUP-06-restore-before-commit",
+    "DIET-BACKUP-08-BACKUP-FIRST",
+    "DIET-BACKUP-09-RESET",
+    "DIET-BACKUP-10-FORCE-ROLLBACK-replace-cleared:media_blobs",
+    "DIET-BACKUP-10-FORCE-ROLLBACK-restore-after-media"
+  ],
+  "BACKUP-V1-COMPAT": [
+    "DIET-BACKUP-07-V1",
+    "BACKUP-COMPATIBILITY"
+  ],
+  "DIET-MIGRATION": [
+    "DIET-MIG-01",
+    "DIET-MIG-02",
+    "DIET-MIG-03",
+    "DIET-MIG-04"
+  ],
+  "DIET-QA": [
+    "DIET-UI-04-REOPEN",
+    "DIET-UI-08-SECOND-BROWSER",
+    "DIET-MANUAL-01",
+    "DIET-MANUAL-02",
+    "DIET-MANUAL-03",
+    "DIET-MANUAL-04",
+    "DIET-MANUAL-05",
+    "DIET-MANUAL-06",
+    "DIET-MANUAL-07",
+    "DIET-MANUAL-08"
   ]
 }

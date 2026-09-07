@@ -1,3 +1,4 @@
+import { runDietUiTests } from './diet-ui-tests.mjs';
 import { runHealthUiTests } from './health-ui-tests.mjs';
 import { runQaFeedbackUiTests } from './qa-feedback-ui-tests.mjs';
 import { runActivityUiTests } from './activity-ui-tests.mjs';
@@ -9,8 +10,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.6.0-browser.json');
-const basePath = '/personal-health-pwa-v0.6.0/';
+const outputPath = path.join(root, 'tests/results/v0.7.0-browser.json');
+const basePath = '/personal-health-pwa-v0.7.0/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -69,7 +70,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.6.0',
+    version: '0.7.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -81,7 +82,7 @@ function writeNotRun(id, evidence) {
 
 async function waitForDevToolsPort(profileDirectory, child) {
   const portFile = path.join(profileDirectory, 'DevToolsActivePort');
-  const deadline = Date.now() + 15000;
+  const deadline = Date.now() + 30000;
 
   while (Date.now() < deadline) {
     if (fs.existsSync(portFile)) {
@@ -98,7 +99,7 @@ async function waitForDevToolsPort(profileDirectory, child) {
 }
 
 async function findPageTarget(port) {
-  const deadline = Date.now() + 10000;
+  const deadline = Date.now() + 30000;
   while (Date.now() < deadline) {
     try {
       const targets = await fetch(`http://127.0.0.1:${port}/json/list`).then((response) => response.json());
@@ -374,7 +375,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.6.0 · DB 1'),
+      (value) => value?.title === '홈' && value.body.includes('v0.7.0 · DB 2'),
       30000
     );
 
@@ -453,11 +454,11 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '설정' && state.body.includes('14 / 14') && state.body.includes('연결됨'),
+        (state) => state?.title === '설정' && state.body.includes('15 / 15') && state.body.includes('연결됨'),
         15000
       );
       return value.body.includes('DB Version') && value.body.includes('Schema Version');
-    }, 'The read-only settings diagnostic reports 14/14 stores and a connected Profile.');
+    }, 'The read-only settings diagnostic reports 15/15 stores and a connected Profile.');
 
     const serviceWorkerState = await cdp.evaluate(`(async () => {
       if (!('serviceWorker' in navigator)) return { supported: false };
@@ -487,8 +488,8 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.6.0');
-    }, 'The v0.6.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.7.0');
+    }, 'The v0.7.0 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
@@ -519,7 +520,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.6.0 · DB 1'),
+        (state) => state?.title === '홈' && state.body.includes('v0.7.0 · DB 2'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -530,11 +531,11 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '설정' && state.body.includes('14 / 14'),
+        (state) => state?.title === '설정' && state.body.includes('15 / 15'),
         15000
       );
       return value.body.includes('Current Profile') && value.body.includes('연결됨');
-    }, 'The Profile and 14-store diagnostic remain available offline.');
+    }, 'The Profile and 15-store diagnostic remain available offline.');
 
     // All UI backup flows run offline in this disposable browser profile.
     await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: profileDirectory });
@@ -584,8 +585,33 @@ try {
     await runActivityUiTests({ cdp, pollEvaluate, runtimeTest });
     await runQaFeedbackUiTests({ cdp, pollEvaluate, runtimeTest, profileDirectory, root });
     await runHealthUiTests({ cdp, pollEvaluate, runtimeTest });
-    const screenshot = await cdp.send('Page.captureScreenshot', { format: 'png' });
-    fs.writeFileSync(path.join(root, 'tests/results/v0.6.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
+    await runDietUiTests({ cdp, pollEvaluate, runtimeTest, profileDirectory, root, crossBrowser: async (bytes, expected, dietId) => {
+      if (!bytes) throw new Error('No actual downloaded ZIP');
+      const secondDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'health-pwa-browser-test-second-'));
+      const secondArgs = args.map((arg) => arg.startsWith('--user-data-dir=') ? `--user-data-dir=${secondDirectory}` : arg === dbTestUrl ? appUrl : arg);
+      let secondChild, second;
+      try {
+        secondChild = spawn(browser, secondArgs, { detached: process.platform !== 'win32', windowsHide: true, stdio: ['ignore','ignore','ignore'] });
+        const secondPort = await waitForDevToolsPort(secondDirectory, secondChild), target = await findPageTarget(secondPort);
+        second = new CdpClient(target.webSocketDebuggerUrl); await second.connect(); await second.send('Runtime.enable');
+        await pollEvaluate(second, "Boolean(document.querySelector('#home-health'))", Boolean, 20000);
+        await second.evaluate("location.hash='/settings'"); await pollEvaluate(second, "Boolean(document.querySelector('#backup-file'))", Boolean, 20000);
+        await second.evaluate(`(() => { const raw=atob(${JSON.stringify(bytes.toString('base64'))}), a=Uint8Array.from(raw,c=>c.charCodeAt(0)), d=new DataTransfer();d.items.add(new File([a],'actual-downloaded.zip',{type:'application/zip'}));const input=document.querySelector('#backup-file');input.files=d.files;input.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+        await pollEvaluate(second, "Boolean(document.querySelector('#backup-confirm')&&!document.querySelector('#backup-confirm').disabled)", Boolean, 20000);
+        await second.evaluate("document.querySelector('#backup-confirm').click()");
+        await pollEvaluate(second, `document.querySelector('.diagnostic-list')?.textContent.includes('${expected.scope.profileId.slice(0,8)}')`, Boolean, 20000);
+        const after = await second.evaluate(`(async()=>{const {bootstrapApplication}=await import('./js/bootstrap/bootstrap.js');const app=await bootstrapApplication();return(await app.services.backupExport.exportCurrentProfile()).document;})()`);
+        await second.evaluate(`location.hash='/diet/log/${dietId}'`);
+        await pollEvaluate(second, "document.querySelectorAll('.diet-full-photos img').length===2&&[...document.querySelectorAll('.diet-full-photos img')].every(i=>i.complete&&i.naturalWidth>0)", Boolean, 20000);
+        return after.integrity.payloadHash===expected.integrity.payloadHash && JSON.stringify(after.mediaManifest)===JSON.stringify(expected.mediaManifest);
+      } finally {
+        second?.close(); stopBrowser(secondChild);
+        const resolved=path.resolve(secondDirectory);if(path.dirname(resolved)!==path.resolve(os.tmpdir())||!path.basename(resolved).startsWith('health-pwa-browser-test-second-'))throw new Error('Unsafe second profile cleanup');
+        try { fs.rmSync(resolved,{recursive:true,force:true,maxRetries:5,retryDelay:200}); } catch(error) { console.error(`Temporary second browser profile cleanup failed (${error.code}).`); }
+      }
+    } });
+    const screenshot = await cdp.send('Page.captureScreenshot' , { format: 'png' });
+    fs.writeFileSync(path.join(root, 'tests/results/v0.7.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
 
     await cdp.send('Network.emulateNetworkConditions', {
       offline: false,
@@ -601,7 +627,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.6.0',
+      version: '0.7.0',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -619,7 +645,7 @@ try {
   })(), 600000, 'Browser runtime suite exceeded the 600 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.6.0',
+    version: '0.7.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },

@@ -114,3 +114,12 @@ Supabase 연결 후에도 IndexedDB는 즉시 읽고 쓰는 로컬 원장으로 
 Weight Page/Home/Calendar → HealthService → WeightRepository/InbodyRepository 또는 InbodyCommandContract → IndexedDbInbodyCommand. 단일 manual CRUD는 Repository에서 revision 검사, 다중 Store 명령은 원본 조회·Profile·revision·유효성 검사·동기화를 2 Store transaction 안에서 완료한다. Service에 generic transaction을 노출하지 않는다. 향후 Supabase adapter는 saveInbody/deleteInbody/restoreInbody RPC 경계로 대체할 수 있다.
 
 기간 조회는 by_profile_measured_at 복합 Index의 반개방 구간, 최근 조회는 같은 Index의 역방향 cursor를 사용한다. 범용 list는 유지한다. 쌍 조회는 uq_profile_source_ref unique index. 앱 shell에 모든 신규 모듈을 포함하며 그래프는 로컬 SVG와 실제 측정 목록으로 렌더링한다.
+
+
+## v0.7.0 Diet/Media and Backup v2
+
+Diet Page → DietService → DietCommandContract → IndexedDbDietCommand (diet_logs+diet_photos+media_blobs transaction). MediaService는 DB 밖의 decode/orientation/resize/encode/hash를 맡고 Page에 scoped photo Blob을 반환한다. IndexedDbMediaStorage는 storage_key 기반 MediaStorageContract adapter이며 향후 Supabase Storage로 교체 가능하다. Page는 binary store를 직접 조작하지 않는다.
+
+Backup snapshot은 portable와 필요한binary를 같은 readonly transaction에서 읽는다. CPU checksum/ZIP 조립은 밖에서 수행. v2검증은 ZIP구조/JSON/media전체를 사전에 확인하고 복원은 portable12+media_blobs+device_settings의 14Store transaction이다. 강제replace/reset은 media도 함께clear, device_id와 app_logs 유지. 사후검증은 실제 read-back Blob checksum 및 portable canonical hash. 백업후파괴적작업의 파일검증은 media manifest까지 비교한다.
+
+자체 ZIP codec은 STORE method만 사용하며 파일을 시스템 디렉터리에 풀지 않는다. CRC32는 ZIP통합, SHA-256은 JSON/이미지내용 검증이며 인증/암호화 목적이 아니다. 기존 JSON v1은 변형 없이 Schema1로 복원한다.

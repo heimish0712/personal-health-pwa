@@ -1,5 +1,50 @@
 # Regression Test
 
+## v0.7.0 Diet + Media + Backup v2
+
+최종 `node tests/run-all-tests.mjs` 종료코드0. **538 PASS / 0 FAIL / 41 NOT RUN** (총579). 기존477개 자동검증을 유지하고 새61개(Diet/Media52 + 실제 UI8 + 신규Store 구조1)가 통과했다. 버전 고정 기대값은 DB2/15Store/Backup v2 지원에 맞게 갱신했으며 과거 결과 JSON은 그대로 보존했다.
+
+APP/cache0.7.0 / DB2 / Portable Schema1 / Seed1 / Backup2(v1 호환). Node v24.16.0, 실제 Chrome/IndexedDB, Pages형 localhost subpath, 별도 임시 Chrome Profile2개와 테스트 전용 DB 사용. 사용자 운영 DB 접근 없음.
+
+| Suite | PASS | FAIL | NOT RUN |
+|---|---:|---:|---:|
+| smoke | 72 | 0 | 0 |
+| architecture | 29 | 0 | 0 |
+| schema | 61 | 0 | 0 |
+| exercise-service | 19 | 0 | 0 |
+| backup | 26 | 0 | 0 |
+| browser-runtime | 331 | 0 | 0 |
+| 실제 Pages/Galaxy QA | 0 | 0 | 41 |
+| **합계** | **538** | **0** | **41** |
+
+### Migration / 안전성
+
+- DIET-MIG-01~04: 실제 DB1 14Store fixture에 Template v1/v2, 운동기록+pass usage, 예약, 인바디 linked weight, 삭제 weight를 생성. 업그레이드 실패 후 DB1 재개와 성공 후 DB2 15Store를 각각 확인. 모든 portable row/UUID/revision/relation/tombstone 및 device_id 전후100% 일치. 추가 media store는 비어 있음.
+- DIET-14 4지점(create), DIET-24 edit/delete/restore 3지점: 강제실패 후 portable와 실제 binary hash snapshot 전체 일치. DIET-15 QuotaExceededError에서도 기존기록·metadata·Blob 변경0, 내부문구 비노출.
+- DIET-04/16은 stale/Profile 격리, DIET-13은 활성미참조와 진짜orphan을 구분하고 all-Profile/tombstone참조파일 보존. DIET-17 DB 재실행 후 같은 데이터/파일.
+
+### 이미지 / 화면
+
+- DIET-05~07: 실제 browser Canvas/createImageBitmap 리사이즈1280/thumbnail320, SHA256/bytes 일치, decode실패 시 DB변경0.
+- DIET-22/23: WebP 비지원 시 JPEG 재인코딩 fallback, EXIF orientation6 가로JPEG를 세로640×1280/160×320로 정상화.
+- DIET-08~12/18~21: 단일/다중/혼합사진·순서·tombstone·복원, index query, 목록thumbnail만/상세압축본만 조회, Calendar 원본projection.
+- DIET-UI-01~08: 오프라인 실제 form사진선택/다중미리보기/저장·중복제출차단/수정/제거/삭제/복원/재실행, 실제 thumbnail/full image decode, Calendar이동/저장공간표시, 실제 ZIP다운로드 및 **두 번째 별도 Chrome Profile**에서 파일선택→pristine복원→사진표시→data/mediahash일치.
+- `tests/results/v0.7.0-diet.png`를 직접 확인했다. 412px 화면에서 날짜/사진2장/내용/메모/버튼이 가로넘침 없이 표시됐다. 실제 기기의 카메라/갤러리 권한 또는 standalone QA로 계산하지 않는다.
+
+### Backup v1/v2
+
+- DIET-BACKUP-01~03: ZIP manifest/data/media 전체 및 삭제사진 파일 포함, pristine복원 후 UUID/revision/관계/사진created_at/checksum 그대로, re-export portable canonical hash/mediaManifest 일치.
+- DIET-BACKUP-04 6종: 누락/변조/extra/JSON손상/중복media/active사진→삭제식단 관계를 조작하고 외부CRC·JSONhash를 맞춘 경우도 전체 거절. 부분복원0.
+- DIET-BACKUP-05/06/10: 명시적 force성공, pristine복원4fault 및 media가 다른 대상의 force2fault에서 binary/metadata/pointer 전체 rollback.
+- DIET-BACKUP-07: 기존 v0.6 앱/DB1 정보의 정상 JSON v1이 DB2에서 원본data그대로 복원됨. 기존 v0.4 백업 suite 및 v0.5/v0.6 회귀도 PASS.
+- DIET-BACKUP-08/09: 백업후초기화 경로는 사진ZIP 실제파일 재검증을 거치고 승인된 초기화 후 media0/pristine. device_id 유지.
+
+한 중간 실행에서 테스트용 Chrome의 DevTools page 준비가10초를 넘어 BROWSER-HARNESS가 실패했다. 시작 준비 대기를30초로 보완한 최종 전체 실행은 종료코드0으로 완료됐다. 임시 Chrome 프로필 정리는 Windows EPERM으로 일부 임시 디렉터리가 남을 수 있음을 로그에 기록했다. 사용자 Chrome Profile은 사용/정리하지 않았다.
+
+실제 카메라·갤러리·PC→폰·Pages 업데이트/Migration/비행기모드8건은 DIET-MANUAL-01~08 **NOT RUN**. 기존33개실기기회귀도 이번버전 미실행으로 유지. `tests/results/v0.7.0.json`과 suite파일, `MANUAL_QA.md`, `tests/traceability.json` 참조.
+
+최종 실행 뒤 Calendar/홈/초기화의 안내 문구만 식단·사진에 맞게 정정했다. 이는 diff/문법 검증으로 확인하고 같은 테스트를 불필요하게 반복하지 않았다.
+
 ## v0.6.0 Weight & InBody
 
 - 최종 결과: **477 PASS / 0 FAIL / 33 NOT RUN** (전체 510건).

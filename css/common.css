@@ -207,3 +207,11 @@ button:disabled { cursor: default; opacity: .55; }
 .health-values { padding-left: 22px; font-size: 13px; }
 .health-memo { white-space: pre-wrap; overflow-wrap: anywhere; }
 #home-health { overflow-wrap: anywhere; }
+
+.diet-card { margin-top: 14px; }
+.diet-thumbnails, .diet-previews { display:flex; flex-wrap:wrap; gap:10px; }
+.diet-thumbnails img, .diet-previews img { width:100px; height:100px; object-fit:cover; border-radius:10px; background:var(--bg); }
+.diet-previews figure { margin:0; display:flex; flex-direction:column; gap:6px; max-width:140px; }
+.diet-full-photos img { display:block; width:100%; height:auto; border-radius:12px; margin-bottom:12px; }
+.diet-text { white-space:pre-wrap; overflow-wrap:anywhere; }
+#diet-form input[type=file] { max-width:100%; }

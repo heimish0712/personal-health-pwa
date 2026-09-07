@@ -3,6 +3,17 @@ importScripts('./js/config.js');
 const CACHE_NAME = APP_CONFIG.CACHE_VERSION;
 const CACHE_PREFIX = APP_CONFIG.CACHE_PREFIX;
 const APP_SHELL = [
+  './js/application/diet.service.js',
+  './js/application/media.service.js',
+  './js/core/media-rules.js',
+  './js/pages/diet/diet.page.js',
+  './js/data/contracts/diet-command.contract.js',
+  './js/data/contracts/media-storage.contract.js',
+  './js/data/indexeddb/media-storage.js',
+  './js/data/indexeddb/commands/diet.command.js',
+  './js/core/backup/backup-media.js',
+  './js/core/backup/zip-store.js',
+
   './js/core/health-rules.js',
   './js/application/health.service.js',
   './js/data/contracts/inbody-command.contract.js',

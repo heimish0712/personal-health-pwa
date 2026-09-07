@@ -1,5 +1,6 @@
 const STATIC_ROUTES = new Set(['/home', '/calendar', '/exercise', '/diet', '/weight', '/settings', '/exercise/passes']);
 const DYNAMIC_ROUTE_PATTERNS = [
+  /^\/diet\/log\/(new|[^/]+)(\/edit)?$/,
   /^\/weight\/(log|inbody)\/(new|[^/]+)(\/edit)?$/,
   /^\/exercise\/pass\/new$/,
   /^\/exercise\/pass\/[^/]+\/edit$/,

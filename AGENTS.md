@@ -12,8 +12,9 @@
 
 - 현재 저장소의 실제 코드, git 상태, REQUIREMENTS, 관련 설계를 먼저 읽는다.
 - 기존 정상 기능을 임의 재작성하지 않는다. 사용자 변경을 보존하고 승인된 작업 범위에서 진행한다.
-- 현재 구현은 v0.6.0 체중·인바디이며 다음 단계는 식단·사진이다. v0.6.0 실기기 QA 완료 여부는 REGRESSION_TEST/MANUAL_QA의 실행 상태를 확인한다. 순서는 [ROADMAP.md](docs/ROADMAP.md), 상세 명세는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md)를 따른다.
+- 현재 구현은 v0.7.0 식단·사진·Backup v2이며 다음 단계는 홈/통합 캘린더 완성과 운영 안정화다. v0.7.0 실기기 QA 완료 여부는 REGRESSION_TEST/MANUAL_QA의 실행 상태를 확인한다. 순서는 [ROADMAP.md](docs/ROADMAP.md), 상세 명세는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md)를 따른다.
 - 일반 복원은 기존 pristine 제한을 유지한다. v0.5.1 사용자 명시 요청으로 별도 강제 복원(replace)과 전체 초기화를 허용한다. 전용 BackupRestore Command에서 portable Store 교체/초기화를 원자적으로 처리하며 일반 CRUD에는 clear/물리삭제를 노출하지 않는다. 기기 데이터는 유지한다. 백업 후 실행은 내려받은 파일 재검증 완료 후에만 허용한다.
+- v0.7 DB2는 media_blobs만 추가한 누적 Migration이다. Portable Schema1/Seed1 유지, 사진은 metadata와 Blob을 분리한다. tombstone 참조 파일은 복원용으로 보존하며 GC는 모든 Profile/삭제 metadata까지 재검사해 진짜 orphan만 제거한다.
 - DB 변경 전 DB/Schema/Seed 버전과 Migration 필요 여부를 명시한다. 실제 구조 변경 없이 기능 추가만으로 DB 버전을 올리지 않는다.
 - UI → Service → Contract/Semantic Command Port → Adapter 경계를 유지한다. 다중 Store 업무는 Command transaction으로 처리한다.
 - BaseScopedRepository의 범용 `list()`는 유지한다. 기간 조회 성능은 기능별 Repository에 기존 Profile+날짜 인덱스 메서드를 추가하여 개선한다.

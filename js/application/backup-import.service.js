@@ -1,3 +1,4 @@
+import { canonicalJson } from '../core/backup/canonical-json.js';
 import { BACKUP_STORE_NAMES, backupError } from '../core/backup/backup-format.js';
 import { payloadHash, snapshotPayload } from '../core/backup/backup-integrity.js';
 
@@ -40,8 +41,8 @@ export class BackupImportService {
       this.#inspection = null;
       this.identityContext.setCurrentProfileId(document.scope.profileId);
       try {
-        const snapshot = await this.snapshotReader.readCurrentProfile();
-        const restored = { ...document, ...snapshotPayload(snapshot.profileId, snapshot.data) };
+        const snapshot = await this.snapshotReader.readCurrentProfile({ includeMedia: document.backupVersion === 2 });
+        const restored = { ...document, ...snapshotPayload(snapshot.profileId, snapshot.data), ...(document.backupVersion === 2 ? { _media: snapshot.media } : {}) };
         await this.validationService.validate(restored);
         if (await payloadHash(restored) !== document.integrity.payloadHash) throw backupError('RESTORE_VERIFY_FAILED');
       } catch (error) { throw backupError('RESTORE_VERIFY_FAILED', error); }
@@ -61,7 +62,7 @@ export class BackupImportService {
       const after = await this.restoreCommand.inspectTarget();
       if (target.fingerprint !== after.fingerprint) throw backupError('RESTORE_TARGET_CHANGED');
       const id = this.idGenerator.generate();
-      this.#replacement = { id, kind, previewId, target, backupHash: backup?.document.integrity.payloadHash ?? null, backupFirst };
+      this.#replacement = { id, kind, previewId, target, backupHash: backup?.document.integrity.payloadHash ?? null, backupMedia: canonicalJson(backup?.document.mediaManifest ?? []), backupFirst };
       return { id, kind, backup };
     } finally { this.#busy = false; }
   }
@@ -74,7 +75,7 @@ export class BackupImportService {
       if (pending.backupFirst) {
         if (!downloadedFile) throw backupError('BACKUP_DOWNLOAD_REQUIRED');
         const saved = await this.validationService.readFile(downloadedFile);
-        if (saved.integrity.payloadHash !== pending.backupHash) throw backupError('BACKUP_DOWNLOAD_REQUIRED');
+        if (saved.integrity.payloadHash !== pending.backupHash || canonicalJson(saved.mediaManifest ?? []) !== pending.backupMedia) throw backupError('BACKUP_DOWNLOAD_REQUIRED');
       }
       if (pending.kind === 'reset') {
         const result = await this.restoreCommand.reset({ expectedFingerprint: pending.target.fingerprint });

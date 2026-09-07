@@ -12,11 +12,12 @@ export class RestoreTargetInspector {
       requestToPromise(store('device_settings').get('current_profile_id')),
       requestToPromise(store('device_settings').get('device_id'))
     ]);
-    const pristine = this.isPristine(data, pointer, device);
+    const media = await requestToPromise(store('media_blobs').getAll());
+    const pristine = media.length === 0 && this.isPristine(data, pointer, device);
     return {
       pristine,
       // Includes identities and all row values; a stale preview cannot replace a new pristine target.
-      fingerprint: canonicalJson({ data, pointer: pointer?.value ?? null, device }),
+      fingerprint: canonicalJson({ data, media: media.map(({blob,...row}) => ({...row, actualSize:blob.size})), pointer: pointer?.value ?? null, device }),
       profileCount: data.profiles.length,
       profileId: data.profiles[0]?.id ?? null,
       typeId: data.exercise_types[0]?.id ?? null,

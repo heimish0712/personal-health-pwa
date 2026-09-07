@@ -61,3 +61,8 @@ v0.5.1 QA 패치에서 월간 캘린더 projection, 입력 유지, 상태 버튼
 ## v0.6.0 구현 상태 (2026-09-07)
 
 체중/인바디 CRUD, 원자적 연동, 기존 측정 인덱스 조회, 7지표 SVG/4기간, Calendar 및 홈 최근 측정 연결을 구현했다. DB1/Schema1 유지, Migration 없음. 식단·사진은 후속 단계이며 media_blobs/Backup v2는 이번 버전에 포함하지 않는다. 자동/실기기 검증 판정은 REGRESSION_TEST.md를 따른다.
+
+
+## v0.7.0 구현 상태 (2026-09-07)
+
+식단 CRUD/카메라·갤러리/로컬 압축·thumbnail/오프라인 media/Calendar 및 ZIP Backup v2를 함께 구현했다. 이전의 사진 기능 다음 Backup v2 별도 순서는 이번 사용자 지시에 따라 같은 릴리스로 합쳤다. DB2 Migration은 local media_blobs만 추가, Portable Schema1/Seed1 유지. 기존 JSON v1 계속 복원. 다음은 홈·통합 캘린더 완성/운영 안정화, 이후 Supabase/Auth/Sync. 실기기 완료 판정은 REGRESSION_TEST/MANUAL_QA의 최신 상태를 따른다.

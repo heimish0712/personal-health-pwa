@@ -22,6 +22,7 @@ export const STORE_NAMES = Object.freeze({
   INBODY_LOGS: 'inbody_logs',
   USER_SETTINGS: 'user_settings',
   DEVICE_SETTINGS: 'device_settings',
+  MEDIA_BLOBS: 'media_blobs',
   APP_LOGS: 'app_logs'
 });
 
@@ -42,7 +43,8 @@ export const SYNC_STORE_NAMES = Object.freeze([
 
 export const LOCAL_ONLY_STORE_NAMES = Object.freeze([
   STORE_NAMES.DEVICE_SETTINGS,
-  STORE_NAMES.APP_LOGS
+  STORE_NAMES.APP_LOGS,
+  STORE_NAMES.MEDIA_BLOBS
 ]);
 
 const index = (name, keyPath, options = {}) => Object.freeze({ name, keyPath, options });
@@ -116,6 +118,7 @@ export const STORE_DEFINITIONS = Object.freeze({
     index('uq_profile_key', ['profile_id', 'key'], { unique: true })
   ]),
 
+  [STORE_NAMES.MEDIA_BLOBS]: store('storage_key', []),
   [STORE_NAMES.DEVICE_SETTINGS]: store('key', []),
 
   [STORE_NAMES.APP_LOGS]: store('id', [

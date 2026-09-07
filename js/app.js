@@ -1,3 +1,4 @@
+import { renderDietRoute, releaseDietUrls, mountMediaSettings } from './pages/diet/diet.page.js';
 import { renderWeightRoute, renderHomeHealth } from './pages/weight/weight.page.js';
 import { renderCalendar } from './pages/exercise/pass-schedule.page.js';
 import { bootstrapApplication } from './bootstrap/bootstrap.js';
@@ -19,7 +20,7 @@ const toast = document.querySelector('#toast');
 const PAGE_META = {
   '/home': { title: '홈', message: '로컬 우선 데이터 기반 준비 완료' },
   '/calendar': { title: '캘린더', message: '캘린더 기능은 후속 버전에서 연결됩니다.' },
-  '/diet': { title: '식단', message: '식단 기록 기능은 후속 버전에서 연결됩니다.' },
+  '/diet': { title: '식단', message: '식단과 사진을 오프라인으로 기록합니다.' },
   '/weight': { title: '체중', message: '체중·인바디 기록과 변화 그래프' },
   '/settings': { title: '설정', message: '데이터 저장소 상태를 확인합니다.' }
 };
@@ -60,7 +61,7 @@ function renderHome(meta) {
   const diagnostic = appContext.diagnostic;
   pageRoot.innerHTML = `
     <section class="card"><h2>${escapeHtml(globalThis.APP_CONFIG.APP_NAME)}</h2><p>${escapeHtml(meta.message)}</p><span class="version-chip">v${escapeHtml(globalThis.APP_CONFIG.APP_VERSION)} · DB ${escapeHtml(globalThis.APP_CONFIG.DB_VERSION)}</span></section>
-    <section class="card"><h2>현재 단계</h2><p>운동·체중·인바디 기록, 변화 그래프와 JSON 백업·복원을 오프라인으로 사용할 수 있습니다. 백업은 설정에서 관리합니다. 이용권은 운동 탭에서, 예약과 운동기록 기간 조회는 캘린더에서 관리합니다.</p></section>
+    <section class="card"><h2>현재 단계</h2><p>운동·식단·사진·체중·인바디 기록, 변화 그래프와 백업·복원을 오프라인으로 사용할 수 있습니다. 백업은 설정에서 관리합니다. 이용권은 운동 탭에서, 예약과 운동기록 기간 조회는 캘린더에서 관리합니다.</p></section>
     <section class="card compact-card"><div class="status-line"><span>로컬 데이터 저장소</span><strong class="status-normal">${diagnostic?.status === 'normal' ? '정상' : '확인 필요'}</strong></div></section>`;
 }
 
@@ -84,6 +85,8 @@ async function renderSettings(token) {
         <button id="diagnose-again" class="button full-width-button" type="button">저장소 다시 진단</button></section>
       <section class="card"><h2>데이터 보호</h2><p>저장소 진단은 데이터를 변경하지 않습니다. 일반 복원은 초기 상태에서 실행할 수 있습니다. 강제 복원과 전체 초기화는 아래에서 별도로 확인 후 실행합니다.</p></section>`;
     document.querySelector('#diagnose-again')?.addEventListener('click', () => { if (!canLeaveCurrentRoute()) return; const nextToken = ++renderToken; void renderSettings(nextToken); });
+    await mountMediaSettings(pageRoot, { services: appContext.services, isCurrent: () => token === renderToken, showToast });
+    if (token !== renderToken) return;
     mountBackupSettings(pageRoot, { services: appContext.services, showToast, isCurrent: () => token === renderToken });
   } catch (error) {
     if (token !== renderToken) return;
@@ -95,13 +98,14 @@ async function renderSettings(token) {
 
 async function renderPage(route) {
   const token = ++renderToken;
+  releaseDietUrls();
   clearNavigationGuard();
   renderBottomNav(bottomNav, route);
   const isCurrent = () => token === renderToken;
 
-  if (route.startsWith('/exercise') || route === '/calendar' || route.startsWith('/weight')) {
+  if (route.startsWith('/exercise') || route === '/calendar' || route.startsWith('/weight') || route.startsWith('/diet')) {
     try {
-      await (route.startsWith('/weight') ? renderWeightRoute : route === '/calendar' ? (r, c) => renderCalendar(c) : renderExerciseRoute)(route, {
+      await (route.startsWith('/diet') ? renderDietRoute : route.startsWith('/weight') ? renderWeightRoute : route === '/calendar' ? (r, c) => renderCalendar(c) : renderExerciseRoute)(route, {
         root: pageRoot,
         services: appContext.services,
         navigate,
