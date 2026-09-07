@@ -9,6 +9,8 @@ export const DB_VERSION = config.DB_VERSION;
 export const SCHEMA_VERSION = config.SCHEMA_VERSION;
 
 export const STORE_NAMES = Object.freeze({
+  CALENDAR_EVENT_LINKS: 'calendar_event_links',
+  CALENDAR_OUTBOX: 'calendar_outbox',
   PROFILES: 'profiles',
   EXERCISE_TYPES: 'exercise_types',
   EXERCISE_TEMPLATES: 'exercise_templates',
@@ -38,19 +40,29 @@ export const SYNC_STORE_NAMES = Object.freeze([
   STORE_NAMES.DIET_PHOTOS,
   STORE_NAMES.WEIGHT_LOGS,
   STORE_NAMES.INBODY_LOGS,
-  STORE_NAMES.USER_SETTINGS
+  STORE_NAMES.USER_SETTINGS,
+  STORE_NAMES.CALENDAR_EVENT_LINKS
 ]);
 
 export const LOCAL_ONLY_STORE_NAMES = Object.freeze([
   STORE_NAMES.DEVICE_SETTINGS,
   STORE_NAMES.APP_LOGS,
-  STORE_NAMES.MEDIA_BLOBS
+  STORE_NAMES.MEDIA_BLOBS,
+  STORE_NAMES.CALENDAR_OUTBOX
 ]);
 
 const index = (name, keyPath, options = {}) => Object.freeze({ name, keyPath, options });
 const store = (keyPath, indexes) => Object.freeze({ keyPath, indexes: Object.freeze(indexes) });
 
 export const STORE_DEFINITIONS = Object.freeze({
+  [STORE_NAMES.CALENDAR_EVENT_LINKS]: store('id', [
+    index('by_profile', 'profile_id'),
+    index('uq_profile_provider_schedule', ['profile_id', 'provider', 'schedule_id'], { unique: true })
+  ]),
+  [STORE_NAMES.CALENDAR_OUTBOX]: store('id', [
+    index('by_profile', 'profile_id'),
+    index('by_profile_status', ['profile_id', 'status'])
+  ]),
   [STORE_NAMES.PROFILES]: store('id', [
     index('by_created_at', 'created_at')
   ]),

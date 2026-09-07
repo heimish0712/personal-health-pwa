@@ -14,7 +14,7 @@ export async function runOperationsUiTests({cdp,pollEvaluate,runtimeTest,root,ad
  await cdp.send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await runtimeTest('OPS-UI-OFFLINE-DIAGNOSTIC',async()=>{await click('#data-diagnose');await pollEvaluate(cdp,"document.querySelector('#data-diagnostic-result').textContent",(s)=>s.startsWith('정상'),20000);await click('#log-refresh');return cdp.evaluate("Boolean(document.querySelector('#log-export')) && document.documentElement.scrollWidth<=innerWidth");},'Storage and data/log diagnostics work fully offline without horizontal overflow.');
  await cdp.evaluate("document.querySelector('#operations-settings').scrollIntoView({block:'start'});");
- const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.9.0-operations.png'),Buffer.from(shot.data,'base64'));
+ const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.10.0-operations.png'),Buffer.from(shot.data,'base64'));
  await cdp.send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
  const snapshot=()=>cdp.evaluate(`(async()=>{const {bootstrapApplication}=await import('./js/bootstrap/bootstrap.js');return (await (await bootstrapApplication()).services.backupExport.exportCurrentProfile()).document.integrity.payloadHash;})()`);
  const before=await snapshot();await cdp.evaluate("caches.open('unrelated-app-keep');");
@@ -31,7 +31,7 @@ export async function runOperationsUiTests({cdp,pollEvaluate,runtimeTest,root,ad
    await cdp.evaluate('window.confirm=()=>true;');await click('#update-now');
    await pollEvaluate(cdp,'globalThis.__opsUpdateMarker===undefined && Boolean(document.querySelector("#health-form"))',Boolean,20000);
    await go('/settings','#operations-settings');await ready('#backup-settings');
-   const cachesOK=await cdp.evaluate("caches.keys().then(keys=>keys.includes('unrelated-app-keep') && keys.includes('personal-health-pwa-v0.9.0-ops-update') && !keys.includes('personal-health-pwa-v0.9.0'))");
+   const cachesOK=await cdp.evaluate("caches.keys().then(keys=>keys.includes('unrelated-app-keep') && keys.includes('personal-health-pwa-v0.10.0-ops-update') && !keys.includes('personal-health-pwa-v0.10.0'))");
    return cachesOK && before===await snapshot() && await cdp.evaluate("document.querySelector('.diagnostic-list').textContent.includes('정상')");
  },'Accepted reload activates new app cache, preserves unrelated cache and exact IndexedDB payload; startup diagnostic normal.');
 }

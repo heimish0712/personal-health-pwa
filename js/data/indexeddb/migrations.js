@@ -8,7 +8,7 @@ function ensureIndex(objectStore, definition) {
 
 function migrateToVersion1(database, transaction) {
   for (const [storeName, definition] of Object.entries(STORE_DEFINITIONS)) {
-    if (storeName === 'media_blobs') continue; // v1 remains the original 14-store layout.
+    if (['media_blobs', 'calendar_event_links', 'calendar_outbox'].includes(storeName)) continue; // v1 remains the original 14-store layout.
     const objectStore = database.objectStoreNames.contains(storeName)
       ? transaction.objectStore(storeName)
       : database.createObjectStore(storeName, { keyPath: definition.keyPath });
@@ -26,6 +26,13 @@ export function applyMigrations({ database, transaction, oldVersion, newVersion 
     }
     if (oldVersion < 2 && newVersion >= 2 && !database.objectStoreNames.contains('media_blobs')) {
       database.createObjectStore('media_blobs', { keyPath: 'storage_key' });
+    }
+    if (oldVersion < 3 && newVersion >= 3) {
+      for (const name of ['calendar_event_links', 'calendar_outbox']) {
+        const definition = STORE_DEFINITIONS[name];
+        const objectStore = database.createObjectStore(name, { keyPath: definition.keyPath });
+        for (const definition of STORE_DEFINITIONS[name].indexes) ensureIndex(objectStore, definition);
+      }
     }
   } catch (error) {
     throw new DatabaseMigrationError(

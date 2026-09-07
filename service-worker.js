@@ -3,6 +3,14 @@ importScripts('./js/config.js');
 const CACHE_NAME = APP_CONFIG.CACHE_VERSION;
 const CACHE_PREFIX = APP_CONFIG.CACHE_PREFIX;
 const APP_SHELL = [
+  './js/core/google-calendar.js',
+  './js/data/contracts/calendar-integration-command.contract.js',
+  './js/data/indexeddb/commands/calendar-integration.command.js',
+  './js/data/google/google-token-client.js',
+  './js/data/google/google-calendar.gateway.js',
+  './js/application/google-calendar.service.js',
+  './js/pages/settings/google-calendar.page.js',
+
   './js/core/maintenance-coordinator.js',
   './js/core/update-controller.js',
   './js/core/log-privacy.js',

@@ -5,7 +5,7 @@ import { requireRule, validatePass, dateKey } from '../core/pass-rules.js';
 import { NotFoundError } from '../core/errors.js';
 
 export class PassScheduleService {
-  constructor({ command, repositories, identityContext }) { this.command = command; this.repositories = repositories; this.identity = identityContext; }
+  constructor({ command, repositories, identityContext, googleCalendar }) { this.googleCalendar = googleCalendar; this.command = command; this.repositories = repositories; this.identity = identityContext; }
   async timezone() { return (await this.repositories.profile.getById(this.identity.getCurrentProfileId())).timezone ?? 'Asia/Seoul'; }
   async passes(exerciseTypeId) {
     const rows = await this.repositories.pass.listByExercise(exerciseTypeId);
@@ -56,10 +56,12 @@ export class PassScheduleService {
   async saveSchedule(input, id, expectedRevision) {
     const data = { exercise_type_id: input.exercise_type_id, scheduled_at: localDateTimeToUtcIso(input.scheduled_at_local, await this.timezone()), expected_duration_minutes: Number(input.expected_duration_minutes), memo: normalizeExerciseMemo(input.memo), status: input.status ?? 'scheduled' };
     requireRule(Number.isFinite(data.expected_duration_minutes) && data.expected_duration_minutes > 0 && data.expected_duration_minutes <= 1440, 'SCHEDULE_DURATION', '예정 시간은 0 초과 1440 이하의 분으로 입력하세요.');
-    return this.command.saveSchedule({ id, data, expectedRevision });
+    const row = await this.command.saveSchedule({ id, data, expectedRevision });
+    this.googleCalendar?.afterLocalCommit(); return row;
   }
   async cancelSchedule(id, expectedRevision) {
-    return this.command.saveSchedule({ id, expectedRevision, data: { status: 'cancelled' } });
+    const row = await this.command.saveSchedule({ id, expectedRevision, data: { status: 'cancelled' } });
+    this.googleCalendar?.afterLocalCommit(); return row;
   }
   async completionTemplate(schedule) {
     if (schedule.completed_exercise_log_id) {

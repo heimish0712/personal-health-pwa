@@ -1,3 +1,4 @@
+import { mountGoogleCalendar } from './pages/settings/google-calendar.page.js';
 import { mountOperations } from './pages/settings/operations.page.js';
 import { UpdateController } from './core/update-controller.js';
 import { renderDashboard, releaseDashboardUrls } from './pages/dashboard.page.js';
@@ -91,6 +92,8 @@ async function renderSettings(token) {
       <section class="card"><h2>데이터 보호</h2><p>저장소 진단은 데이터를 변경하지 않습니다. 일반 복원은 초기 상태에서 실행할 수 있습니다. 강제 복원과 전체 초기화는 아래에서 별도로 확인 후 실행합니다.</p></section>`;
     document.querySelector('#diagnose-again')?.addEventListener('click', () => { if (!canLeaveCurrentRoute()) return; const nextToken = ++renderToken; void renderSettings(nextToken); });
     await mountMediaSettings(pageRoot, { services: appContext.services, isCurrent: () => token === renderToken, showToast });
+    if (token !== renderToken) return;
+    await mountGoogleCalendar(pageRoot, { services: appContext.services, isCurrent: () => token === renderToken });
     if (token !== renderToken) return;
     await mountOperations(pageRoot, { services: appContext.services, isCurrent: () => token === renderToken });
     if (token !== renderToken) return;

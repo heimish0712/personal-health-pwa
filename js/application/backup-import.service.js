@@ -27,7 +27,7 @@ export class BackupImportService {
     return structuredClone({
       id, source: document.source, exportedAt: document.exportedAt,
       profile: document.data.profiles[0], counts: document.counts,
-      deletedCounts: Object.fromEntries(BACKUP_STORE_NAMES.map((name) => [name, document.data[name].filter((row) => row.deleted_at !== null).length])),
+      deletedCounts: Object.fromEntries(BACKUP_STORE_NAMES.map((name) => [name, (document.data[name] ?? []).filter((row) => row.deleted_at !== null).length])),
       pristine: target.pristine
     });
   }
@@ -45,7 +45,7 @@ export class BackupImportService {
       this.identityContext.setCurrentProfileId(document.scope.profileId);
       try {
         const snapshot = await this.snapshotReader.readCurrentProfile({ includeMedia: document.backupVersion === 2 });
-        const restored = { ...document, ...snapshotPayload(snapshot.profileId, snapshot.data), ...(document.backupVersion === 2 ? { _media: snapshot.media } : {}) };
+        const restored = { ...document, ...snapshotPayload(snapshot.profileId, Object.fromEntries(Object.keys(document.data).map((name) => [name, snapshot.data[name]]))), ...(document.backupVersion === 2 ? { _media: snapshot.media } : {}) };
         await this.validationService.validate(restored);
         if (await payloadHash(restored) !== document.integrity.payloadHash) throw backupError('RESTORE_VERIFY_FAILED');
       } catch (error) { throw backupError('RESTORE_VERIFY_FAILED', error); }

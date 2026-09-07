@@ -1,0 +1,373 @@
+{
+  "version": "0.10.0",
+  "suite": "smoke",
+  "executedAt": "2026-09-07T09:22:51.531Z",
+  "summary": {
+    "total": 72,
+    "passed": 72,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "FILE:index.html",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:manifest.json",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:service-worker.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:css/variables.css",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:css/common.css",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:css/layout.css",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/config.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/app.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/router.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/components/bottom-nav.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/bootstrap/bootstrap.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/bootstrap/container.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/application/exercise-management.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/application/exercise-log.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/application/exercise-query.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/core/exercise-fields.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/core/datetime.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/components/dirty-form-guard.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/data/contracts/exercise-management-command.contract.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/data/indexeddb/commands/exercise-management.command.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise.router.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-management.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-type-form.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-log-form.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-log-detail.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-view.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/data/indexeddb/database.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:js/data/indexeddb/schema.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:icons/icon-192.png",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:icons/icon-512.png",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:README.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:CHANGELOG.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:REQUIREMENTS.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:REGRESSION_TEST.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:RELEASE_REPORT.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:docs/ARCHITECTURE.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:docs/DATA_MODEL.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:docs/MIGRATION_POLICY.md",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:tests/architecture-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:tests/schema-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:tests/exercise-service-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:tests/browser/db-test.html",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "FILE:tests/browser/db-test.js",
+      "status": "PASS",
+      "evidence": "Required file exists."
+    },
+    {
+      "id": "APP-002",
+      "status": "PASS",
+      "evidence": "manifest display=standalone"
+    },
+    {
+      "id": "APP-002-START",
+      "status": "PASS",
+      "evidence": "Relative GitHub Pages start_url."
+    },
+    {
+      "id": "APP-002-SCOPE",
+      "status": "PASS",
+      "evidence": "Relative GitHub Pages scope."
+    },
+    {
+      "id": "APP-002-ICONS",
+      "status": "PASS",
+      "evidence": "192/512 icons are defined."
+    },
+    {
+      "id": "VERSION-001",
+      "status": "PASS",
+      "evidence": "App version is v0.10.0."
+    },
+    {
+      "id": "DB-CONFIG-001",
+      "status": "PASS",
+      "evidence": "DB version is 3."
+    },
+    {
+      "id": "SCHEMA-CONFIG-001",
+      "status": "PASS",
+      "evidence": "Schema version is 2."
+    },
+    {
+      "id": "SEED-CONFIG-001",
+      "status": "PASS",
+      "evidence": "Seed version is 1."
+    },
+    {
+      "id": "NAV:홈",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained."
+    },
+    {
+      "id": "NAV:캘린더",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained."
+    },
+    {
+      "id": "NAV:운동",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained."
+    },
+    {
+      "id": "NAV:식단",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained."
+    },
+    {
+      "id": "NAV:체중",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained."
+    },
+    {
+      "id": "APP-004",
+      "status": "PASS",
+      "evidence": "App Shell is cached."
+    },
+    {
+      "id": "CACHE-001",
+      "status": "PASS",
+      "evidence": "Only this app's old caches are removed."
+    },
+    {
+      "id": "CACHE-002",
+      "status": "PASS",
+      "evidence": "Cache lifecycle does not delete IndexedDB."
+    },
+    {
+      "id": "UPD-001",
+      "status": "PASS",
+      "evidence": "Update remains user-triggered."
+    },
+    {
+      "id": "CACHE-ASSET-001",
+      "status": "PASS",
+      "evidence": "New application modules are in App Shell."
+    },
+    {
+      "id": "CACHE-ASSET-002",
+      "status": "PASS",
+      "evidence": "All application modules are cached: no missing modules"
+    },
+    {
+      "id": "CACHE-ASSET-003",
+      "status": "PASS",
+      "evidence": "Test files are excluded from the production App Shell."
+    },
+    {
+      "id": "CACHE-REVALIDATE-001",
+      "status": "PASS",
+      "evidence": "A new Service Worker revalidates App Shell files while installing."
+    },
+    {
+      "id": "UPD-002",
+      "status": "PASS",
+      "evidence": "Skip waiting is requested only by update action."
+    },
+    {
+      "id": "ERROR-001",
+      "status": "PASS",
+      "evidence": "Public failure message preserves data semantics."
+    },
+    {
+      "id": "ERROR-004",
+      "status": "PASS",
+      "evidence": "CRUD conflicts are mapped to safe public operation messages."
+    },
+    {
+      "id": "EX-UI-001",
+      "status": "PASS",
+      "evidence": "Exercise route is delegated to the exercise page module."
+    },
+    {
+      "id": "EX-UI-002",
+      "status": "PASS",
+      "evidence": "Exercise route modules are part of the offline App Shell."
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only DB diagnostic action exists."
+    },
+    {
+      "id": "NAV-004",
+      "status": "PASS",
+      "evidence": "Settings remains a header entry."
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { runGoogleCalendarTests } from './google-calendar-test.js';
 import { runOperationsTests } from './operations-test.js';
 import { runDashboardTests } from './dashboard-test.js';
 import { runDietTests } from './diet-test.js';
@@ -15,9 +16,9 @@ import {
   STORE_NAMES
 } from '../../js/data/indexeddb/schema.js';
 
-const TEST_DB_NAME = 'personal-health-pwa-test-v0.9.0';
-const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.9.0-rollback';
-const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.9.0-exercise-rollback';
+const TEST_DB_NAME = 'personal-health-pwa-test-v0.10.0';
+const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.10.0-rollback';
+const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.10.0-exercise-rollback';
 const resultNode = document.querySelector('#test-result');
 const cases = [];
 
@@ -44,7 +45,7 @@ async function test(id, callback, evidence = '') {
     const pass = value === undefined ? true : Boolean(value);
     record(id, pass, evidence || (pass ? 'Completed without error.' : 'Returned false.'));
   } catch (error) {
-    record(id, false, `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}`);
+    record(id, false, `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}; cause=${error?.cause?.message ?? ''}; ${error?.stack ?? ''}`);
   }
 }
 
@@ -84,8 +85,8 @@ async function run() {
   const firstBootstrap = await container.bootstrapService.initialize();
   const profileAId = firstBootstrap.profileId;
 
-  await test('DB-001', async () => (await container.database.inspectSchema()).version === 2, 'DB version is 2.');
-  await test('DB-002', async () => (await container.database.inspectSchema()).storeNames.length === EXPECTED_STORE_COUNT, '15 Object Stores exist.');
+  await test('DB-001', async () => (await container.database.inspectSchema()).version === 3, 'DB version is 3.');
+  await test('DB-002', async () => (await container.database.inspectSchema()).storeNames.length === EXPECTED_STORE_COUNT, '17 Object Stores exist.');
   await test('DB-003', async () => {
     const actual = await container.database.inspectSchema();
     return Object.entries(STORE_DEFINITIONS).every(([storeName, definition]) => {
@@ -368,7 +369,7 @@ async function run() {
   const persisted = await container.repositories.exerciseType.getById(created.id);
   await test('DB-004', () => persisted?.name === '달리기' && persisted.revision === 4, 'Record survives database close and reopen.');
 
-  // v0.9.0 Exercise Core
+  // v0.10.0 Exercise Core
   const currentTypesBeforeExercise = await container.exerciseQueryService.listActiveTypes();
   await test('EX-TYPE-001', () => currentTypesBeforeExercise.some((item) => item.system_key === 'default.pilates'), 'Default Pilates seed is visible through the exercise query service.');
 
@@ -538,7 +539,7 @@ async function run() {
   await test('LOG-002', async () => (await container.repositories.appLog.count()) === 200, 'App log retention is capped at 200 records.');
 
   const diagnostic = await container.databaseDiagnosticService.diagnose();
-  await test('DIAG-001', () => diagnostic.status === 'normal' && diagnostic.actualStoreCount === 15, 'Read-only diagnostic reports a healthy database.');
+  await test('DIAG-001', () => diagnostic.status === 'normal' && diagnostic.actualStoreCount === 17, 'Read-only diagnostic reports a healthy database.');
 
   container.database.close();
   await deleteDatabase(TEST_DB_NAME);
@@ -555,14 +556,15 @@ try {
   await runDietTests(test);
   await runDashboardTests(test);
   await runOperationsTests(test);
+  await runGoogleCalendarTests(test);
 } catch (error) {
-  record('BROWSER-HARNESS', false, `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}`);
+  record('BROWSER-HARNESS', false, `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}; cause=${error?.cause?.message ?? ''}; ${error?.stack ?? ''}`);
 }
 
 const passed = cases.filter((item) => item.status === 'PASS').length;
 const failed = cases.filter((item) => item.status === 'FAIL').length;
 const result = {
-  version: '0.9.0',
+  version: '0.10.0',
   suite: 'browser-indexeddb',
   executedAt: new Date().toISOString(),
   userAgent: navigator.userAgent,

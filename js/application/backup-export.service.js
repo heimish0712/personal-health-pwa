@@ -15,7 +15,7 @@ export class BackupExportService {
     const config = globalThis.APP_CONFIG;
     const document = {
       format: BACKUP_FORMAT, backupVersion: version,
-      source: { appVersion: config.APP_VERSION, dbVersion: config.DB_VERSION, schemaVersion: config.SCHEMA_VERSION, seedVersion: config.SEED_VERSION },
+      source: { appVersion: config.APP_VERSION, dbVersion: this.snapshotReader.dbVersion ?? config.DB_VERSION, schemaVersion: data.calendar_event_links ? 2 : 1, seedVersion: config.SEED_VERSION },
       exportedAt: this.clock.nowIso(), ...snapshotPayload(profileId, data)
     };
     document.integrity = { algorithm: 'SHA-256', payloadHash: await payloadHash(document) };

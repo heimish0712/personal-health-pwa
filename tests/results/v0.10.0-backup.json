@@ -1,0 +1,143 @@
+{
+  "version": "0.10.0",
+  "suite": "backup",
+  "executedAt": "2026-09-07T09:22:52.470Z",
+  "summary": {
+    "total": 26,
+    "passed": 26,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "BACKUP-VAL-001",
+      "status": "PASS",
+      "evidence": "Valid backup with historical template and deleted record accepted."
+    },
+    {
+      "id": "BACKUP-VAL-002",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "BACKUP-VAL-003",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_FORMAT_INVALID, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-004",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_VERSION_UNSUPPORTED, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-005",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_SCHEMA_UNSUPPORTED, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-006",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_COUNTS_MISMATCH, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-007",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_CHECKSUM_MISMATCH, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-008",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_DUPLICATE_ID, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-009",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_SCOPE_MISMATCH, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-010",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-011",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-012",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-013",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-014",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access."
+    },
+    {
+      "id": "BACKUP-VAL-015",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_UNIQUE_CONFLICT, before any database access."
+    },
+    {
+      "id": "BACKUP-FILE-LIMIT",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "BACKUP-COMPATIBILITY",
+      "status": "PASS",
+      "evidence": "App and DB implementation versions are informational, not rejection gates."
+    },
+    {
+      "id": "BACKUP-CANONICAL",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "BACKUP-UNIQUE-SCHEMA-PARITY",
+      "status": "PASS",
+      "evidence": "All portable DB3 unique indexes match the validator."
+    },
+    {
+      "id": "BACKUP-INVALID-TIME",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access."
+    },
+    {
+      "id": "BACKUP-INVALID-REVISION",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access."
+    },
+    {
+      "id": "BACKUP-INVALID-FIELD",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access."
+    },
+    {
+      "id": "BACKUP-JSON-LOSS",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "BACKUP-MALFORMED-ROWS",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access."
+    },
+    {
+      "id": "BACKUP-MEDIA-IMPORT",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_MEDIA_UNSUPPORTED, before any database access."
+    },
+    {
+      "id": "BACKUP-ARCHITECTURE",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    }
+  ]
+}

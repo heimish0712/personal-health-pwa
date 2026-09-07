@@ -5,7 +5,7 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('smoke');
-const output = path.join(root, 'tests/results/v0.9.0-smoke.json');
+const output = path.join(root, 'tests/results/v0.10.0-smoke.json');
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -56,9 +56,9 @@ reporter.check('APP-002-SCOPE', manifest.scope === './', 'Relative GitHub Pages 
 reporter.check('APP-002-ICONS', Array.isArray(manifest.icons) && manifest.icons.length >= 2, '192/512 icons are defined.');
 
 const config = read('js/config.js');
-reporter.check('VERSION-001', config.includes("APP_VERSION: '0.9.0'"), 'App version is v0.9.0.');
-reporter.check('DB-CONFIG-001', config.includes('DB_VERSION: 2'), 'DB version is 2.');
-reporter.check('SCHEMA-CONFIG-001', config.includes('SCHEMA_VERSION: 1'), 'Schema version is 1.');
+reporter.check('VERSION-001', config.includes("APP_VERSION: '0.10.0'"), 'App version is v0.10.0.');
+reporter.check('DB-CONFIG-001', config.includes('DB_VERSION: 3'), 'DB version is 3.');
+reporter.check('SCHEMA-CONFIG-001', config.includes('SCHEMA_VERSION: 2'), 'Schema version is 2.');
 reporter.check('SEED-CONFIG-001', config.includes('SEED_VERSION: 1'), 'Seed version is 1.');
 
 const nav = read('js/components/bottom-nav.js');

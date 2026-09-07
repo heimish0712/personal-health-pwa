@@ -1,10 +1,12 @@
 import { ValidationError } from '../errors.js';
 
 export const BACKUP_FORMAT = 'personal-health-pwa-backup';
-export const BACKUP_STORE_NAMES = Object.freeze([
+export const LEGACY_BACKUP_STORE_NAMES = Object.freeze([
   'profiles', 'exercise_types', 'exercise_templates', 'exercise_logs', 'exercise_schedules',
   'passes', 'pass_usage_logs', 'diet_logs', 'diet_photos', 'weight_logs', 'inbody_logs', 'user_settings'
 ]);
+export const BACKUP_STORE_NAMES = Object.freeze([...LEGACY_BACKUP_STORE_NAMES, 'calendar_event_links']);
+export const backupStores = (schemaVersion) => schemaVersion >= 2 ? BACKUP_STORE_NAMES : LEGACY_BACKUP_STORE_NAMES;
 export const BACKUP_MAX_BYTES = 50 * 1000 * 1000;
 export const BACKUP_MESSAGES = Object.freeze({
   BACKUP_ZIP_INVALID: 'ZIP 백업이 손상되었거나 지원하지 않는 압축 방식입니다. 앱에서 내보낸 원본 ZIP을 선택하세요.',
@@ -41,11 +43,11 @@ export function backupError(code, cause = undefined) {
 }
 
 export function backupCounts(data) {
-  return Object.fromEntries(BACKUP_STORE_NAMES.map((name) => [name, data[name].length]));
+  return Object.fromEntries(Object.keys(data).map((name) => [name, data[name].length]));
 }
 
 export function sortBackupData(data) {
-  return Object.fromEntries(BACKUP_STORE_NAMES.map((name) => [name,
+  return Object.fromEntries(Object.keys(data).map((name) => [name,
     [...data[name]].sort((a, b) => (a?.id ?? '') < (b?.id ?? '') ? -1 : (a?.id ?? '') > (b?.id ?? '') ? 1 : 0)
   ]));
 }

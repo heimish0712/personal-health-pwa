@@ -6,8 +6,9 @@ import { readPortableStores } from './backup-snapshot.reader.js';
 import { requestToPromise } from '../idb-request.js';
 
 export class RestoreTargetInspector {
+  constructor(names = BACKUP_STORE_NAMES) { this.names = names; }
   async inspect(store) {
-    const data = await readPortableStores(store);
+    const data = await readPortableStores(store, this.names);
     const [pointer, device] = await Promise.all([
       requestToPromise(store('device_settings').get('current_profile_id')),
       requestToPromise(store('device_settings').get('device_id'))
@@ -27,7 +28,7 @@ export class RestoreTargetInspector {
 
   isPristine(data, pointer, device) {
     if (data.profiles.length !== 1 || data.exercise_types.length !== 1 || data.exercise_templates.length !== 1) return false;
-    if (BACKUP_STORE_NAMES.filter((name) => !['profiles', 'exercise_types', 'exercise_templates'].includes(name)).some((name) => data[name].length !== 0)) return false;
+    if (BACKUP_STORE_NAMES.filter((name) => !['profiles', 'exercise_types', 'exercise_templates'].includes(name)).some((name) => (data[name] ?? []).length !== 0)) return false;
     const [profile] = data.profiles, [type] = data.exercise_types, [template] = data.exercise_templates;
     if (![profile, type, template].every((row) => isUuid(row.id)) || pointer?.value !== profile.id || !isUuid(device?.value)) return false;
     const time = profile.created_at;

@@ -3,6 +3,7 @@ import { setNavigationGuard } from '../../router.js';
 const labels = {
   profiles: 'Profile', exercise_types: '운동 종류', exercise_templates: '운동 양식', exercise_logs: '운동 기록',
   exercise_schedules: '예약', passes: '이용권', pass_usage_logs: '이용 내역', diet_logs: '식단',
+  calendar_event_links: 'Google 일정 연결',
   diet_photos: '사진', weight_logs: '체중', inbody_logs: '인바디', user_settings: '사용자 설정'
 };
 const escape = (value) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');

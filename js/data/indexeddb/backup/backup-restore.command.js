@@ -1,18 +1,18 @@
 import { validateMedia } from '../../../core/backup/backup-media.js';
 import { createProfileEntity, createScopedEntity } from '../../../core/entity-metadata.js';
 import { BackupRestoreCommandContract } from '../../contracts/backup-restore-command.contract.js';
-import { BACKUP_STORE_NAMES, backupError } from '../../../core/backup/backup-format.js';
+import { BACKUP_STORE_NAMES, backupStores, backupError } from '../../../core/backup/backup-format.js';
 import { validateBackupRows } from '../../../core/backup/backup-validator.js';
 import { requestToPromise } from '../idb-request.js';
 
-const RESTORE_STORES = Object.freeze([...BACKUP_STORE_NAMES, 'media_blobs', 'device_settings']);
+
 
 export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract {
-  constructor({ unitOfWork, inspector, clock, idGenerator, faultInjector = null }) {
-    super(); this.unitOfWork = unitOfWork; this.inspector = inspector; this.clock = clock; this.idGenerator = idGenerator; this.faultInjector = faultInjector;
+  constructor({ unitOfWork, inspector, clock, idGenerator, faultInjector = null, dbVersion = globalThis.APP_CONFIG.DB_VERSION }) {
+    super(); this.names = backupStores(dbVersion >= 3 ? 2 : 1); this.dbVersion = dbVersion; this.stores = [...this.names, 'media_blobs', 'device_settings', ...(dbVersion >= 3 ? ['calendar_outbox'] : [])]; this.unitOfWork = unitOfWork; this.inspector = inspector; this.clock = clock; this.idGenerator = idGenerator; this.faultInjector = faultInjector;
   }
   async inspectTarget() {
-    return this.unitOfWork.run(RESTORE_STORES, 'readonly', ({ store }) => this.inspector.inspect(store));
+    return this.unitOfWork.run(this.stores, 'readonly', ({ store }) => this.inspector.inspect(store));
   }
   checkpoint(name) {
     const result = typeof this.faultInjector === 'function' ? this.faultInjector(name) : this.faultInjector?.checkpoint?.(name);
@@ -24,7 +24,7 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
     if (document.backupVersion === 2) await validateMedia(document, document._media);
     else if (document.data.diet_photos.length) throw backupError('BACKUP_MEDIA_UNSUPPORTED');
     try {
-      await this.unitOfWork.run(RESTORE_STORES, 'readwrite', async ({ store }) => {
+      await this.unitOfWork.run(this.stores, 'readwrite', async ({ store }) => {
         const target = await this.inspector.inspect(store);
         if (mode === 'pristine' && !target.pristine) throw backupError('RESTORE_TARGET_NOT_PRISTINE');
         if (target.fingerprint !== expectedFingerprint) throw backupError(mode === 'pristine' ? 'RESTORE_TARGET_NOT_PRISTINE' : 'RESTORE_TARGET_CHANGED');
@@ -36,10 +36,11 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
         await requestToPromise(store('exercise_types').delete(target.typeId));
         await requestToPromise(store('profiles').delete(target.profileId));
         }
+        await this.disableIntegration(store);
         this.checkpoint('restore-after-seed-removal');
-        for (const name of BACKUP_STORE_NAMES) {
+        for (const name of this.names) {
           // Queue a store batch within the same transaction; every failure still aborts all stores.
-          await Promise.all(document.data[name].map(async (row) => {
+          await Promise.all((document.data[name] ?? []).map(async (row) => {
             await requestToPromise(store(name).add(row));
             this.checkpoint(`restore-row:${name}`);
           }));
@@ -59,15 +60,22 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
     return { profileId: document.scope.profileId };
   }
   // Explicit reset/replace exception: ordinary CRUD repositories never expose clear.
+  async disableIntegration(store) {
+    if (this.dbVersion < 3) return;
+    await requestToPromise(store('calendar_outbox').clear());
+    const settings = await requestToPromise(store('device_settings').getAll());
+    for (const row of settings.filter((r) => r.key.startsWith('google_calendar:'))) await requestToPromise(store('device_settings').put({ ...row, value: { enabled: false }, updated_at: this.clock.nowIso() }));
+  }
   async clearPortable(store) {
-    for (const name of [...BACKUP_STORE_NAMES, 'media_blobs']) {
+    await this.disableIntegration(store);
+    for (const name of [...this.names, 'media_blobs']) {
       await requestToPromise(store(name).clear());
       this.checkpoint(`replace-cleared:${name}`);
     }
   }
   async reset({ expectedFingerprint }) {
     try {
-      return await this.unitOfWork.run(RESTORE_STORES, 'readwrite', async ({ store }) => {
+      return await this.unitOfWork.run(this.stores, 'readwrite', async ({ store }) => {
         const before = await this.inspector.inspect(store);
         if (before.fingerprint !== expectedFingerprint) throw backupError('RESTORE_TARGET_CHANGED');
         await this.clearPortable(store);

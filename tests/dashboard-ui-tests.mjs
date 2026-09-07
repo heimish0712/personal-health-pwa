@@ -11,7 +11,7 @@ export async function runDashboardUiTests({cdp,pollEvaluate,runtimeTest,root}) {
     return cdp.evaluate(`(async()=>{const {bootstrapApplication}=await import('./js/bootstrap/bootstrap.js');const app=await bootstrapApplication();const s=await app.services.dashboard.summary();return document.querySelector('#home-diet-count').textContent===s.dietCount+'건' && document.querySelector('#home-exercise-count').textContent===s.exerciseCount+'회' && document.querySelector('#home-weight').textContent===s.latest.weight+' kg';})()`);
   },'Rendered home counts and measurement agree with fresh query after existing CRUD/media QA.');
   await runtimeTest('DASH-UI-02-THUMBNAIL',async()=>{ await pollEvaluate(cdp,"Boolean(document.querySelector('#home-diet-thumbnail img')?.naturalWidth)",Boolean,15000);return cdp.evaluate("document.querySelectorAll('#home-diet-thumbnail img').length===1");},'Dashboard decodes one local thumbnail from the latest diet.');
-  const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.9.0-dashboard.png'),Buffer.from(shot.data,'base64'));
+  const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.10.0-dashboard.png'),Buffer.from(shot.data,'base64'));
   await runtimeTest('CAL-UI-01-MONTH',async()=>{
     await go(`/calendar?date=${selected}`,'[data-calendar-date="2036-05-17"]');
     await click('#calendar-next');await ready('[data-calendar-date="2036-06-01"]');
@@ -52,5 +52,5 @@ export async function runDashboardUiTests({cdp,pollEvaluate,runtimeTest,root}) {
     await go(`/calendar?date=${selected}`,'[data-calendar-entry]');return same&&blocked&&home;
   },'Network blocked and full reload retains identical calendar; dashboard and local assets function offline.');
   await cdp.send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
-  const calendarShot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.9.0-unified-calendar.png'),Buffer.from(calendarShot.data,'base64'));
+  const calendarShot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.10.0-unified-calendar.png'),Buffer.from(calendarShot.data,'base64'));
 }

@@ -1,3 +1,8 @@
+import { backupStores } from '../core/backup/backup-format.js';
+import { GoogleTokenClient } from '../data/google/google-token-client.js';
+import { GoogleCalendarGateway } from '../data/google/google-calendar.gateway.js';
+import { IndexedDbCalendarIntegrationCommand } from '../data/indexeddb/commands/calendar-integration.command.js';
+import { GoogleCalendarService } from '../application/google-calendar.service.js';
 import { MaintenanceCoordinator } from '../core/maintenance-coordinator.js';
 import { IndexedDbOperationsReader } from '../data/indexeddb/operations.reader.js';
 import { OperationsService } from '../application/operations.service.js';
@@ -54,6 +59,8 @@ export function createContainer({
   idGenerator = new CryptoIdGenerator(),
   identityContext = new IdentityContext(),
   logger = new AppLogger(),
+  googleTokenClient = new GoogleTokenClient(),
+  googleGateway = new GoogleCalendarGateway(),
   faultInjector = null
 } = {}) {
   const database = new IndexedDbDatabase({
@@ -97,8 +104,8 @@ export function createContainer({
   const dietCommand = new IndexedDbDietCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
   const dietService = new DietService({ repositories, command: dietCommand, media: mediaService, identityContext });
   const repositoryProvider = new RepositoryProvider(repositories);
-  const backupSnapshotReader = new IndexedDbBackupSnapshotReader({ unitOfWork, identityContext });
-  const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(), clock, idGenerator, faultInjector });
+  const backupSnapshotReader = new IndexedDbBackupSnapshotReader({ unitOfWork, identityContext, dbVersion });
+  const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(backupStores(dbVersion >= 3 ? 2 : 1)), clock, idGenerator, faultInjector, dbVersion });
   const backupValidationService = new BackupValidationService();
   const backupExportService = new BackupExportService({ snapshotReader: backupSnapshotReader, validationService: backupValidationService, clock, coordinator });
   const backupImportService = new BackupImportService({ validationService: backupValidationService, restoreCommand: backupRestoreCommand, snapshotReader: backupSnapshotReader, identityContext, idGenerator, exportService: backupExportService, coordinator });
@@ -124,8 +131,10 @@ export function createContainer({
   });
   const inbodyCommand = new IndexedDbInbodyCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
   const healthService = new HealthService({ repositories, command: inbodyCommand, identityContext, clock });
-  const activityCommand = new IndexedDbActivityCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
-  const passScheduleService = new PassScheduleService({ command: activityCommand, repositories, identityContext });
+  const calendarIntegrationCommand = new IndexedDbCalendarIntegrationCommand({ unitOfWork, clock, idGenerator, faultInjector });
+  const googleCalendarService = dbVersion >= 3 ? new GoogleCalendarService({ command: calendarIntegrationCommand, tokenClient: googleTokenClient, gateway: googleGateway, identityContext, coordinator }) : null;
+  const activityCommand = new IndexedDbActivityCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector, dbVersion });
+  const passScheduleService = new PassScheduleService({ command: activityCommand, repositories, identityContext, googleCalendar: googleCalendarService });
   const exerciseLogService = new ExerciseLogService({
     exerciseTypeRepository: repositories.exerciseType,
     exerciseTemplateRepository: repositories.exerciseTemplate,
@@ -157,6 +166,7 @@ export function createContainer({
   const calendarService = new CalendarService({ repositories, identityContext });
 
   return Object.freeze({
+    googleCalendarService, calendarIntegrationCommand,
     dashboardService, calendarService, operationsService, operationsReader, coordinator,
     database,
     unitOfWork,

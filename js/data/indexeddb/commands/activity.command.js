@@ -1,3 +1,4 @@
+import { enqueueCalendar } from './calendar-integration.command.js';
 import { ActivityCommandContract } from '../../contracts/activity-command.contract.js';
 import { createScopedEntity } from '../../../core/entity-metadata.js';
 import { ConflictError, NotFoundError } from '../../../core/errors.js';
@@ -12,7 +13,7 @@ export class IndexedDbActivityCommand extends ActivityCommandContract {
   constructor(dependencies) { super(); Object.assign(this, dependencies); }
   run(work) {
     const profileId = this.identityContext.getCurrentProfileId();
-    return this.unitOfWork.run(STORES, 'readwrite', async ({ store }) => {
+    return this.unitOfWork.run(this.dbVersion >= 3 ? [...STORES, 'device_settings', 'calendar_outbox'] : STORES, 'readwrite', async ({ store }) => {
       const now = this.clock.nowIso();
       const get = async (name, id, deleted = false) => {
         const row = await request(store(name).get(id));
@@ -23,7 +24,7 @@ export class IndexedDbActivityCommand extends ActivityCommandContract {
       const fresh = (data) => createScopedEntity({ data, id: this.idGenerator.generate(), profileId, nowIso: now });
       const patch = (row, data) => ({ ...row, ...data, updated_at: now, revision: row.revision + 1 });
       const index = (name, key, value) => request(store(name).index(key).getAll(value));
-      return work({ get, put, fresh, patch, index, profileId, now });
+      return work({ get, put, fresh, patch, index, profileId, now, store });
     });
   }
   revision(row, expected) {
@@ -144,7 +145,10 @@ export class IndexedDbActivityCommand extends ActivityCommandContract {
       requireRule(!old?.completed_exercise_log_id || old.exercise_type_id === next.exercise_type_id, 'SCHEDULE_EXERCISE', '완료 이력이 있는 예약의 운동은 변경할 수 없습니다.');
       const type = await tx.get('exercise_types', next.exercise_type_id, Boolean(old));
       requireRule(old || type.status === 'active', 'EXERCISE_TYPE_INACTIVE', '활성 운동을 선택하세요.');
-      return tx.put('exercise_schedules', next);
+      await tx.put('exercise_schedules', next);
+      if (this.dbVersion >= 3) await enqueueCalendar(tx.store, next, tx.now);
+      this.checkpoint('calendar-after-enqueue');
+      return next;
     });
   }
   completeSchedule({ id, data, expectedRevision }) {

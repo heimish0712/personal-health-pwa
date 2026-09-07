@@ -26,5 +26,5 @@ export async function runDietUiTests({cdp,pollEvaluate,runtimeTest,profileDirect
   },'Offline settings actually downloads a complete ZIP to disk and displays storage estimate.');
   await runtimeTest('DIET-UI-08-SECOND-BROWSER',()=>crossBrowser(zipBytes,exported,dietId),'Downloaded v2 file restores in a second fresh Chrome Profile; original portable hash, media checksums and photos match.');
   await go('/diet','#diet-day');await ready('.diet-thumbnails img');await pollEvaluate(cdp,"[...document.querySelectorAll('.diet-thumbnails img')].every(i=>i.complete&&i.naturalWidth>0)",Boolean,10000);
-  const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.9.0-diet.png'),Buffer.from(shot.data,'base64'));
+  const shot=await cdp.send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,'tests/results/v0.10.0-diet.png'),Buffer.from(shot.data,'base64'));
 }

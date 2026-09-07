@@ -55,6 +55,7 @@ export async function bootstrapApplication(options = {}) {
       exerciseManagement: container.exerciseManagementService,
       exerciseLog: container.exerciseLogService,
       activity: container.passScheduleService,
+      googleCalendar: container.googleCalendarService,
       operations: container.operationsService,
       dashboard: container.dashboardService,
       calendar: container.calendarService,

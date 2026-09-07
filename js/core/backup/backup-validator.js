@@ -3,7 +3,7 @@ import { HEALTH_METRICS } from '../health-rules.js';
 import { isUuid } from '../id-generator.js';
 import { canonicalJson } from './canonical-json.js';
 import { payloadHash } from './backup-integrity.js';
-import { BACKUP_FORMAT, BACKUP_STORE_NAMES, backupError } from './backup-format.js';
+import { BACKUP_FORMAT, BACKUP_STORE_NAMES, backupStores, backupError } from './backup-format.js';
 
 const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 const positive = (value) => Number.isSafeInteger(value) && value > 0;
@@ -29,6 +29,7 @@ export const BACKUP_UNIQUE_KEYS = Object.freeze({
   pass_usage_logs: [['profile_id', 'pass_id', 'exercise_log_id']],
   diet_photos: [['profile_id', 'storage_key']],
   weight_logs: [['profile_id', 'source', 'source_ref_id']],
+  calendar_event_links: [['profile_id', 'provider', 'schedule_id']],
   user_settings: [['profile_id', 'key']]
 });
 
@@ -69,7 +70,7 @@ export function validateBackupRows(document) {
   for (const name of BACKUP_STORE_NAMES) {
     const map = new Map();
     maps[name] = map;
-    for (const row of data[name]) {
+    for (const row of (data[name] ?? [])) {
       assert(object(row) && isUuid(row.id));
       assert(!map.has(row.id), 'BACKUP_DUPLICATE_ID');
       map.set(row.id, row);
@@ -149,11 +150,19 @@ export function validateBackupRows(document) {
       if (active) assert(linked.weight === row.weight && linked.measured_at === row.measured_at && linked.memo === row.memo, 'BACKUP_REFERENCE_BROKEN');
     }
   }
+  for (const row of (data.calendar_event_links ?? [])) {
+    ref('exercise_schedules', row.schedule_id);
+    assert(row.provider === 'google' && row.calendar_id === 'primary' && ['synced', 'deleted'].includes(row.status));
+    assert(row.external_event_id === null || (text(row.external_event_id) && /^[a-v0-9]{5,1024}$/.test(row.external_event_id)));
+    assert(positive(row.generation) && isUtcIso(row.last_synced_at));
+    const allowed = ['id','profile_id','created_at','updated_at','deleted_at','revision','provider','schedule_id','calendar_id','external_event_id','status','generation','last_synced_at'];
+    assert(Object.keys(row).every((key) => allowed.includes(key)));
+  }
   for (const row of data.user_settings) assert(text(row.key) && row.key.length > 0 && Object.hasOwn(row, 'value'));
   for (const [name, indexes] of Object.entries(BACKUP_UNIQUE_KEYS)) {
     for (const keys of indexes) {
       const seen = new Set();
-      for (const row of data[name]) {
+      for (const row of (data[name] ?? [])) {
         // Missing optional keys do not participate in an IndexedDB index.
         if (keys.some((key) => !Object.hasOwn(row, key))) continue;
         const values = keys.map((key) => row[key]);
@@ -170,13 +179,14 @@ export class BackupValidator {
   async validate(document) {
     assert(object(document) && document.format === BACKUP_FORMAT, 'BACKUP_FORMAT_INVALID');
     assert([1, 2].includes(document.backupVersion), 'BACKUP_VERSION_UNSUPPORTED');
-    assert(object(document.source) && document.source.schemaVersion === 1, 'BACKUP_SCHEMA_UNSUPPORTED');
+    assert(object(document.source) && [1, 2].includes(document.source.schemaVersion), 'BACKUP_SCHEMA_UNSUPPORTED');
     assert(text(document.source.appVersion) && positive(document.source.dbVersion) && positive(document.source.seedVersion));
     assert(isUtcIso(document.exportedAt));
     assert(object(document.scope) && document.scope.type === 'profile' && isUuid(document.scope.profileId), 'BACKUP_SCOPE_MISMATCH');
-    exactKeys(document.data, BACKUP_STORE_NAMES, 'BACKUP_FORMAT_INVALID');
-    exactKeys(document.counts, BACKUP_STORE_NAMES, 'BACKUP_COUNTS_MISMATCH');
-    for (const name of BACKUP_STORE_NAMES) {
+    const names = backupStores(document.source.schemaVersion);
+    exactKeys(document.data, names, 'BACKUP_FORMAT_INVALID');
+    exactKeys(document.counts, names, 'BACKUP_COUNTS_MISMATCH');
+    for (const name of names) {
       assert(Array.isArray(document.data[name]), 'BACKUP_FORMAT_INVALID');
       assert(Number.isSafeInteger(document.counts[name]) && document.counts[name] === document.data[name].length, 'BACKUP_COUNTS_MISMATCH');
     }

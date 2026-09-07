@@ -21,12 +21,19 @@ function action(context, selector, work) {
     finally { button.disabled = false; }
   }));
 }
+async function scheduleNotice(services) {
+  try {
+    const state = await services.googleCalendar?.status();
+    if (state?.enabled && state.pending) return '예약은 저장됐지만 Google Calendar 반영은 대기 중입니다. 설정에서 재인증·재시도할 수 있습니다.';
+  } catch { return '예약은 저장됐습니다. Google Calendar 상태는 설정에서 확인하세요.'; }
+  return '저장했습니다.';
+}
 function submit(context, selector, work) {
   const form = context.root.querySelector(selector), guard = guardForm(form); let busy = false;
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); if (busy) return; busy = true;
     const button = form.querySelector('[type=submit]'); button.disabled = true;
-    try { await work(); guard.markClean(); clearNavigationGuard(); context.showToast('저장했습니다.'); context.navigate(context.returnRoute ?? (selector === '#pass-form' ? '/exercise/passes' : '/calendar')); }
+    try { await work(); guard.markClean(); clearNavigationGuard(); context.showToast(selector === '#schedule-form' ? await scheduleNotice(context.services) : '저장했습니다.'); context.navigate(context.returnRoute ?? (selector === '#pass-form' ? '/exercise/passes' : '/calendar')); }
     catch (error) { context.showError('저장에 실패했습니다.', error); }
     finally { busy = false; button.disabled = false; }
   });
@@ -130,7 +137,7 @@ export async function renderScheduleForm(context, id, complete = false) {
     ${id && !complete ? `<div class="form-actions"><button class="button button-danger" id="cancel-schedule">예약 취소</button><button class="button" id="complete-schedule" ${schedule.status !== 'scheduled' ? 'disabled' : ''}>예약 완료</button></div>` : ''}`;
   action(context, '[data-back]', () => context.navigate(context.returnRoute ?? '/calendar'));
   action(context, '#complete-schedule', () => context.navigate(`/exercise/schedule/${id}/complete`));
-  action(context, '#cancel-schedule', async () => { if (!window.confirm('저장된 예약을 취소할까요?')) return; await services.activity.cancelSchedule(id, schedule.revision); clearNavigationGuard(); context.navigate(context.returnRoute ?? '/calendar'); });
+  action(context, '#cancel-schedule', async () => { if (!window.confirm('저장된 예약을 취소할까요?')) return; await services.activity.cancelSchedule(id, schedule.revision); context.showToast(await scheduleNotice(services)); clearNavigationGuard(); context.navigate(context.returnRoute ?? '/calendar'); });
   const value = (key) => root.querySelector(`#schedule-${key}`).value;
   submit(context, '#schedule-form', () => complete
     ? services.activity.completeSchedule(id, { performed_at_local: value('at'), values: readDynamicValues(root, template.fields), pass_id: root.querySelector('#exercise-pass').value || null, memo: value('memo') }, schedule.revision)
