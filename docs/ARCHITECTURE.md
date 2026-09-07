@@ -97,3 +97,8 @@ Supabase 연결 후에도 IndexedDB는 즉시 읽고 쓰는 로컬 원장으로 
 ## UI 오류 경계
 
 내부 `ConstraintError`, transaction 오류, revision 오류 문자열을 사용자에게 그대로 표시하지 않는다. Application/Core 오류코드를 안전한 작업 메시지로 매핑하고 상세 원인은 console/app_logs 진단에만 남긴다.
+
+
+## v0.5.0 Activity Command
+
+운동기록과 예약·이용권 정합성은 ActivityCommandContract → IndexedDbActivityCommand에서 처리한다. Service에 generic transaction을 노출하지 않는다. 자세한 상태 전이·멱등성·조회·RPC 경계는 [PASS_SCHEDULE_DESIGN.md](PASS_SCHEDULE_DESIGN.md)를 따른다.

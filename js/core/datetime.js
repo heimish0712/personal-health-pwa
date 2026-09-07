@@ -35,6 +35,8 @@ export function localDateTimeToUtcIso(localValue, timeZone) {
   const secondOffset = timeZoneOffsetMs(result, timeZone);
   result = new Date(guess.getTime() - secondOffset);
   if (Number.isNaN(result.getTime())) throw new ValidationError('DATETIME_INVALID', '날짜와 시간을 확인해 주세요.');
+  const actual = partsFor(result, timeZone);
+  if (['year', 'month', 'day', 'hour', 'minute', 'second'].some((key) => Number(actual[key]) !== p[key])) throw new ValidationError('DATETIME_INVALID', '실제 존재하는 날짜와 시간을 입력하세요.');
   return result.toISOString();
 }
 

@@ -60,7 +60,9 @@ export class ExerciseQueryService {
   async getWeeklySummary({ exerciseTypeId = null } = {}) {
     const timezone = await this.getTimezone();
     const { start, end } = getLocalWeekUtcRange(this.#clock.nowIso(), timezone);
-    const logs = await this.#exerciseLogRepository.list({
+    const logs = this.#exerciseLogRepository.listByDateRange
+      ? (await this.#exerciseLogRepository.listByDateRange(start, end)).filter((item) => !exerciseTypeId || item.exercise_type_id === exerciseTypeId)
+      : await this.#exerciseLogRepository.list({
       predicate: (item) => item.performed_at >= start && item.performed_at < end && (!exerciseTypeId || item.exercise_type_id === exerciseTypeId)
     });
     return {

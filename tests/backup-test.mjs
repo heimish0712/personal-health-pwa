@@ -22,7 +22,7 @@ data.exercise_templates = [{ ...metadata(3), exercise_type_id: id(2), version: 1
 data.exercise_logs = [{ ...metadata(4), exercise_type_id: id(2), template_id: id(3), performed_at: time, values: { duration_minutes: 10 }, memo: '  원본 메모 <안전>  ', revision: 7, deleted_at: time }];
 data.passes = [{ ...metadata(5), exercise_type_id: id(2), name: '테스트권', total_count: 10, status: 'active' }];
 data.pass_usage_logs = [{ ...metadata(6), pass_id: id(5), exercise_log_id: id(4), used_count: 1, status: 'cancelled' }];
-const original = { format: BACKUP_FORMAT, backupVersion: 1, source: { appVersion: '0.4.0', dbVersion: 1, schemaVersion: 1, seedVersion: 1 }, exportedAt: time, scope: { type: 'profile', profileId: id(1) }, data, counts: backupCounts(data) };
+const original = { format: BACKUP_FORMAT, backupVersion: 1, source: { appVersion: '0.5.0', dbVersion: 1, schemaVersion: 1, seedVersion: 1 }, exportedAt: time, scope: { type: 'profile', profileId: id(1) }, data, counts: backupCounts(data) };
 async function seal(doc) { doc.counts = backupCounts(doc.data); doc.integrity = { algorithm: 'SHA-256', payloadHash: await payloadHash(doc) }; return doc; }
 await seal(original);
 async function reject(id, mutate, code, rehash = true) {
@@ -84,4 +84,4 @@ await reporter.test('BACKUP-ARCHITECTURE', () => {
   assert(!/\.clear\(|repositories\.|\.create\(/.test(command));
   assert(command.includes(".delete(target.templateId)") && command.includes(".delete(target.typeId)") && command.includes(".delete(target.profileId)"));
 });
-reporter.finish('tests/results/v0.4.0-backup.json');
+reporter.finish('tests/results/v0.5.0-backup.json');

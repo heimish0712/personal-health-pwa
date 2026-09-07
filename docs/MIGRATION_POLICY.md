@@ -58,3 +58,9 @@ IndexedDB Migration과 향후 Supabase PostgreSQL Migration은 별도 이력으�
 App/cache만 0.4.0으로 올리고 DB/Schema/Seed는 1을 유지한다. 기존 14 Store와 Index 변경이 없으므로 IndexedDB Migration은 없다. BackupMigrationRegistry도 v1→v1 no-op이며 데이터 변환은 없다.
 
 복원은 Schema Migration이 아니라 사용자 실행 업무 Command다. 검증된 pristine 자동생성 Profile/Seed 3행을 하나의 transaction에서 교체한다. 실패 시 기존 세 행까지 rollback하며 DB 삭제/clear는 사용하지 않는다.
+
+
+## v0.5.0 Pass & Schedule
+
+DB/Schema/Seed 1 유지, 새 Store·인덱스·누적 Migration 없음. 선택적 JSON 필드 pass_id/completion_revision 추가만 수행한다. 기존 백업 v1의 필드 누락은 허용한다. 최신 규칙은 같은 pass cancelled 행 재활성화이므로 기존 pair UNIQUE 제거 계획은 폐기한다.
+v0.5 데이터가 생긴 뒤 v0.4에서 운동을 수정/삭제하면 원장을 갱신하지 않으므로 코드 downgrade 후 쓰기는 안전하지 않다. 백업 후 쓰기 중지 및 수정 릴리스로 복구하며 DB 삭제/downgrade는 하지 않는다.

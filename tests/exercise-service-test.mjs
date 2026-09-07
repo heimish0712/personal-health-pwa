@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
-const output = path.join(root, 'tests/results/v0.4.0-exercise-service.json');
+const output = path.join(root, 'tests/results/v0.5.0-exercise-service.json');
 const reporter = new TestReporter('exercise-service');
 await import(pathToFileURL(path.join(root, 'js/config.js')));
 const { ExerciseManagementService } = await import(pathToFileURL(path.join(root, 'js/application/exercise-management.service.js')));
@@ -51,7 +51,11 @@ function makeFixture() {
     }
   };
   const management = new ExerciseManagementService({ exerciseTypeRepository: typeRepo, exerciseTemplateRepository: templateRepo, exerciseManagementCommand: command, idGenerator: ids });
-  const logs = new ExerciseLogService({ exerciseTypeRepository: typeRepo, exerciseTemplateRepository: templateRepo, exerciseLogRepository: logRepo, profileRepository: profileRepo, identityContext: identity });
+  const logs = new ExerciseLogService({ exerciseTypeRepository: typeRepo, exerciseTemplateRepository: templateRepo, exerciseLogRepository: logRepo, profileRepository: profileRepo, identityContext: identity, activityCommand: {
+    saveLog: ({ id, data, expectedRevision }) => id ? logRepo.update(id, data, expectedRevision) : logRepo.create(data),
+    deleteLog: ({ id, expectedRevision }) => logRepo.softDelete(id, expectedRevision),
+    restoreLog: ({ id, expectedRevision }) => logRepo.restore(id, expectedRevision)
+  } });
   const query = new ExerciseQueryService({ exerciseTypeRepository: typeRepo, exerciseTemplateRepository: templateRepo, exerciseLogRepository: logRepo, profileRepository: profileRepo, identityContext: identity, clock });
   return { clock, ids, identity, typeRepo, templateRepo, logRepo, management, logs, query };
 }

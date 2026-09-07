@@ -3,6 +3,13 @@ importScripts('./js/config.js');
 const CACHE_NAME = APP_CONFIG.CACHE_VERSION;
 const CACHE_PREFIX = APP_CONFIG.CACHE_PREFIX;
 const APP_SHELL = [
+  './js/application/pass-schedule.service.js',
+  './js/core/pass-rules.js',
+  './js/pages/exercise/pass-schedule.page.js',
+  './js/data/contracts/activity-command.contract.js',
+  './js/data/indexeddb/commands/activity.command.js',
+  './js/data/indexeddb/repositories/scoped-index-query.js',
+
   './',
   './index.html',
   './manifest.json',

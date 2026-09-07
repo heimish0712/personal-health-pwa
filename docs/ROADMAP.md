@@ -1,6 +1,6 @@
 # 개발 로드맵
 
-확정일: 2026-09-07. 사용자 지정 순서를 기록한다. 아래 단계는 기능 완료를 의미하지 않는다.
+확정일: 2026-09-07. 사용자 지정 순서를 기록한다. v0.5.0 이용권·예약까지 구현 및 자동검증을 진행했다. 실기기 승인 상태는 REGRESSION_TEST.md를 따른다.
 
 ## 기준선
 
@@ -29,10 +29,10 @@ App `0.3.0` / DB `1` / Schema `1` / Seed `1`.
 - 운동기록 + 사용원장, 예약 완료 + 운동기록 + 사용원장은 각각 하나의 Semantic Command transaction으로 처리한다.
 - Command transaction 안에서 Profile 소유권, 관계, expectedRevision, 잔여 횟수와 적용 기간, 기존 사용로그를 재확인한다. 검사와 저장을 서로 다른 transaction으로 나누지 않는다.
 - 같은 Profile의 운동기록 한 건에 `status = used`인 사용로그는 최대 1건이다. `cancelled` 로그는 여러 건 보존한다. 상태 판정에서 삭제 표시를 이용해 규칙을 우회하지 않는다.
-- A 이용권 사용 → 취소 → B 이용권 사용 → 취소 → A 이용권 재사용 시 이전 로그는 cancelled로 보존하고 마지막 사용은 새 로그 ID로 기록한다.
-- 현재 `uq_profile_pass_exercise`는 동일 이용권·운동기록 쌍 전체에 UNIQUE이므로 위 A 재사용 이력을 새 행으로 쌓을 수 없다. 이용권 개발 단계에서 이 인덱스를 제거하거나 비고유 조회 인덱스로 교체하는 누적 Migration을 설계한다. 기존 사용로그 행은 보존하고 one-active-usage와 재요청 중복 방지는 Command로 검증한다.
-- `exercise_log_id` 단독 UNIQUE로 바꾸지 않는다. 요청 식별자를 보존하는 멱등성 설계를 별도로 두어 같은 요청의 재시도와 사용자의 새 차감 의도를 구분한다.
-- Backup Core에서는 현재 DB v1 인덱스와 사용로그 데이터를 그대로 보존한다. 이용권 개발 단계에서 이전 백업을 읽는 변환·검증도 함께 갱신한다.
+- 최신 v0.5 요청에 따라 A → 취소 → B → 취소 → A는 기존 A usage ID를 재활성화한다. 이전의 새 행 누적 제안은 폐기했다.
+- 기존 uq_profile_pass_exercise를 그대로 유지한다. exercise_log_id 단독 UNIQUE는 추가하지 않는다. DB/Schema/Seed 1, Migration 없음.
+- 예약 완료 expectedRevision을 완료 요청 식별에 사용하고, 완료 취소 후에는 새로운 revision으로 명시적으로 재완료한다.
+- Backup v1을 유지하며 신규 pass_id 관계 및 one-active-usage 검증을 추가했다.
 - 향후 PostgreSQL에서도 같은 업무 경계를 RPC로 대응하고 동시성 제약을 원격 transaction에서 보장한다.
 
 ## 체중·인바디와 조회

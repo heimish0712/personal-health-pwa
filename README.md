@@ -4,7 +4,7 @@
 
 ## 현재 버전
 
-- App: **v0.4.0**
+- App: **v0.5.0**
 - IndexedDB: **v1**
 - Logical Schema: **v1**
 - Seed: **v1**
@@ -23,9 +23,11 @@ v0.3.0부터 `운동` 탭을 실제로 사용할 수 있습니다. 필라테스 
 - 운동 공통 메모
 - 과거 기록의 역사적 Template 보존
 - 운동 종류 필터 / 최근 기록 / 주간 운동 횟수·시간 계산
+- 운동별 이용권·차감·원장, 삭제 기록 복원
+- 예약 생성·수정·취소·완료·완료 취소, 기간별 예약/운동 조회
 - 설정 화면 DB 진단
 
-다음 개발은 **이용권·예약 v0.5.0**입니다. 체중·인바디, 식단·사진, 사진 포함 Backup v2, 홈·통합 캘린더, Supabase Sync는 [개발 로드맵](docs/ROADMAP.md)을 따릅니다.
+v0.5.0에서 **운동 → 이용권 관리**, **캘린더 → 예약**을 사용할 수 있습니다. 다음 개발은 체중·인바디입니다. 체중·인바디, 식단·사진, 사진 포함 Backup v2, 홈·통합 캘린더, Supabase Sync는 [개발 로드맵](docs/ROADMAP.md)을 따릅니다.
 
 ## Backup Core v0.4.0
 
@@ -156,3 +158,5 @@ node tests/run-all-tests.mjs
 - `tests/results/v0.3.0.json` — 당시 자동검증 실행결과(최종 사용자 QA 반영 전 이력)
 
 - `tests/results/v0.4.0.json` — 현재 버전의 자동검증 및 실기기 QA 대기 항목
+
+수동 검증: [MANUAL_QA.md](MANUAL_QA.md). 배포 및 복구 주의사항: [RELEASE_REPORT.md](RELEASE_REPORT.md).

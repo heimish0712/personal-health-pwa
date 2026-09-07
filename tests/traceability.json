@@ -427,5 +427,96 @@
     "BACKUP-EXP-012",
     "BACKUP-MEDIA-IMPORT",
     "RESTORE-011"
+  ],
+  "V05-PASS-001": [
+    "PASS-001",
+    "ACTIVITY-UI-PASS"
+  ],
+  "V05-PASS-002": [
+    "PASS-002",
+    "PASS-003",
+    "PASS-004",
+    "PASS-005",
+    "PASS-008",
+    "PASS-009"
+  ],
+  "V05-PASS-003": [
+    "PASS-006",
+    "PASS-007",
+    "PASS-017",
+    "PASS-RESTORE-EXHAUSTED",
+    "PASS-RESTORE-ROLLBACK"
+  ],
+  "V05-PASS-004": [
+    "PASS-010",
+    "PASS-013",
+    "PASS-014",
+    "PASS-DATE-BOUNDARY"
+  ],
+  "V05-PASS-005": [
+    "PASS-015",
+    "PASS-016"
+  ],
+  "V05-SCHEDULE-001": [
+    "SCHEDULE-001",
+    "ACTIVITY-UI-SCHEDULE"
+  ],
+  "V05-SCHEDULE-002": [
+    "SCHEDULE-002",
+    "SCHEDULE-005",
+    "SCHEDULE-OPTIONAL-PASS",
+    "ACTIVITY-UI-COMPLETE"
+  ],
+  "V05-SCHEDULE-003": [
+    "SCHEDULE-004",
+    "SCHEDULE-007",
+    "ACTIVITY-UI-UNDO",
+    "ACTIVITY-UI-RECOMPLETE"
+  ],
+  "V05-SCHEDULE-004": [
+    "SCHEDULE-003",
+    "SCHEDULE-006",
+    "SCHEDULE-COMPLETED-EDIT"
+  ],
+  "V05-QUERY-001": [
+    "QUERY-ACTIVITY-RANGE",
+    "ACTIVITY-SCOPE-QUERY"
+  ],
+  "V05-ATOMIC-001": [
+    "ATOMIC-UNDO-activity-after-log",
+    "ATOMIC-UNDO-activity-after-cancel",
+    "ATOMIC-UNDO-activity-after-usage",
+    "ATOMIC-UNDO-activity-after-schedule",
+    "ATOMIC-COMPLETE-activity-after-log",
+    "ATOMIC-COMPLETE-activity-after-cancel",
+    "ATOMIC-COMPLETE-activity-after-usage",
+    "ATOMIC-COMPLETE-activity-after-schedule",
+    "ATOMIC-SWITCH-activity-after-log",
+    "ATOMIC-SWITCH-activity-after-cancel",
+    "ATOMIC-SWITCH-activity-after-usage",
+    "PASS-CONCURRENT-LAST",
+    "ACTIVITY-SCOPE-PASS"
+  ],
+  "V05-BACKUP-001": [
+    "ACTIVITY-BACKUP",
+    "ACTIVITY-REOPEN"
+  ],
+  "V05-QA-001": [
+    "ACTIVITY-UI-PASS",
+    "ACTIVITY-UI-LOG",
+    "ACTIVITY-UI-UNLINK",
+    "ACTIVITY-UI-SCHEDULE",
+    "ACTIVITY-UI-COMPLETE",
+    "ACTIVITY-UI-UNDO",
+    "ACTIVITY-UI-RECOMPLETE",
+    "ACTIVITY-UI-MOBILE",
+    "V05-QA-PASS",
+    "V05-QA-SCHEDULE",
+    "V05-QA-VALIDITY",
+    "V05-QA-LIMIT",
+    "V05-QA-CONFLICT",
+    "V05-QA-HISTORY",
+    "V05-QA-BACKUP",
+    "V05-QA-REGRESSION"
   ]
 }

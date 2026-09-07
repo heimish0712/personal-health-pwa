@@ -1,3 +1,4 @@
+import { renderCalendar } from './pages/exercise/pass-schedule.page.js';
 import { bootstrapApplication } from './bootstrap/bootstrap.js';
 import { getActionErrorMessage, getPublicErrorMessage } from './core/errors.js';
 import { canLeaveCurrentRoute, clearNavigationGuard, navigate, startRouter } from './router.js';
@@ -58,7 +59,7 @@ function renderHome(meta) {
   const diagnostic = appContext.diagnostic;
   pageRoot.innerHTML = `
     <section class="card"><h2>${escapeHtml(globalThis.APP_CONFIG.APP_NAME)}</h2><p>${escapeHtml(meta.message)}</p><span class="version-chip">v${escapeHtml(globalThis.APP_CONFIG.APP_VERSION)} · DB ${escapeHtml(globalThis.APP_CONFIG.DB_VERSION)}</span></section>
-    <section class="card"><h2>현재 단계</h2><p>운동 기록과 JSON 백업·복원을 오프라인으로 사용할 수 있습니다. 백업은 설정에서 관리합니다. 이용권과 예약은 v0.5.0에서 연결합니다.</p></section>
+    <section class="card"><h2>현재 단계</h2><p>운동 기록과 JSON 백업·복원을 오프라인으로 사용할 수 있습니다. 백업은 설정에서 관리합니다. 이용권은 운동 탭에서, 예약과 운동기록 기간 조회는 캘린더에서 관리합니다.</p></section>
     <section class="card compact-card"><div class="status-line"><span>로컬 데이터 저장소</span><strong class="status-normal">${diagnostic?.status === 'normal' ? '정상' : '확인 필요'}</strong></div></section>`;
 }
 
@@ -97,9 +98,9 @@ async function renderPage(route) {
   renderBottomNav(bottomNav, route);
   const isCurrent = () => token === renderToken;
 
-  if (route.startsWith('/exercise')) {
+  if (route.startsWith('/exercise') || route === '/calendar') {
     try {
-      await renderExerciseRoute(route, {
+      await (route === '/calendar' ? (r, c) => renderCalendar(c) : renderExerciseRoute)(route, {
         root: pageRoot,
         services: appContext.services,
         navigate,

@@ -1,4 +1,4 @@
-# Data Model - v0.4.0
+# Data Model - v0.5.0
 
 ## 버전
 
@@ -167,3 +167,10 @@ IndexedDB는 제거하지 않고 향후 Sync Outbox와 Remote Gateway를 추가�
 현재 Profile의 12 portable Store를 삭제 행까지 포함하여 원본 metadata 그대로 JSON으로 보존한다. device_settings/app_logs는 제외한다. diet_photos가 있으면 사진 파일을 누락한 백업을 만들지 않도록 v1 Export/Import를 거절한다.
 
 파일의 data/counts/scope 형식과 pristine 복원 정의는 [BACKUP_CORE_DESIGN.md](BACKUP_CORE_DESIGN.md)를 따른다.
+
+
+## v0.5.0 선택적 JSON 필드
+
+Store/Index/keyPath는 변경하지 않는다. exercise_logs.pass_id는 UUID 또는 null(차감 없음); 기존 누락 데이터는 현재 used usage로 호환한다. 삭제 시 pass_id를 유지한다.
+exercise_schedules.completion_revision은 마지막 완료 요청 expectedRevision이다. completed_exercise_log_id는 최초 완료 전에는 생략, 완료 취소 후에도 유지한다. 재완료는 동일 log ID/역사적 template_id를 보존한다.
+pass_usage_logs의 기존 uq_profile_pass_exercise는 유지한다. 같은 쌍 재적용은 cancelled→used 재활성화이며 revision 증가, created_at/ID 보존이다. 상세 업무 규칙은 PASS_SCHEDULE_DESIGN.md 참조.

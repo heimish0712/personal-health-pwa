@@ -12,12 +12,13 @@
 
 - 현재 저장소의 실제 코드, git 상태, REQUIREMENTS, 관련 설계를 먼저 읽는다.
 - 기존 정상 기능을 임의 재작성하지 않는다. 사용자 변경을 보존하고 승인된 작업 범위에서 진행한다.
-- 현재 구현은 Backup Core v0.4.0이며 다음 이용권·예약은 v0.5.0이다. 순서는 [ROADMAP.md](docs/ROADMAP.md), 상세 명세는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md)를 따른다.
+- 현재 구현은 이용권·예약 v0.5.0이며 다음 단계는 체중·인바디다. 순서는 [ROADMAP.md](docs/ROADMAP.md), 상세 명세는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md)를 따른다.
 - 최신 사용자 지시에 따라 복원은 자동 Seed만 있는 pristine 환경에서 수행한다. 전용 Command transaction 안에서 검증된 초기 3행만 제거하는 예외가 있다. 이전 'Seed 생성 전 복원' 설계를 적용하지 않는다.
 - DB 변경 전 DB/Schema/Seed 버전과 Migration 필요 여부를 명시한다. 실제 구조 변경 없이 기능 추가만으로 DB 버전을 올리지 않는다.
 - UI → Service → Contract/Semantic Command Port → Adapter 경계를 유지한다. 다중 Store 업무는 Command transaction으로 처리한다.
 - BaseScopedRepository의 범용 `list()`는 유지한다. 기간 조회 성능은 기능별 Repository에 기존 Profile+날짜 인덱스 메서드를 추가하여 개선한다.
 - 일반 CRUD에 물리삭제·clear·무조건 덮어쓰기·백업 import API를 노출하지 않는다.
+- 동일 pass 재적용은 기존 cancelled usage ID를 재활성화한다. 기존 pair UNIQUE를 유지하며 새 행 누적/Migration 제안은 폐기되었다.
 - 이용권은 운동기록별 `status = used` 로그 최대 1건, `cancelled` 이력 여러 건을 허용하는 규칙을 Command transaction 안에서 검사한다. `exercise_log_id` 단독 UNIQUE를 추가하지 않는다.
 
 ## 변경 산출물과 검증

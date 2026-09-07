@@ -1,0 +1,915 @@
+{
+  "version": "0.5.0",
+  "suite": "browser-runtime",
+  "executedAt": "2026-09-07T03:13:21.117Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+  "basePath": "/personal-health-pwa-v0.5.0/",
+  "summary": {
+    "total": 180,
+    "passed": 180,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "DB-001",
+      "status": "PASS",
+      "evidence": "DB version is 1."
+    },
+    {
+      "id": "DB-002",
+      "status": "PASS",
+      "evidence": "14 Object Stores exist."
+    },
+    {
+      "id": "DB-003",
+      "status": "PASS",
+      "evidence": "All real Object Store key paths and Index definitions match the approved schema."
+    },
+    {
+      "id": "DB-005",
+      "status": "PASS",
+      "evidence": "Test database is separate from the production database."
+    },
+    {
+      "id": "PROFILE-001",
+      "status": "PASS",
+      "evidence": "One local Profile was created."
+    },
+    {
+      "id": "PROFILE-002-ID",
+      "status": "PASS",
+      "evidence": "Profile ID is UUID v4."
+    },
+    {
+      "id": "PROFILE-003",
+      "status": "PASS",
+      "evidence": "Current profile pointer and IdentityContext are aligned."
+    },
+    {
+      "id": "SEED-001",
+      "status": "PASS",
+      "evidence": "One default Pilates type exists."
+    },
+    {
+      "id": "SEED-002",
+      "status": "PASS",
+      "evidence": "Pilates template v1 exists."
+    },
+    {
+      "id": "UUID-001",
+      "status": "PASS",
+      "evidence": "Seed entities use UUID v4."
+    },
+    {
+      "id": "TIME-001",
+      "status": "PASS",
+      "evidence": "Entity timestamps use UTC ISO format."
+    },
+    {
+      "id": "PROFILE-002",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate profiles."
+    },
+    {
+      "id": "SEED-003",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate seed records."
+    },
+    {
+      "id": "SEED-004",
+      "status": "PASS",
+      "evidence": "Seed upgrade does not overwrite a user rename."
+    },
+    {
+      "id": "SEED-005",
+      "status": "PASS",
+      "evidence": "Soft-deleted seed is not restored automatically."
+    },
+    {
+      "id": "SCOPE-CREATE-001",
+      "status": "PASS",
+      "evidence": "Repository ignores an untrusted input profile_id."
+    },
+    {
+      "id": "REV-001",
+      "status": "PASS",
+      "evidence": "New entity revision is 1."
+    },
+    {
+      "id": "REV-002",
+      "status": "PASS",
+      "evidence": "Update increments revision and preserves created_at."
+    },
+    {
+      "id": "REV-003",
+      "status": "PASS",
+      "evidence": "Stale expectedRevision is rejected."
+    },
+    {
+      "id": "PROTECTED-001",
+      "status": "PASS",
+      "evidence": "A caller cannot move an entity to another Profile through an update patch."
+    },
+    {
+      "id": "REV-004",
+      "status": "PASS",
+      "evidence": "Soft-delete rejects a stale expectedRevision."
+    },
+    {
+      "id": "DELETE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted record is excluded from normal get."
+    },
+    {
+      "id": "DELETE-002",
+      "status": "PASS",
+      "evidence": "Deleted record remains queryable through explicit include-deleted path."
+    },
+    {
+      "id": "REV-005",
+      "status": "PASS",
+      "evidence": "Restore rejects a stale expectedRevision."
+    },
+    {
+      "id": "DELETE-003",
+      "status": "PASS",
+      "evidence": "Restore keeps ID and increments revision."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-001",
+      "status": "PASS",
+      "evidence": "Multiple user-created exercises without system_key are allowed."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-002",
+      "status": "PASS",
+      "evidence": "Multiple schedules without completed_exercise_log_id are allowed."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-003",
+      "status": "PASS",
+      "evidence": "Multiple manual weights without source_ref_id are allowed."
+    },
+    {
+      "id": "SCOPE-001",
+      "status": "PASS",
+      "evidence": "Profile A cannot read Profile B data."
+    },
+    {
+      "id": "SCOPE-002",
+      "status": "PASS",
+      "evidence": "Profile A cannot update Profile B data."
+    },
+    {
+      "id": "UNIQUE-001",
+      "status": "PASS",
+      "evidence": "Duplicate profile/system_key is rejected by a unique compound index."
+    },
+    {
+      "id": "UNIQUE-002",
+      "status": "PASS",
+      "evidence": "Duplicate profile/exercise/version is rejected."
+    },
+    {
+      "id": "UNIQUE-003",
+      "status": "PASS",
+      "evidence": "Duplicate pass/exercise usage is rejected."
+    },
+    {
+      "id": "TX-002",
+      "status": "PASS",
+      "evidence": "Explicit abort leaves no partial records."
+    },
+    {
+      "id": "TX-001",
+      "status": "PASS",
+      "evidence": "Bootstrap failure rolls back Profile, seed, and device pointer together."
+    },
+    {
+      "id": "PROFILE-004",
+      "status": "PASS",
+      "evidence": "Invalid profile pointer is repaired without creating another Profile."
+    },
+    {
+      "id": "DB-004",
+      "status": "PASS",
+      "evidence": "Record survives database close and reopen."
+    },
+    {
+      "id": "EX-TYPE-001",
+      "status": "PASS",
+      "evidence": "Default Pilates seed is visible through the exercise query service."
+    },
+    {
+      "id": "EX-TYPE-002",
+      "status": "PASS",
+      "evidence": "A user-created exercise type is created through the application service."
+    },
+    {
+      "id": "EX-TPL-001",
+      "status": "PASS",
+      "evidence": "Exercise creation atomically creates template v1."
+    },
+    {
+      "id": "EX-TPL-007",
+      "status": "PASS",
+      "evidence": "Custom fields receive a stable UUID-based key."
+    },
+    {
+      "id": "EX-LOG-001",
+      "status": "PASS",
+      "evidence": "Exercise log is created against the current active template."
+    },
+    {
+      "id": "EX-LOG-002",
+      "status": "PASS",
+      "evidence": "Exercise memo is stored as a common fixed field."
+    },
+    {
+      "id": "EX-LOG-003",
+      "status": "PASS",
+      "evidence": "Dynamic exercise values are validated and normalized."
+    },
+    {
+      "id": "EX-TPL-003",
+      "status": "PASS",
+      "evidence": "Template edit creates a new active version."
+    },
+    {
+      "id": "EX-TPL-004",
+      "status": "PASS",
+      "evidence": "Previous template is retained as superseded."
+    },
+    {
+      "id": "EX-TPL-007-KEY",
+      "status": "PASS",
+      "evidence": "Changing a custom field label preserves its internal key."
+    },
+    {
+      "id": "EX-TPL-009",
+      "status": "PASS",
+      "evidence": "Stale template ID/revision pair is rejected."
+    },
+    {
+      "id": "EX-TPL-005",
+      "status": "PASS",
+      "evidence": "Existing record keeps its original template after a newer template is created."
+    },
+    {
+      "id": "EX-LOG-014",
+      "status": "PASS",
+      "evidence": "Historical record can still be edited with its historical template."
+    },
+    {
+      "id": "EX-LOG-006",
+      "status": "PASS",
+      "evidence": "Exercise log update preserves created_at."
+    },
+    {
+      "id": "EX-LOG-007",
+      "status": "PASS",
+      "evidence": "Exercise log update changes updated_at and revision."
+    },
+    {
+      "id": "EX-LOG-009",
+      "status": "PASS",
+      "evidence": "Stale exercise log revision is rejected."
+    },
+    {
+      "id": "EX-TPL-006",
+      "status": "PASS",
+      "evidence": "New record uses the latest active template."
+    },
+    {
+      "id": "EX-VAL-004",
+      "status": "PASS",
+      "evidence": "Invalid numeric dynamic value is rejected by the application service."
+    },
+    {
+      "id": "EX-VAL-008",
+      "status": "PASS",
+      "evidence": "Blank exercise name is rejected."
+    },
+    {
+      "id": "EX-TYPE-005",
+      "status": "PASS",
+      "evidence": "Exercise type can be deactivated."
+    },
+    {
+      "id": "EX-VAL-003",
+      "status": "PASS",
+      "evidence": "Inactive exercise cannot receive a new log."
+    },
+    {
+      "id": "EX-TYPE-006",
+      "status": "PASS",
+      "evidence": "Exercise type can be reactivated."
+    },
+    {
+      "id": "EX-TYPE-007",
+      "status": "PASS",
+      "evidence": "Exercise type uses soft-delete."
+    },
+    {
+      "id": "EX-TYPE-008",
+      "status": "PASS",
+      "evidence": "Soft-deleted exercise is excluded from active list."
+    },
+    {
+      "id": "EX-VAL-002",
+      "status": "PASS",
+      "evidence": "Deleted exercise cannot receive a new log."
+    },
+    {
+      "id": "EX-TYPE-RESTORE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted exercise can be restored without changing ID."
+    },
+    {
+      "id": "EX-LOG-010",
+      "status": "PASS",
+      "evidence": "Exercise log uses soft-delete."
+    },
+    {
+      "id": "EX-LOG-011",
+      "status": "PASS",
+      "evidence": "Deleted exercise log is excluded from normal detail lookup."
+    },
+    {
+      "id": "EX-LOG-012",
+      "status": "PASS",
+      "evidence": "Deleted exercise log is available through explicit include-deleted lookup."
+    },
+    {
+      "id": "EX-LOG-RESTORE-001",
+      "status": "PASS",
+      "evidence": "Deleted exercise log restores with the same ID."
+    },
+    {
+      "id": "EX-TYPE-009",
+      "status": "PASS",
+      "evidence": "Exercise query service keeps Profile data isolated."
+    },
+    {
+      "id": "EX-LOG-013",
+      "status": "PASS",
+      "evidence": "Exercise log service cannot read another Profile log."
+    },
+    {
+      "id": "EX-TPL-002",
+      "status": "PASS",
+      "evidence": "Exercise type + template creation rolls back together on mid-command failure."
+    },
+    {
+      "id": "LOG-001",
+      "status": "PASS",
+      "evidence": "App log records can be written and read."
+    },
+    {
+      "id": "LOG-002",
+      "status": "PASS",
+      "evidence": "App log retention is capped at 200 records."
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only diagnostic reports a healthy database."
+    },
+    {
+      "id": "BACKUP-EXP-001",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-002",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-003",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-004",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-005",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-006",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-007",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-008",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-009",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-010",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-011",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-012",
+      "status": "PASS",
+      "evidence": "Photo metadata prevents a falsely complete v1 export."
+    },
+    {
+      "id": "RESTORE-001",
+      "status": "PASS",
+      "evidence": "Pristine seeded database restored via 13-store command."
+    },
+    {
+      "id": "RESTORE-002",
+      "status": "PASS",
+      "evidence": "Original Profile ID preserved."
+    },
+    {
+      "id": "RESTORE-003",
+      "status": "PASS",
+      "evidence": "id preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-004",
+      "status": "PASS",
+      "evidence": "created_at preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-005",
+      "status": "PASS",
+      "evidence": "updated_at preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-006",
+      "status": "PASS",
+      "evidence": "deleted_at preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-007",
+      "status": "PASS",
+      "evidence": "revision preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-008",
+      "status": "PASS",
+      "evidence": "Template references and dynamic values preserved."
+    },
+    {
+      "id": "RESTORE-009",
+      "status": "PASS",
+      "evidence": "Historical templates preserved."
+    },
+    {
+      "id": "RESTORE-010",
+      "status": "PASS",
+      "evidence": "Deleted rows remain deleted."
+    },
+    {
+      "id": "RESTORE-011",
+      "status": "PASS",
+      "evidence": "Device ID and device metadata untouched."
+    },
+    {
+      "id": "RESTORE-012",
+      "status": "PASS",
+      "evidence": "Current Profile pointer is restored."
+    },
+    {
+      "id": "RESTORE-013",
+      "status": "PASS",
+      "evidence": "Valid file can be previewed on a populated target but cannot be written."
+    },
+    {
+      "id": "RESTORE-014",
+      "status": "PASS",
+      "evidence": "Five fault points roll back Seed removals, portable rows and pointer together."
+    },
+    {
+      "id": "RESTORE-015",
+      "status": "PASS",
+      "evidence": "Entire portable canonical hash matches original."
+    },
+    {
+      "id": "RESTORE-016",
+      "status": "PASS",
+      "evidence": "Reopen and bootstrap preserve all restored values without Seed mutation."
+    },
+    {
+      "id": "RESTORE-STALE-PREVIEW",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "RESTORE-CHANGED-SEED",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "RESTORE-CONCURRENT",
+      "status": "PASS",
+      "evidence": "Two connections cannot mix or duplicate concurrent restores."
+    },
+    {
+      "id": "BACKUP-SNAPSHOT-ATOMIC",
+      "status": "PASS",
+      "evidence": "Snapshot observes both type/template writes together or neither."
+    },
+    {
+      "id": "PASS-001",
+      "status": "PASS",
+      "evidence": "Initial pass has 60 calculated uses."
+    },
+    {
+      "id": "PASS-002",
+      "status": "PASS",
+      "evidence": "Exercise debits once: 60 -> 59."
+    },
+    {
+      "id": "PASS-003",
+      "status": "PASS",
+      "evidence": "Same pass edit neither adds nor mutates usage."
+    },
+    {
+      "id": "PASS-004",
+      "status": "PASS",
+      "evidence": "Removing selection cancels usage."
+    },
+    {
+      "id": "PASS-005",
+      "status": "PASS",
+      "evidence": "Reapply reactivates same cancelled usage ID."
+    },
+    {
+      "id": "PASS-006",
+      "status": "PASS",
+      "evidence": "Delete restores capacity."
+    },
+    {
+      "id": "PASS-007",
+      "status": "PASS",
+      "evidence": "Restore revalidates and debits."
+    },
+    {
+      "id": "PASS-008",
+      "status": "PASS",
+      "evidence": "Switch cancels A and activates B atomically; max one active."
+    },
+    {
+      "id": "PASS-009",
+      "status": "PASS",
+      "evidence": "A -> B -> A keeps pair identity and cancelled B history."
+    },
+    {
+      "id": "PASS-010",
+      "status": "PASS",
+      "evidence": "Actual exercise date outside expiry rejects edit without removing existing usage."
+    },
+    {
+      "id": "PASS-011",
+      "status": "PASS",
+      "evidence": "Rejected date edit preserves previous charge."
+    },
+    {
+      "id": "PASS-012",
+      "status": "PASS",
+      "evidence": "Invalid total is rejected."
+    },
+    {
+      "id": "PASS-013",
+      "status": "PASS",
+      "evidence": "Total cannot be less than two active uses."
+    },
+    {
+      "id": "PASS-014",
+      "status": "PASS",
+      "evidence": "Pass date edits cannot exclude existing used exercise day."
+    },
+    {
+      "id": "PASS-015",
+      "status": "PASS",
+      "evidence": "Pass with history is deactivated, not deleted."
+    },
+    {
+      "id": "PASS-016",
+      "status": "PASS",
+      "evidence": "Existing charge remains editable on inactive pass."
+    },
+    {
+      "id": "PASS-017",
+      "status": "PASS",
+      "evidence": "Restore cannot recharge inactive pass."
+    },
+    {
+      "id": "SCHEDULE-001",
+      "status": "PASS",
+      "evidence": "Schedule create/edit/cancel never debit."
+    },
+    {
+      "id": "SCHEDULE-002",
+      "status": "PASS",
+      "evidence": "Concurrent duplicate completion creates one log and usage."
+    },
+    {
+      "id": "SCHEDULE-003",
+      "status": "PASS",
+      "evidence": "Linked completed log must be undone through schedule command."
+    },
+    {
+      "id": "SCHEDULE-004",
+      "status": "PASS",
+      "evidence": "Undo atomically restores schedule and capacity, soft-deletes log."
+    },
+    {
+      "id": "SCHEDULE-005",
+      "status": "PASS",
+      "evidence": "Stale retry after undo cannot complete again."
+    },
+    {
+      "id": "SCHEDULE-006",
+      "status": "PASS",
+      "evidence": "Direct restore cannot reactivate cancelled schedule log."
+    },
+    {
+      "id": "SCHEDULE-007",
+      "status": "PASS",
+      "evidence": "Explicit re-complete restores same log and usage identity."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-schedule",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-schedule",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows."
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows."
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows."
+    },
+    {
+      "id": "PASS-CONCURRENT-LAST",
+      "status": "PASS",
+      "evidence": "Concurrent last-use claims allow exactly one complete write."
+    },
+    {
+      "id": "PASS-WRONG-TYPE",
+      "status": "PASS",
+      "evidence": "Cross-exercise pass selection rejected."
+    },
+    {
+      "id": "PASS-DATE-BOUNDARY",
+      "status": "PASS",
+      "evidence": "Validity uses Seoul exercise day, inclusive start, not UTC day or today."
+    },
+    {
+      "id": "QUERY-ACTIVITY-RANGE",
+      "status": "PASS",
+      "evidence": "Existing compound date indexes return scoped live schedules/logs for period."
+    },
+    {
+      "id": "ACTIVITY-REOPEN",
+      "status": "PASS",
+      "evidence": "Database reopen preserves complete pass/schedule state and revisions."
+    },
+    {
+      "id": "SCHEDULE-OPTIONAL-PASS",
+      "status": "PASS",
+      "evidence": "Schedule completion without pass creates only an exercise log."
+    },
+    {
+      "id": "SCHEDULE-COMPLETED-EDIT",
+      "status": "PASS",
+      "evidence": "Completed schedule cannot be edited without undo."
+    },
+    {
+      "id": "ACTIVITY-INVALID-DATE",
+      "status": "PASS",
+      "evidence": "Impossible local dates are rejected, not normalized."
+    },
+    {
+      "id": "ACTIVITY-SCOPE-PASS",
+      "status": "PASS",
+      "evidence": "Command cannot mutate another profile pass."
+    },
+    {
+      "id": "ACTIVITY-SCOPE-QUERY",
+      "status": "PASS",
+      "evidence": "Indexed pass query is profile-scoped."
+    },
+    {
+      "id": "PASS-RESTORE-EXHAUSTED",
+      "status": "PASS",
+      "evidence": "Restore rechecks capacity used by a later exercise."
+    },
+    {
+      "id": "PASS-RESTORE-ROLLBACK",
+      "status": "PASS",
+      "evidence": "Failed restore leaves deleted state and usage unchanged."
+    },
+    {
+      "id": "ACTIVITY-BACKUP",
+      "status": "PASS",
+      "evidence": "Backup v1 restores all pass selections, cancelled history and undone schedule links with exact hash."
+    },
+    {
+      "id": "PWA-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The application boots successfully from a GitHub Pages-style repository subpath."
+    },
+    {
+      "id": "MANIFEST-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The manifest resolves inside the repository subpath."
+    },
+    {
+      "id": "MANIFEST-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Chromium parses the manifest without errors and resolves standalone scope to the repository subpath."
+    },
+    {
+      "id": "NAV-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "All five approved bottom navigation tabs render."
+    },
+    {
+      "id": "NAV-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Hash routing changes the active page without a server route."
+    },
+    {
+      "id": "EX-UI-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "Exercise main page renders the default Pilates seed and actual record controls."
+    },
+    {
+      "id": "EX-UI-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Exercise type creation route and dynamic template editor render."
+    },
+    {
+      "id": "EX-UI-RUNTIME-003",
+      "status": "PASS",
+      "evidence": "Exercise template editor is data-driven from the approved field catalog."
+    },
+    {
+      "id": "DIAG-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The read-only settings diagnostic reports 14/14 stores and a connected Profile."
+    },
+    {
+      "id": "SW-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The Service Worker activates and controls the GitHub Pages-style scope."
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The v0.5.0 App Shell cache exists."
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-002",
+      "status": "PASS",
+      "evidence": "Activation removes the simulated v0.4.0 App Shell cache without clearing unrelated cache names."
+    },
+    {
+      "id": "OFFLINE-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The cached App Shell and IndexedDB-backed home screen reload while network access is disabled."
+    },
+    {
+      "id": "OFFLINE-DIAG-001",
+      "status": "PASS",
+      "evidence": "The Profile and 14-store diagnostic remain available offline."
+    },
+    {
+      "id": "BACKUP-UI-EXPORT",
+      "status": "PASS",
+      "evidence": "Offline settings export downloads an actual JSON file in the disposable browser profile."
+    },
+    {
+      "id": "BACKUP-UI-PRISTINE-PREVIEW",
+      "status": "PASS",
+      "evidence": "Valid file previews on the seeded target and enables restore."
+    },
+    {
+      "id": "BACKUP-UI-OFFLINE-RESTORE",
+      "status": "PASS",
+      "evidence": "Offline UI restore commits, verifies and reloads with the original Profile ID."
+    },
+    {
+      "id": "BACKUP-UI-POPULATED-PREVIEW",
+      "status": "PASS",
+      "evidence": "Same valid file is previewable on populated data but restore is disabled."
+    },
+    {
+      "id": "BACKUP-UI-RESTORED-HASH",
+      "status": "PASS",
+      "evidence": "After offline UI reload, full portable payload hash still matches the imported file."
+    },
+    {
+      "id": "ACTIVITY-UI-PASS",
+      "status": "PASS",
+      "evidence": "Offline pass form saves a 60-use pass and displays calculated remaining."
+    },
+    {
+      "id": "ACTIVITY-UI-LOG",
+      "status": "PASS",
+      "evidence": "Offline exercise form selects pass and detail shows 59 remaining."
+    },
+    {
+      "id": "ACTIVITY-UI-UNLINK",
+      "status": "PASS",
+      "evidence": "Edit UI can remove debit without deleting historical usage."
+    },
+    {
+      "id": "ACTIVITY-UI-SCHEDULE",
+      "status": "PASS",
+      "evidence": "Offline schedule form saves without any charge."
+    },
+    {
+      "id": "ACTIVITY-UI-COMPLETE",
+      "status": "PASS",
+      "evidence": "Double-submit completion UI commits exactly one log and one debit offline."
+    },
+    {
+      "id": "ACTIVITY-UI-UNDO",
+      "status": "PASS",
+      "evidence": "Completed schedule UI undo returns remaining to 60."
+    },
+    {
+      "id": "ACTIVITY-UI-RECOMPLETE",
+      "status": "PASS",
+      "evidence": "Re-complete then offline app reload preserves exact data hash and 59 remaining."
+    },
+    {
+      "id": "ACTIVITY-UI-MOBILE",
+      "status": "PASS",
+      "evidence": "412px mobile viewport shows pass balance without horizontal overflow (not real-device QA)."
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { passOptions } from './pass-schedule.page.js';
 import { DirtyFormGuard } from '../../components/dirty-form-guard.js';
 import { nowLocalInput, utcIsoToLocalInput } from '../../core/datetime.js';
 import { setNavigationGuard, clearNavigationGuard } from '../../router.js';
@@ -38,24 +39,31 @@ export async function renderExerciseLogCreate(context) {
       <div class="form-actions"><button class="button button-secondary" data-cancel type="button">취소</button><button class="button" type="submit">저장</button></div>
     </form>`;
   let template = await renderFields(root, services, types[0].id);
+  root.querySelector('#dynamic-fields').insertAdjacentHTML('afterend', '<div class="form-field"><label for="exercise-pass">차감 이용권</label><select id="exercise-pass"></select></div>');
+  root.querySelector('#exercise-pass').innerHTML = await passOptions(services, types[0].id);
   const guard = bindGuard(root);
   root.querySelector('#exercise-type').addEventListener('change', async (event) => {
-    try { template = await renderFields(root, services, event.target.value); guard.markDirty(); bindDirtyInputs(root.querySelector('#dynamic-fields'), () => guard.markDirty()); }
+    try { template = await renderFields(root, services, event.target.value); root.querySelector('#exercise-pass').innerHTML = await passOptions(services, event.target.value); guard.markDirty(); bindDirtyInputs(root.querySelector('#dynamic-fields'), () => guard.markDirty()); }
     catch (error) { showError('운동 기록 양식을 불러오지 못했습니다.', error); }
   });
   root.querySelector('[data-cancel]')?.addEventListener('click', () => navigate('/exercise'));
+  let busy = false;
   root.querySelector('#exercise-log-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (busy) return; busy = true;
+    const button = event.currentTarget.querySelector('[type=submit]'); button.disabled = true;
     try {
       const typeId = root.querySelector('#exercise-type').value;
       const result = await services.exerciseLog.create({
         exercise_type_id: typeId,
         performed_at_local: root.querySelector('#performed-at').value,
         values: readDynamicValues(root, template.fields),
+        pass_id: root.querySelector('#exercise-pass').value || null,
         memo: root.querySelector('#exercise-memo').value
       });
       guard.markClean(); clearNavigationGuard(); showToast('운동 기록을 저장했습니다.'); navigate(`/exercise/log/${result.id}`);
     } catch (error) { showError('운동 기록 저장에 실패했습니다.', error); }
+    finally { busy = false; button.disabled = false; }
   });
 }
 
@@ -65,28 +73,35 @@ export async function renderExerciseLogEdit(context, id) {
   const [detail, timezone] = await Promise.all([services.exerciseLog.getDetail(id), services.exerciseQuery.getTimezone()]);
   if (!isCurrent()) return;
   const { log, exerciseType, template } = detail;
+  const options = await passOptions(services, log.exercise_type_id, await services.activity.selectedPass(log));
+  if (!isCurrent()) return;
   root.innerHTML = `
     <form id="exercise-log-edit-form" class="form-stack">
       <section class="card">
         <h2>${escapeHtml(exerciseType.icon ?? '●')} ${escapeHtml(exerciseType.name)}</h2>
         <p class="section-description">이 기록은 생성 당시 양식 v${template.version}을 유지합니다.</p>
         <div class="form-field"><label for="performed-at">날짜/시간</label><input id="performed-at" type="datetime-local" value="${utcIsoToLocalInput(log.performed_at, timezone)}" required></div>
-        <div id="dynamic-fields">${renderDynamicFields(template.fields, log.values)}</div>
+        <div id="dynamic-fields">${renderDynamicFields(template.fields, log.values)}</div><div class="form-field"><label for="exercise-pass">차감 이용권</label><select id="exercise-pass">${options}</select></div>
         <div class="form-field"><label for="exercise-memo">메모</label><textarea id="exercise-memo" maxlength="2000" rows="5">${escapeHtml(log.memo ?? '')}</textarea></div>
       </section>
       <div class="form-actions"><button class="button button-secondary" data-cancel type="button">취소</button><button class="button" type="submit">저장</button></div>
     </form>`;
   const guard = bindGuard(root);
   root.querySelector('[data-cancel]')?.addEventListener('click', () => navigate(`/exercise/log/${id}`));
+  let busy = false;
   root.querySelector('#exercise-log-edit-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (busy) return; busy = true;
+    const button = event.currentTarget.querySelector('[type=submit]'); button.disabled = true;
     try {
       await services.exerciseLog.update(id, {
         performed_at_local: root.querySelector('#performed-at').value,
         values: readDynamicValues(root, template.fields),
+        pass_id: root.querySelector('#exercise-pass').value || null,
         memo: root.querySelector('#exercise-memo').value
       }, log.revision);
       guard.markClean(); clearNavigationGuard(); showToast('운동 기록을 수정했습니다.'); navigate(`/exercise/log/${id}`);
     } catch (error) { showError('운동 기록 수정에 실패했습니다.', error); }
+    finally { busy = false; button.disabled = false; }
   });
 }

@@ -5,7 +5,7 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('schema');
-const output = path.join(root, 'tests/results/v0.4.0-schema.json');
+const output = path.join(root, 'tests/results/v0.5.0-schema.json');
 
 await import(pathToFileURL(path.join(root, 'js/config.js')));
 const schema = await import(pathToFileURL(path.join(root, 'js/data/indexeddb/schema.js')));

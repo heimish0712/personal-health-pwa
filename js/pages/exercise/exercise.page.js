@@ -29,6 +29,7 @@ export async function renderExerciseMain(context) {
         <div class="section-heading"><div><h2>이번 주</h2><p>${selectedTypeId ? '선택한 운동' : '전체 운동'} 기준</p></div><button id="exercise-manage" class="button button-secondary compact-button" type="button">운동 관리</button></div>
         <div class="metric-row"><div><strong>${filteredSummary.count}</strong><span>회</span></div><div><strong>${filteredSummary.durationMinutes}</strong><span>분</span></div></div>
       </section>
+      <section class="card"><button class="button button-secondary" id="exercise-trash">삭제 기록</button> <button class="button" id="exercise-passes">이용권 관리</button> <button class="button button-secondary" id="exercise-schedules">예약 · 캘린더</button></section>
       <section class="filter-strip">${filterButtons}<button id="exercise-type-add" class="filter-chip add-chip" type="button">+ 운동 추가</button></section>
       <section class="card">
         <div class="section-heading"><h2>최근 기록</h2><button id="exercise-log-add" class="button compact-button" type="button" ${types.length === 0 ? 'disabled' : ''}>+ 운동 기록</button></div>
@@ -43,6 +44,9 @@ export async function renderExerciseMain(context) {
         </div>
       </section>
     `;
+    root.querySelector('#exercise-trash').addEventListener('click', async () => { const rows = await services.exerciseQuery.listRecentLogs({ includeDeleted: true, limit: Number.MAX_SAFE_INTEGER }); if (!isCurrent()) return; root.innerHTML = '<section class="card"><h2>삭제 기록</h2>' + rows.filter(({ log }) => log.deleted_at !== null).map(({ log, exerciseType }) => `<p><button class="button" data-deleted-log="${log.id}">${escapeHtml(exerciseType?.name)} · ${escapeHtml(formatLocalDateTime(log.performed_at, timezone))}</button></p>`).join('') + '</section>'; root.querySelectorAll('[data-deleted-log]').forEach((b) => b.addEventListener('click', () => navigate(`/exercise/log/${b.dataset.deletedLog}`))); });
+    root.querySelector('#exercise-passes').addEventListener('click', () => navigate('/exercise/passes'));
+    root.querySelector('#exercise-schedules').addEventListener('click', () => navigate('/calendar'));
     root.querySelector('#exercise-manage')?.addEventListener('click', () => navigate('/exercise/manage'));
     root.querySelector('#exercise-type-add')?.addEventListener('click', () => navigate('/exercise/type/new'));
     root.querySelector('#exercise-log-add')?.addEventListener('click', () => navigate('/exercise/log/new'));

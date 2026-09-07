@@ -8,13 +8,15 @@ export class ExerciseLogService {
   #exerciseLogRepository;
   #profileRepository;
   #identityContext;
+  #activityCommand;
 
-  constructor({ exerciseTypeRepository, exerciseTemplateRepository, exerciseLogRepository, profileRepository, identityContext }) {
+  constructor({ exerciseTypeRepository, exerciseTemplateRepository, exerciseLogRepository, profileRepository, identityContext, activityCommand }) {
     this.#exerciseTypeRepository = exerciseTypeRepository;
     this.#exerciseTemplateRepository = exerciseTemplateRepository;
     this.#exerciseLogRepository = exerciseLogRepository;
     this.#profileRepository = profileRepository;
     this.#identityContext = identityContext;
+    this.#activityCommand = activityCommand;
   }
 
   async #timezone() {
@@ -52,13 +54,14 @@ export class ExerciseLogService {
     const performedAt = localDateTimeToUtcIso(input.performed_at_local, timezone);
     const values = validateExerciseValues(template.fields, input.values ?? {});
     const memo = normalizeExerciseMemo(input.memo);
-    return this.#exerciseLogRepository.create({
+    return this.#activityCommand.saveLog({ data: {
       exercise_type_id: type.id,
       template_id: template.id,
       performed_at: performedAt,
       values,
-      memo
-    });
+      memo,
+      pass_id: input.pass_id ?? null
+    } });
   }
 
   async getDetail(id, { includeDeleted = false } = {}) {
@@ -79,21 +82,22 @@ export class ExerciseLogService {
     const performedAt = localDateTimeToUtcIso(input.performed_at_local, timezone);
     const values = validateExerciseValues(detail.template.fields, input.values ?? {});
     const memo = normalizeExerciseMemo(input.memo);
-    return this.#exerciseLogRepository.update(id, {
+    return this.#activityCommand.saveLog({ id, data: {
       performed_at: performedAt,
       values,
-      memo
-    }, expectedRevision);
+      memo,
+      ...(input.pass_id !== undefined ? { pass_id: input.pass_id } : {})
+    }, expectedRevision });
   }
 
   async softDelete(id, expectedRevision) {
     await this.getDetail(id);
-    return this.#exerciseLogRepository.softDelete(id, expectedRevision);
+    return this.#activityCommand.deleteLog({ id, expectedRevision });
   }
 
   async restore(id, expectedRevision) {
     const detail = await this.getDetail(id, { includeDeleted: true });
     if (detail.log.deleted_at === null) throw new ValidationError('EXERCISE_LOG_NOT_DELETED', '삭제된 운동 기록만 복원할 수 있습니다.');
-    return this.#exerciseLogRepository.restore(id, expectedRevision);
+    return this.#activityCommand.restoreLog({ id, expectedRevision });
   }
 }

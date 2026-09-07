@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.5.0 - 2026-09-07
+
+- 운동별 이용권 추가·수정·비활성화, 총/사용/잔여횟수와 원장 조회.
+- 운동기록의 선택적 이용권 차감·해제·변경·삭제·복원, 사용이력 재활성화.
+- 예약 추가·수정·취소, 완료·완료 취소·재완료, 기간별 예약/운동 캘린더.
+- Semantic ActivityCommand가 Profile·revision·기간·잔여량·연결 상태를 transaction 안에서 검증.
+- 예약 완료는 기대 revision을 멱등 키로 사용. 완료 취소 뒤 오래된 요청은 거절, 명시적 재완료는 기존 log/usage ID 복원.
+- 같은 pass 재적용 시 cancelled 행 재활성화라는 최신 확정 규칙 적용. 기존 pair UNIQUE 유지; 과거 신규 이력 행/Migration 제안 폐기.
+- log.pass_id는 선택 의도(없음=null), 삭제 시 보존. 기존 v0.4 행의 필드 누락은 active 원장에서 읽어 호환.
+- 기존 Profile+날짜/이용권 인덱스 조회 추가. 범용 BaseScopedRepository는 수정하지 않음.
+- JSON Backup v1에서 신규 선택 관계 검증 및 one-active-usage 검증, 원본 hash 일치 복원 유지.
+- 존재하지 않는 날짜 입력 거절, 저장 중 중복 제출 방지, 삭제 기록 복원 진입 추가.
+- App/cache 0.5.0. DB 1 / Schema 1 / Seed 1 / Backup 1 / 14 Store 그대로. **Migration 없음, 삭제 파일 0개**.
+- 테스트 결과와 실기기 NOT RUN은 REGRESSION_TEST.md, 수동 절차는 MANUAL_QA.md 참조.
+
 ## v0.4.0 - 2026-09-07
 
 ### Added

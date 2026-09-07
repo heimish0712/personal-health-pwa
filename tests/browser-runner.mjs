@@ -1,3 +1,4 @@
+import { runActivityUiTests } from './activity-ui-tests.mjs';
 import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
@@ -6,8 +7,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.4.0-browser.json');
-const basePath = '/personal-health-pwa-v0.4.0/';
+const outputPath = path.join(root, 'tests/results/v0.5.0-browser.json');
+const basePath = '/personal-health-pwa-v0.5.0/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -66,7 +67,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.4.0',
+    version: '0.5.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -346,7 +347,7 @@ try {
     const runtimeTest = makeRuntimeRecorder(runtimeCases);
 
     await cdp.evaluate(`(async () => {
-      const legacyCache = await caches.open('personal-health-pwa-v0.3.0');
+      const legacyCache = await caches.open('personal-health-pwa-v0.4.0');
       await legacyCache.put(
         '${origin}${basePath}legacy-cache-marker',
         new Response('legacy')
@@ -366,7 +367,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.4.0 · DB 1'),
+      (value) => value?.title === '홈' && value.body.includes('v0.5.0 · DB 1'),
       30000
     );
 
@@ -479,15 +480,15 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.4.0');
-    }, 'The v0.4.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.5.0');
+    }, 'The v0.5.0 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
       return Array.isArray(keys)
-        && !keys.includes('personal-health-pwa-v0.3.0')
+        && !keys.includes('personal-health-pwa-v0.4.0')
         && keys.includes('unrelated-app-cache');
-    }, 'Activation removes the simulated v0.3.0 App Shell cache without clearing unrelated cache names.');
+    }, 'Activation removes the simulated v0.4.0 App Shell cache without clearing unrelated cache names.');
 
     await cdp.send('Page.navigate', { url: appUrl });
     await pollEvaluate(
@@ -511,7 +512,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.4.0 · DB 1'),
+        (state) => state?.title === '홈' && state.body.includes('v0.5.0 · DB 1'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -573,6 +574,10 @@ try {
       return hash === backupUiDocument.integrity.payloadHash;
     }, 'After offline UI reload, full portable payload hash still matches the imported file.');
 
+    await runActivityUiTests({ cdp, pollEvaluate, runtimeTest });
+    const screenshot = await cdp.send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(root, 'tests/results/v0.5.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
+
     await cdp.send('Network.emulateNetworkConditions', {
       offline: false,
       latency: 0,
@@ -587,7 +592,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.4.0',
+      version: '0.5.0',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -605,7 +610,7 @@ try {
   })(), 120000, 'Browser runtime suite exceeded the 120 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.4.0',
+    version: '0.5.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },

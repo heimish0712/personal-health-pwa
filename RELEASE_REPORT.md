@@ -1,110 +1,105 @@
-# Release Report — v0.4.0 Backup Core
+# Release Report — v0.5.0 Pass & Schedule
 
-## 버전 및 상태
+## 상태와 기준
 
-- 이전 기준: v0.3.0 FINAL 186 PASS / 0 FAIL / 0 NOT RUN (사용자 QA 포함).
-- App/cache 0.4.0, Backup Format 1.
-- DB 1 / Schema 1 / Seed 1, 14 Store/Index 유지. **Migration 없음**.
-- 구현 및 자동검증 완료: **330 PASS / 0 FAIL / 9 NOT RUN**. 사용자 배포·갤럭시 QA 대기.
-- 실제 GitHub Pages 배포, commit/push, 사용자 DB 조작은 수행하지 않음.
+- 기준: 사용자 지정 v0.4.0 검증 완료본, 작업 시작 시 clean HEAD `f05d0be5c12def44741b6a30e863db776ca03b7e`.
+- 구현 완료 및 자동검증: **386 PASS / 0 FAIL / 17 NOT RUN**. Pages/Galaxy 실기기 항목은 사용자 검증 대기.
+- App/cache 0.5.0 / DB1 / Schema1 / Seed1 / Backup1. **Migration 없음, 삭제 파일 0개**.
+- 기존 범용 Repository, Store/Index, 과거 v0.3/v0.4 테스트 결과는 유지.
 
-## 변경 범위
+## 변경 결과
 
-현재 HEAD 대비 **51개 파일: 수정 24개 / 신규 27개 / 삭제 0개**. 앞선 기준선 문서 정정도 현재 diff에 포함한다.
+운동별 이용권 및 계산 잔여량, 운동기록 선택 차감·해제·교체·삭제·복원, 예약 생성·수정·취소·완료·완료 취소를 제공한다. 캘린더에서 기간별 예약과 실제 기록을 조회한다. 같은 pass 재적용은 기존 usage를 재활성화하고 완료 취소 후 재완료는 연결 log ID를 재사용한다.
 
-- 설정의 JSON export/import, 파일 검증·미리보기, pristine 복원.
-- 12 Store snapshot과 SHA-256 자기검증. 원본 metadata·관계·역사적 Template 보존.
-- 13 Store transaction에서 검증된 초기 자동생성 3행만 교체. device_id 유지 및 포인터 연결.
-- 실패 전체 rollback과 복원 후 전체 portable hash 검증, 오프라인 UI.
-- App Shell, v0.4 테스트 결과 경로, 백업 파일 .gitignore, 요구사항·설계·회귀 문서 갱신.
-- 기존 일반 CRUD Repository와 운동 업무 로직, schema/migrations 코드 무변경.
+Service는 입력 정규화와 업무 호출을 담당한다. ActivityCommand가 다중 Store 정합성/동시성/expectedRevision/원자성을 보장한다. 기존 Profile 날짜 인덱스를 사용하는 Query를 추가했으며 BaseScopedRepository를 전면 수정하지 않았다.
 
-## 검증
-
-| Suite | PASS | FAIL | NOT RUN |
+| 구분 | PASS | FAIL | NOT RUN |
 |---|---:|---:|---:|
 | smoke | 72 | 0 | 0 |
 | architecture | 29 | 0 | 0 |
 | schema | 60 | 0 | 0 |
 | exercise-service | 19 | 0 | 0 |
 | backup | 26 | 0 | 0 |
-| browser-runtime | 124 | 0 | 0 |
-| 사용자 QA | 0 | 0 | 9 |
+| browser-runtime | 180 | 0 | 0 |
+| 사용자 배포·실기기 QA | 0 | 0 | 17 |
+| **합계 (403건)** | **386** | **0** | **17** |
 
-Node 검증에 더해 실제 IndexedDB와 오프라인 브라우저 UI를 실행했다. 5개 복원 실패 지점에서 초기 Seed까지 rollback하며 원본/복원 후/재실행 후 전체 데이터 hash가 같음을 확인했다. 이전 자동결과 tests/results/v0.3.0*.json은 변경하지 않았다.
+## 적용 및 산출물
 
-## 적용
+- changed.zip: 기준 HEAD 대비 수정·추가 파일의 현재 내용. 저장소 루트에 경로를 유지하여 적용한다.
+- full.zip: 현재 배포 소스·문서·테스트 전체(.git 및 ignored 개인 파일 제외).
+- diff.patch: 기준 HEAD 대비 신규 파일과 모바일 이미지까지 포함한 binary-capable patch. changed.zip과 patch 중 한 방법만 사용한다.
+- manifest.json: 기준 commit, 변경/전체 목록, 삭제 목록, ZIP/patch SHA-256.
+- 배포 전 기존 앱에서 JSON 백업을 보관한다. 변경 전체 적용 후 App/cache 0.5.0 확인 → 사용자 선택 업데이트 → MANUAL_QA.md 순서로 실행한다.
+- 저장소 소스 수정과 산출물 생성까지만 수행했다. commit/push/실제 Pages 배포는 수행하지 않았다.
 
-1. 제공한 전체 git diff(신규 파일 포함)를 현재 소스와 함께 검토한다.
-2. 실제 배포 시 변경 파일 전체를 반영하고 App/cache가 모두 0.4.0인지 확인한다.
-3. 기존 설치 앱의 업데이트를 선택한 뒤 홈에서 v0.4.0 · DB 1을 확인한다.
-4. 설정에서 현재 데이터 JSON을 내보내고 파일 보관을 확인한다.
-5. 같은 데이터가 있는 앱에서는 정상 파일 미리보기와 복원 차단을 확인한다.
-6. 새 브라우저의 기본 Seed만 있는 환경에서 복원하고 Profile·기록·Template·메모·삭제 상태를 확인한다.
-7. 복원 후 네트워크 OFF 재실행과 운동 CRUD를 확인하고 사용자 QA 결과를 보고한다.
+## 검증과 제한
 
-## 복구
+실제 Chrome의 격리 DB에서 11개 transaction 실패 지점에 대한 전후 전체 portable 동일성, 잔여1 동시 차감, 중복 완료, Profile 격리, 재복원/재실행 hash를 확인했다. 오프라인 UI 8건과 412px 캡처를 검사했다. 실기기 미실행 17건은 자동 PASS로 처리하지 않았다.
 
-- 문제가 있으면 이번 코드 변경 전체를 검토하여 이전 v0.3 코드로 되돌린다. 사용자 DB와 백업 파일은 보존한다.
-- DB v1을 계속 사용하므로 DB downgrade/삭제는 하지 않는다. 복원된 데이터도 동일 v1 형식이다.
-- restore transaction 실패는 초기 상태를 유지한다. 저장 후 hash 확인 실패는 별도 메시지로 알리며 앱 다시 열기를 제공한다.
-- 실제 백업 파일을 public Git 저장소에 넣지 않는다.
+캘린더는 기간별 예약/운동 목록이며 체중·식단 통합과 월간 요약은 후속 작업이다. 동일 쌍 usage는 재활성화하므로 모든 취소/재사용 이벤트를 별도 행으로 쌓는 감사 이벤트 스트림은 아니다.
 
-## 제한
+## 원복
 
-- 병합·부분복원·사진 Blob/ZIP·클라우드·자동 백업은 없음.
-- 최초 자동생성 상태에서만 복원 가능하며 변경한 Seed·설정·삭제 행도 기존 데이터로 판정.
-- 파일은 암호화되지 않은 JSON, 50 MB 이하. 사진 metadata가 있으면 v1을 거절.
-- 이용권·예약은 v0.5.0으로 순연.
+일반 운동은 삭제하면 차감 취소, 완료 예약은 완료 취소 후 예약 취소한다. 테스트 내역은 soft-delete/cancelled로 남기는 것이 정상이다. 기존 데이터와 백업은 삭제하지 않는다.
+**v0.5에서 이용권을 연동한 뒤 v0.4 코드로 운동을 수정/삭제하면 v0.4에는 원장 갱신이 없어 불일치할 수 있다.** 문제가 생기면 백업을 보관하고 쓰기를 중지한 채 수정 릴리스를 적용한다. 단순 DB downgrade/초기화는 하지 않는다. v0.5 사용 전 코드 검토 원복에는 reverse patch를 사용할 수 있으나 사용자 데이터까지 원복하지는 않는다.
 
 ## 변경 파일 목록
 
-- .gitignore
+총 57개: 수정 39 / 신규 18 / 삭제 0.
+
 - AGENTS.md
 - CHANGELOG.md
+- MANUAL_QA.md
 - README.md
 - REGRESSION_TEST.md
 - RELEASE_REPORT.md
 - REQUIREMENTS.md
-- css/common.css
 - docs/ARCHITECTURE.md
-- docs/BACKUP_CORE_DESIGN.md
 - docs/DATA_MODEL.md
 - docs/MIGRATION_POLICY.md
+- docs/PASS_SCHEDULE_DESIGN.md
 - docs/ROADMAP.md
 - js/app.js
-- js/application/backup-export.service.js
-- js/application/backup-import.service.js
-- js/application/backup-validation.service.js
+- js/application/exercise-log.service.js
+- js/application/exercise-query.service.js
+- js/application/pass-schedule.service.js
 - js/bootstrap/bootstrap.js
 - js/bootstrap/container.js
 - js/config.js
-- js/core/backup/backup-format.js
-- js/core/backup/backup-integrity.js
-- js/core/backup/backup-migrations.js
 - js/core/backup/backup-validator.js
-- js/core/backup/canonical-json.js
-- js/data/contracts/backup-restore-command.contract.js
-- js/data/contracts/backup-snapshot-reader.contract.js
-- js/data/indexeddb/backup/backup-restore.command.js
-- js/data/indexeddb/backup/backup-snapshot.reader.js
-- js/data/indexeddb/backup/restore-target.inspector.js
-- js/pages/settings/backup-restore.page.js
+- js/core/datetime.js
+- js/core/pass-rules.js
+- js/data/contracts/activity-command.contract.js
+- js/data/indexeddb/commands/activity.command.js
+- js/data/indexeddb/repositories/exercise-log.repository.js
+- js/data/indexeddb/repositories/exercise-schedule.repository.js
+- js/data/indexeddb/repositories/pass-usage.repository.js
+- js/data/indexeddb/repositories/pass.repository.js
+- js/data/indexeddb/repositories/scoped-index-query.js
+- js/pages/exercise/exercise-log-detail.page.js
+- js/pages/exercise/exercise-log-form.page.js
+- js/pages/exercise/exercise.page.js
+- js/pages/exercise/exercise.router.js
+- js/pages/exercise/pass-schedule.page.js
+- js/router.js
 - service-worker.js
+- tests/activity-ui-tests.mjs
 - tests/architecture-test.mjs
 - tests/backup-test.mjs
 - tests/browser-runner.mjs
-- tests/browser/backup-test.js
+- tests/browser/activity-test.js
 - tests/browser/db-test.html
 - tests/browser/db-test.js
 - tests/exercise-service-test.mjs
-- tests/results/v0.4.0-architecture.json
-- tests/results/v0.4.0-backup.json
-- tests/results/v0.4.0-browser.json
-- tests/results/v0.4.0-exercise-service.json
-- tests/results/v0.4.0-schema.json
-- tests/results/v0.4.0-smoke.json
-- tests/results/v0.4.0.json
+- tests/results/v0.5.0-architecture.json
+- tests/results/v0.5.0-backup.json
+- tests/results/v0.5.0-browser.json
+- tests/results/v0.5.0-exercise-service.json
+- tests/results/v0.5.0-mobile.png
+- tests/results/v0.5.0-schema.json
+- tests/results/v0.5.0-smoke.json
+- tests/results/v0.5.0.json
 - tests/run-all-tests.mjs
 - tests/schema-test.mjs
 - tests/smoke-test.mjs

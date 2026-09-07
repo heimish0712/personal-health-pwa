@@ -172,3 +172,22 @@
 - **PASS-FUTURE-001** 운동기록 하나에 `status = used` 사용로그는 최대 1건, cancelled 이력은 여러 건 허용한다. Command transaction에서 검사하고 운동기록·사용원장·예약 완료를 원자적으로 처리한다.
 - **PASS-FUTURE-002** A 취소 → B 사용·취소 → A 재사용 이력을 별도 행으로 보존한다. 현재 `UNIQUE-003`의 쌍 고유 인덱스는 v0.3 기준으로 유지하고, 이용권 개발 시 누적 Migration으로 교체하여 이력 정책과 멱등성 규칙을 함께 검증한다. exercise_log_id 단독 UNIQUE를 추가하지 않는다.
 - **QUERY-FUTURE-001** BaseScopedRepository.list()는 유지하고 기간 조회가 필요한 기능별 Repository에 기존 Profile+날짜 인덱스 메서드를 추가한다.
+
+
+## v0.5.0 Pass & Schedule — 구현 요구사항
+
+아래 최신 규칙이 이전 로드맵의 동일 pass 재사용 시 새 usage 생성 제안을 대체한다.
+
+- **V05-PASS-001** 운동별 이용권 이름·총횟수·시작/종료일·메모·활성 상태 관리. 잔여횟수는 저장하지 않고 deleted_at=null, status=used 원장의 used_count 합계로 계산.
+- **V05-PASS-002** 운동기록 1건의 active usage는 최대 1건. 같은 이용권 수정은 추가 차감 없음. 선택 해제는 cancelled. 같은 쌍 재적용은 기존 ID 재활성화. 다른 이용권 전환은 취소+적용 원자적 실행.
+- **V05-PASS-003** log 삭제는 usage 취소, 복원은 실제 운동일·이용권 활성·잔여량 재검증. 선택 의도 pass_id는 삭제 시 보존하고 차감 해제 시 null로 변경.
+- **V05-PASS-004** 유효기간은 Profile timezone의 실제 운동일 양끝 포함. 현재 날짜와 비교하지 않음. 총횟수는 현재 유효 사용량 미만으로 낮출 수 없음. 기존 사용일을 제외하는 기간 축소는 거절.
+- **V05-PASS-005** 사용이력(취소 포함)이 있으면 삭제 요청은 inactive 처리. 기존 유효 차감은 비활성화 후에도 그대로 유지하며 수정 가능; 신규/복원 차감은 불가.
+- **V05-SCHEDULE-001** 예약 생성·수정·취소는 차감 없음. 예정 시간 1~1440분, 날짜·운동·메모와 상태 관리.
+- **V05-SCHEDULE-002** 예정 예약 완료는 schedule+log+optional usage 원자 처리. 같은 expectedRevision의 완료 재시도는 기존 결과 반환. 완료 취소 이후 이전 요청은 충돌 처리.
+- **V05-SCHEDULE-003** 완료 취소는 linked log soft-delete+usage cancelled+scheduled 원자 처리. 연결 ID와 역사적 Template 유지, 명시적 재완료는 같은 기록/원장 ID 복원. 완료 이력이 있는 예약의 운동 종류 변경 금지.
+- **V05-SCHEDULE-004** 완료 예약 수정은 완료 취소 선행. 완료 기록 직접 삭제와 완료 취소된 연결 기록 직접 복원은 예약 Command로 안내. 완료 기록의 메모/시간/이용권 수정은 운동 Command로 가능.
+- **V05-QUERY-001** 캘린더는 원본 예약·운동기록 Store에서 Profile+UTC [start,end) 인덱스로 조회. UI 종료일은 포함하여 다음날 00시로 변환. 주간 요약도 기존 기간 인덱스 사용.
+- **V05-ATOMIC-001** Service는 일반 transaction에 접근하지 않음. ActivityCommand Port가 다중 Store 검증·쓰기·동시성·rollback 담당, 향후 Supabase RPC로 대체 가능.
+- **V05-BACKUP-001** Backup v1의 ID·revision·관계·삭제 상태 보존을 유지하고 pass_id 및 한 기록의 중복 active usage 검증. 새 Store/인덱스/Migration 없음.
+- **V05-QA-001** 실제 IndexedDB 실패 주입, 중복 완료, 마지막 잔여 동시 사용, 오프라인 UI·재실행, v0.4 전체 자동 회귀. Pages/Galaxy 미실행은 NOT RUN.

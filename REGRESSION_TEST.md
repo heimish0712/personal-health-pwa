@@ -1,5 +1,41 @@
 # Regression Test
 
+## v0.5.0 Pass & Schedule
+
+- 검증일: 2026-09-07T03:13:30.583Z
+- 기준 소스: 사용자 지정 v0.4.0 검증 완료본, 작업 시작 시 git clean. 이전 결과 JSON은 변경하지 않았다.
+- App/cache 0.5.0, DB1 / Schema1 / Seed1 / Backup1 / 14 Store 및 기존 인덱스 유지. Migration 없음.
+- 실행: `node tests/run-all-tests.mjs`, Node v24.16.0, 격리된 실제 Chrome + IndexedDB + localhost 저장소 하위 경로.
+
+| 구분 | PASS | FAIL | NOT RUN |
+|---|---:|---:|---:|
+| smoke | 72 | 0 | 0 |
+| architecture | 29 | 0 | 0 |
+| schema | 60 | 0 | 0 |
+| exercise-service | 19 | 0 | 0 |
+| backup | 26 | 0 | 0 |
+| browser-runtime | 180 | 0 | 0 |
+| 사용자 배포·실기기 QA | 0 | 0 | 17 |
+| **합계 (403건)** | **386** | **0** | **17** |
+
+기존 v0.4 자동검증 330개는 유지하고 신규 56개를 추가했다. 테스트용 DB/Profile만 사용했으며 실제 Pages 배포·Galaxy 설치형 앱 QA는 수행하지 않았다. 상세 버튼 순서·입력값·PASS 기준·실패 기록·원복은 [MANUAL_QA.md](MANUAL_QA.md)에 있다.
+
+### 주요 증적
+
+- PASS-001~017, PASS-RESTORE-EXHAUSTED/ROLLBACK: 60→59→59→60→59→60, 복원 재검증, inactive/한도/기간 처리.
+- SCHEDULE-001~007: 생성·수정·취소 무차감, 두 동시 완료 동일 log ID, 완료 취소, stale 재시도 차단, 동일 ID 재완료.
+- ATOMIC-UNDO/COMPLETE/SWITCH: 총 11개 중간 실패 주입. 각 실행 전후 portable 데이터 전체 canonical 값 동일.
+- PASS-CONCURRENT-LAST: 잔여1에 동시 두 저장 중 정확히 한 건 성공. QUERY-ACTIVITY-RANGE, ACTIVITY-SCOPE-*는 기간/프로필 격리 확인.
+- ACTIVITY-BACKUP/REOPEN: v1 백업 복원 및 재부팅 후 원본 hash 일치. 이전 Backup 검증/복원 회귀 전부 유지.
+- ACTIVITY-UI-* 8건: 네트워크 OFF에서 실제 폼·버튼 저장, double submit, 완료 취소/재완료와 재실행 후 hash 동일, 412px 가로 넘침 없음.
+- 모바일 캡처: tests/results/v0.5.0-mobile.png. 실제 기기 증적은 아니다.
+
+최종 실행 후 임시 Chrome Profile 자동 정리에서 EPERM 메시지가 발생했다. 테스트는 정상 완료되었으며 사용자 Profile/운영 DB와 무관한 임시 파일 정리 문제다.
+
+기계 판독 결과: [v0.5.0.json](tests/results/v0.5.0.json). 테스트 매핑: [traceability.json](tests/traceability.json).
+
+---
+
 ## v0.4.0 Backup Core
 
 - 검증일: 2026-09-07T02:31:49.964Z

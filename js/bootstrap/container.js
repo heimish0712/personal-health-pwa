@@ -1,3 +1,5 @@
+import { IndexedDbActivityCommand } from '../data/indexeddb/commands/activity.command.js';
+import { PassScheduleService } from '../application/pass-schedule.service.js';
 import { AppLogger } from '../core/app-logger.js';
 import { SystemClock } from '../core/clock.js';
 import { CryptoIdGenerator } from '../core/id-generator.js';
@@ -102,9 +104,12 @@ export function createContainer({
     exerciseManagementCommand,
     idGenerator
   });
+  const activityCommand = new IndexedDbActivityCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
+  const passScheduleService = new PassScheduleService({ command: activityCommand, repositories, identityContext });
   const exerciseLogService = new ExerciseLogService({
     exerciseTypeRepository: repositories.exerciseType,
     exerciseTemplateRepository: repositories.exerciseTemplate,
+    activityCommand,
     exerciseLogRepository: repositories.exerciseLog,
     profileRepository: repositories.profile,
     identityContext
@@ -112,6 +117,7 @@ export function createContainer({
   const exerciseQueryService = new ExerciseQueryService({
     exerciseTypeRepository: repositories.exerciseType,
     exerciseTemplateRepository: repositories.exerciseTemplate,
+    activityCommand,
     exerciseLogRepository: repositories.exerciseLog,
     profileRepository: repositories.profile,
     identityContext,
@@ -142,6 +148,8 @@ export function createContainer({
     databaseDiagnosticService,
     exerciseManagementService,
     exerciseLogService,
+    activityCommand,
+    passScheduleService,
     exerciseQueryService,
     backupSnapshotReader,
     backupRestoreCommand,

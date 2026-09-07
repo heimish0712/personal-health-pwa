@@ -99,6 +99,7 @@ export function validateBackupRows(document) {
     const template = ref('exercise_templates', row.template_id);
     assert(template.exercise_type_id === row.exercise_type_id, 'BACKUP_REFERENCE_BROKEN');
     validateValues(row, template);
+    if (row.pass_id != null) assert(ref('passes', row.pass_id).exercise_type_id === row.exercise_type_id, 'BACKUP_REFERENCE_BROKEN');
   }
   for (const row of data.exercise_schedules) {
     ref('exercise_types', row.exercise_type_id);
@@ -109,11 +110,16 @@ export function validateBackupRows(document) {
     ref('exercise_types', row.exercise_type_id);
     assert(text(row.name) && Number.isSafeInteger(row.total_count) && row.total_count >= 0 && text(row.status));
   }
+  const activeUsageIds = new Set();
   for (const row of data.pass_usage_logs) {
     const pass = ref('passes', row.pass_id);
     const log = ref('exercise_logs', row.exercise_log_id);
     assert(pass.exercise_type_id === log.exercise_type_id, 'BACKUP_REFERENCE_BROKEN');
     assert(positive(row.used_count) && ['used', 'cancelled'].includes(row.status));
+    if (row.status === 'used' && row.deleted_at === null) {
+      assert(log.deleted_at === null && !activeUsageIds.has(log.id), 'BACKUP_REFERENCE_BROKEN');
+      activeUsageIds.add(log.id);
+    }
   }
   for (const row of data.diet_logs) assert(isUtcIso(row.eaten_at) && text(row.meal_type));
   for (const row of data.diet_photos) ref('diet_logs', row.diet_log_id);
