@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.9.0 — Operational Hardening
+
+- 운동 최근기록을 기존 Profile/운동/시간 인덱스 cursor로 제한 조회. 백업 media 읽기와 복원 add 요청을 같은 transaction 내 묶음으로 처리. Media 통계/GC는 Blob 전체 목록 보관 대신 cursor 누계.
+- 설정에 portable JSON 용량 추정, 읽기 전용 관계 진단, 최근 진단 로그/안전한 로그 내보내기.
+- 저장 전 압축사진 크기를 포함한 quota 위험 경고. Persistent Storage 이미 허용 시 재요청하지 않음.
+- GC 건수/용량 미리보기 및 확인, 모든 Profile/tombstone 참조 보존. Web Locks로 백업·복원과 GC 상호 배제.
+- 외부 Service Worker 활성화 시 작성 폼 새로고침 보류 및 사용자 적용. 저장소 초기화로 업데이트 오류를 우회하지 않음.
+- 재사용 Migration Harness, 대량 사진/기록 fixture, 백업 장애/원자성/실제 업데이트 QA 추가.
+- APP/cache0.9.0 / DB2 / Schema1 / Seed1 / Backup2(v1 호환). 신규 Store/index/Migration 없음.
+
 ## v0.8.0 — Dashboard + Unified Calendar
 
 - 홈: 오늘 예약/식단, 주간 실제 운동 횟수·시간, 최근 운동·체중·인바디, 원장 기반 이용권 잔여횟수, 식단 thumbnail과 빠른 기록.

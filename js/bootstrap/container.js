@@ -1,3 +1,6 @@
+import { MaintenanceCoordinator } from '../core/maintenance-coordinator.js';
+import { IndexedDbOperationsReader } from '../data/indexeddb/operations.reader.js';
+import { OperationsService } from '../application/operations.service.js';
 import { DashboardService } from '../application/dashboard.service.js';
 import { CalendarService } from '../application/calendar.service.js';
 import { IndexedDbDietCommand } from '../data/indexeddb/commands/diet.command.js';
@@ -86,16 +89,19 @@ export function createContainer({
     appLog: new AppLogRepository({ database, clock, idGenerator })
   };
 
+  const coordinator = new MaintenanceCoordinator(dbName);
+  const operationsReader = new IndexedDbOperationsReader({ database });
+  const operationsService = new OperationsService({ reader: operationsReader, logRepository: repositories.appLog, coordinator });
   const mediaStorage = new IndexedDbMediaStorage({ database });
-  const mediaService = new MediaService({ storage: mediaStorage, photoRepository: repositories.dietPhoto, idGenerator, clock });
+  const mediaService = new MediaService({ storage: mediaStorage, photoRepository: repositories.dietPhoto, idGenerator, clock, coordinator });
   const dietCommand = new IndexedDbDietCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
   const dietService = new DietService({ repositories, command: dietCommand, media: mediaService, identityContext });
   const repositoryProvider = new RepositoryProvider(repositories);
   const backupSnapshotReader = new IndexedDbBackupSnapshotReader({ unitOfWork, identityContext });
   const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(), clock, idGenerator, faultInjector });
   const backupValidationService = new BackupValidationService();
-  const backupExportService = new BackupExportService({ snapshotReader: backupSnapshotReader, validationService: backupValidationService, clock });
-  const backupImportService = new BackupImportService({ validationService: backupValidationService, restoreCommand: backupRestoreCommand, snapshotReader: backupSnapshotReader, identityContext, idGenerator, exportService: backupExportService });
+  const backupExportService = new BackupExportService({ snapshotReader: backupSnapshotReader, validationService: backupValidationService, clock, coordinator });
+  const backupImportService = new BackupImportService({ validationService: backupValidationService, restoreCommand: backupRestoreCommand, snapshotReader: backupSnapshotReader, identityContext, idGenerator, exportService: backupExportService, coordinator });
   const bootstrapCommand = new IndexedDbBootstrapCommand({
     unitOfWork,
     clock,
@@ -151,7 +157,7 @@ export function createContainer({
   const calendarService = new CalendarService({ repositories, identityContext });
 
   return Object.freeze({
-    dashboardService, calendarService,
+    dashboardService, calendarService, operationsService, operationsReader, coordinator,
     database,
     unitOfWork,
     clock,

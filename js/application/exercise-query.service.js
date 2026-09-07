@@ -46,14 +46,9 @@ export class ExerciseQueryService {
   }
 
   async listRecentLogs({ exerciseTypeId = null, limit = 20, includeDeleted = false } = {}) {
-    const logs = await this.#exerciseLogRepository.list({
-      includeDeleted,
-      predicate: (item) => !exerciseTypeId || item.exercise_type_id === exerciseTypeId,
-      sort: (a, b) => b.performed_at.localeCompare(a.performed_at)
-    });
-    const limited = logs.slice(0, limit);
-    const types = await this.#exerciseTypeRepository.list({ includeDeleted: true });
-    const typeMap = new Map(types.map((item) => [item.id, item]));
+    const limited = await this.#exerciseLogRepository.recent({ exerciseTypeId, limit, includeDeleted });
+    const types = await Promise.all([...new Set(limited.map((r) => r.exercise_type_id))].map((id) => this.#exerciseTypeRepository.getByIdIncludingDeleted(id)));
+    const typeMap = new Map(types.filter(Boolean).map((item) => [item.id, item]));
     return limited.map((log) => ({ log, exerciseType: typeMap.get(log.exercise_type_id) ?? null }));
   }
 

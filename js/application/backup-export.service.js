@@ -4,10 +4,11 @@ import { canonicalJson } from '../core/backup/canonical-json.js';
 import { payloadHash, snapshotPayload } from '../core/backup/backup-integrity.js';
 
 export class BackupExportService {
-  constructor({ snapshotReader, validationService, clock }) {
-    this.snapshotReader = snapshotReader; this.validationService = validationService; this.clock = clock;
+  constructor({ snapshotReader, validationService, clock, coordinator }) {
+    this.snapshotReader = snapshotReader; this.validationService = validationService; this.clock = clock; this.coordinator = coordinator;
   }
-  async exportCurrentProfile({ format = 'auto' } = {}) {
+  exportCurrentProfile(options) { return this.coordinator ? this.coordinator.backup(() => this.#exportSnapshot(options)) : this.#exportSnapshot(options); }
+  async #exportSnapshot({ format = 'auto' } = {}) {
     const { profileId, data, media } = await this.snapshotReader.readCurrentProfile({ includeMedia: true });
     const version = format === 'v2' || data.diet_photos.length ? 2 : 1;
     if (data.diet_photos.some((p) => !p.thumbnail_storage_key)) throw backupError('BACKUP_MEDIA_UNSUPPORTED');

@@ -1,5 +1,65 @@
 # Regression Test
 
+## v0.9.0 Operational Hardening
+
+최종 `node tests/run-all-tests.mjs` 종료코드0. **618 PASS / 0 FAIL / 56 NOT RUN** (총674). 기존 v0.8 자동574건의 suite+Test ID가 전부 PASS인 것을 비교했고 신규44건(DB/DOM38 + 실제 UI6)을 추가했다. 과거 v0.3 FINAL186/0/0 및 확정 버전 결과는 보존했다.
+
+APP/cache0.9.0 / DB2 / Portable Schema1 / Seed1 / Backup2(v1 호환). **Migration 없음**, Store/index 및 BaseScopedRepository 변경 없음. Node v24.16.0, Chrome 실제 IndexedDB, localhost Pages형 subpath, 격리된 테스트 DB/임시 Chrome Profile 사용.
+
+| Suite | PASS | FAIL | NOT RUN |
+|---|---:|---:|---:|
+| smoke | 72 | 0 | 0 |
+| architecture | 29 | 0 | 0 |
+| schema | 61 | 0 | 0 |
+| exercise-service | 19 | 0 | 0 |
+| backup | 26 | 0 | 0 |
+| browser-runtime (DB/DOM349 + 실제 UI62) | 411 | 0 | 0 |
+| 실제 Pages/Galaxy/설치 QA | 0 | 0 | 56 |
+| **합계** | **618** | **0** | **56** |
+
+### 대량 데이터 / profiling
+
+운동/예약/체중/식단 각3000, 인바디/사진 metadata 각1000, Blob2000, 실제 binary20,256,000 bytes(20.26MB). 운영 DB 이름을 거절하는 `tests/browser/large-fixture.js`에서 생성하며 App Shell에 포함하지 않는다.
+
+| 측정 | 최종 ms |
+|---|---:|
+| DB open + bootstrap | 12.2 |
+| 홈 | 18.8 |
+| 월간 캘린더 | 52.6 |
+| 이전 운동 최근 전체조회 경로 재현 | 138.1 |
+| 운동 최근 index cursor | 6.9 |
+| 체중 그래프 | 5.3 |
+| 식단 날짜 | 15.3 |
+| Backup export/self-validation | 7,094.7 |
+| Restore 파일 검증 | 2,582.9 |
+| Restore/재검증 | 10,267.8 |
+
+
+`bootMs`는 기존 대량 DB의 새 connection + seed/bootstrap 시간이며 OS/브라우저 프로세스 cold launch 측정은 아니다. 이전 전체조회 경로를 같은 fixture에서 재현해 비교했다. 기존3000개 materialize+sort에서20개 cursor로 변경했고 ObjectStore.getAll을 막아도 최근 Query가 성공한다. 별도 앱 시작/오프라인/업데이트 UI 검증도 PASS다.
+
+백업 요청 묶음 처리 전 restore14,942.1ms → 최종10,267.8ms. 같은 transaction 안에서 per-store add 요청과 media point-read를 묶었으며 체크포인트/전체 rollback은 유지한다. export는5,645.0→7,094.7ms로 변동하여 export 속도 개선을 주장하지 않는다. 값은 단회 환경 관측이며 Galaxy SLA/메모리 사용량 보증이 아니다. 전후 `v0.9.0-profile-before-batching.json` / `v0.9.0-profile.json` 참조.
+
+### 데이터 보존 / 운영 검사
+
+- OPS-DIAG: 정상 관계 및 7종 손상 투영(Profile pointer, 운동양식, pass usage, 예약완료, 인바디 값, 누락media, 중복사용)을 code/count로 판정. 진단 전후 원본·binary·pointer 동일, 건강원문 미출력.
+- OPS-STORAGE/PERSIST/SPACE: portable JSON UTF-8/Blob 실제 bytes, 이미 granted 재요청0, 거부 비치명적, 준비사진을 포함한90% 경고.
+- OPS-GC: 고아 수/bytes 미리보기, 실제 orphan만 삭제, tombstone 참조 binary 보존. 독립 coordinator 사이 shared backup/exclusive GC 상호 배제, nested backup-first 비교착, Web Locks 미지원 정리 차단.
+- OPS-LOG: 205회 append 후200건 유지, 메모/사진원문이 저장/표시/내보내기에 남지 않음.
+- OPS-BACKUP/RECOVERY: JSON/checksum/UUID/reference/version/schema/누락·변조사진 전체 거절, populated target 보존. replace와 reset 마지막 단계 실패 후 이전 portable/media/device/pointer 동일. 기존 pristine/force/QuotaExceeded/백업파일확인 회귀도 모두 유지.
+- OPS-MIG: 실제 DB1에 양식v1/v2, revision2 운동+원장, 완료예약, 인바디 연결, 삭제체중을 넣고 upgrade실패→DB1보존→DB2성공→재open 보존. 재사용 가능한 from/to/populate Harness이며 v0.9 새 Migration을 만들지 않는다.
+- OPS-PERF-RESTORE 및 기존 DIET-UI-08: 대량 ZIP 복원 projection+2000파일 보존, 실제 내려받은 ZIP을 두 번째 독립 Chrome Profile에서 복원해 원본 hash/사진 동일.
+
+### 실제 UI / 미실행 항목
+
+신규 UI6건: 설정 storage/진단, GC 확인 취소, 오프라인 진단/로그, 실제 waiting worker dirty 거절, UI 밖 skipWaiting으로 발생한 실제 controllerchange에서 폼 유지, 승인 적용 후 앱cache 교체+다른앱cache 보존+DB payload hash 동일+시작 진단 정상. 다른 탭 자체를 열어 실행한 테스트는 아니므로 실제 두 탭/설치형 동작은 OPS-MANUAL-04에서 추가 판정한다.
+
+`v0.9.0-operations.png` 412px 화면에서 진단 결과/로그 버튼/백업 영역을 확인했다. 실제 Galaxy/standalone QA는 신규8+기존48 = **56 NOT RUN**. 저장공간 경고/다른 탭 동시성 재현이 어려운 실기기 하위 항목도 실행하지 않았으면 NOT RUN으로 기록한다.
+
+중간 실행은 UI 테스트의 비동기 평가 문법 오류와 Windows DevToolsActivePort EBUSY로 중단됐다. 스크립트 문법 및 기존 준비 제한시간 안의 파일 잠금 재시도를 수정한 최종 전체 실행은 PASS다. Windows가 일부 임시 Chrome Profile 삭제를 EPERM으로 거부했으며 사용자 Profile을 사용/삭제하지 않았다.
+
+증적: `tests/results/v0.9.0.json`, suite JSON/PNG/profiling JSON, `tests/traceability.json`, `MANUAL_QA.md`, `OPERATIONS.md`. 최종 제품 검증 이후 문서/패키지 정합성만 확인하며 동일 제품 테스트를 불필요하게 반복하지 않는다.
+
+
 ## v0.8.0 Dashboard + Unified Calendar
 
 최종 `node tests/run-all-tests.mjs` 종료코드 0. **574 PASS / 0 FAIL / 48 NOT RUN** (총 622). 기존 v0.7 자동 PASS 538건의 suite+Test ID를 모두 유지했고 신규 36건(실제 IndexedDB/DOM 27 + UI 9)을 추가했다. v0.3 FINAL 186/0/0 및 과거 결과 JSON은 변경하지 않았다.

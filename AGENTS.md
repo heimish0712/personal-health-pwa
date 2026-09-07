@@ -12,7 +12,7 @@
 
 - 현재 저장소의 실제 코드, git 상태, REQUIREMENTS, 관련 설계를 먼저 읽는다.
 - 기존 정상 기능을 임의 재작성하지 않는다. 사용자 변경을 보존하고 승인된 작업 범위에서 진행한다.
-- 현재 구현은 v0.8.0 홈·통합 캘린더이며 다음 단계는 운영 안정화다. v0.8.0 실기기 QA 완료 여부는 REGRESSION_TEST/MANUAL_QA의 실행 상태를 확인한다. 순서는 [ROADMAP.md](docs/ROADMAP.md), 상세 명세는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md)를 따른다.
+- 현재 구현은 v0.9.0 운영 안정화이며 후속 단계는 사용자 실기기 QA 및 Supabase/Auth/Sync 설계다. v0.9.0 실기기 QA 완료 여부는 REGRESSION_TEST/MANUAL_QA의 실행 상태를 확인한다. 순서는 [ROADMAP.md](docs/ROADMAP.md), 상세 명세는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md)를 따른다.
 - 일반 복원은 기존 pristine 제한을 유지한다. v0.5.1 사용자 명시 요청으로 별도 강제 복원(replace)과 전체 초기화를 허용한다. 전용 BackupRestore Command에서 portable Store 교체/초기화를 원자적으로 처리하며 일반 CRUD에는 clear/물리삭제를 노출하지 않는다. 기기 데이터는 유지한다. 백업 후 실행은 내려받은 파일 재검증 완료 후에만 허용한다.
 - v0.7 DB2는 media_blobs만 추가한 누적 Migration이다. Portable Schema1/Seed1 유지, 사진은 metadata와 Blob을 분리한다. tombstone 참조 파일은 복원용으로 보존하며 GC는 모든 Profile/삭제 metadata까지 재검사해 진짜 orphan만 제거한다.
 - DB 변경 전 DB/Schema/Seed 버전과 Migration 필요 여부를 명시한다. 실제 구조 변경 없이 기능 추가만으로 DB 버전을 올리지 않는다.
@@ -21,6 +21,8 @@
 - 일반 CRUD에 물리삭제·clear·무조건 덮어쓰기·백업 import API를 노출하지 않는다.
 - 동일 pass 재적용은 기존 cancelled usage ID를 재활성화한다. 기존 pair UNIQUE를 유지하며 새 행 누적/Migration 제안은 폐기되었다.
 - 이용권은 운동기록별 `status = used` 로그 최대 1건, `cancelled` 이력 여러 건을 허용하는 규칙을 Command transaction 안에서 검사한다. `exercise_log_id` 단독 UNIQUE를 추가하지 않는다.
+
+- 운영 정책은 [OPERATIONS.md](OPERATIONS.md)를 따른다. portable tombstone 자동 purge 금지, app_logs200건 유지, GC는 모든 Profile/삭제 metadata 참조를 재검사하고 Web Locks로 백업/복원과 상호 배제한다.
 
 ## 변경 산출물과 검증
 

@@ -1,6 +1,6 @@
 import { blobChecksum, mediaRule, safeDietError } from '../core/media-rules.js';
 export class MediaService {
-  constructor({ storage, photoRepository, idGenerator, clock }) { Object.assign(this, { storage, photoRepository, idGenerator, clock }); }
+  constructor({ storage, photoRepository, idGenerator, clock, coordinator }) { Object.assign(this, { storage, photoRepository, idGenerator, clock, coordinator }); }
   async prepare(file) {
     const config = globalThis.APP_CONFIG.MEDIA;
     mediaRule(file instanceof Blob && file.size > 0 && file.size <= config.MAX_INPUT_BYTES && /^image\/(jpeg|png|webp)$/.test(file.type), 'JPEG·PNG·WebP 사진(25 MB 이하)을 선택하세요. 지원되지 않는 사진은 JPEG로 변환해 주세요.');
@@ -35,6 +35,7 @@ export class MediaService {
     const [media, estimate, persistent] = await Promise.all([this.storage.statistics(), navigator.storage?.estimate?.().catch(() => null), navigator.storage?.persisted?.().catch(() => false)]);
     return { ...media, usage: estimate?.usage ?? null, quota: estimate?.quota ?? null, supported: Boolean(navigator.storage && globalThis.isSecureContext), persistent: Boolean(persistent) };
   }
-  requestPersistence() { return navigator.storage?.persist?.() ?? Promise.resolve(false); }
-  collectOrphans() { return this.storage.collectOrphans(); }
+  async requestPersistence() { if (await navigator.storage?.persisted?.().catch(() => false)) return true; return navigator.storage?.persist?.().catch(() => false) ?? false; }
+  async spaceWarning(additionalBytes = 0) { const s = await navigator.storage?.estimate?.().catch(() => null); return s?.quota > 0 && ((s.usage ?? 0) + additionalBytes >= s.quota * 0.9) ? '저장공간이 거의 찼습니다. 사진을 줄이거나 백업을 보관한 후 저장공간을 확인하세요.' : null; }
+  collectOrphans() { return this.coordinator ? this.coordinator.collect(() => this.storage.collectOrphans()) : this.storage.collectOrphans(); }
 }

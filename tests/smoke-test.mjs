@@ -5,7 +5,7 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('smoke');
-const output = path.join(root, 'tests/results/v0.8.0-smoke.json');
+const output = path.join(root, 'tests/results/v0.9.0-smoke.json');
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -56,7 +56,7 @@ reporter.check('APP-002-SCOPE', manifest.scope === './', 'Relative GitHub Pages 
 reporter.check('APP-002-ICONS', Array.isArray(manifest.icons) && manifest.icons.length >= 2, '192/512 icons are defined.');
 
 const config = read('js/config.js');
-reporter.check('VERSION-001', config.includes("APP_VERSION: '0.8.0'"), 'App version is v0.8.0.');
+reporter.check('VERSION-001', config.includes("APP_VERSION: '0.9.0'"), 'App version is v0.9.0.');
 reporter.check('DB-CONFIG-001', config.includes('DB_VERSION: 2'), 'DB version is 2.');
 reporter.check('SCHEMA-CONFIG-001', config.includes('SCHEMA_VERSION: 1'), 'Schema version is 1.');
 reporter.check('SEED-CONFIG-001', config.includes('SEED_VERSION: 1'), 'Seed version is 1.');
@@ -82,7 +82,7 @@ reporter.check('CACHE-ASSET-003', ![...appShellPaths].some((assetPath) => assetP
 reporter.check('CACHE-REVALIDATE-001', sw.includes("{ cache: 'reload' }"), 'A new Service Worker revalidates App Shell files while installing.');
 
 const app = read('js/app.js');
-reporter.check('UPD-002', app.includes("waitingWorker.postMessage({ type: 'SKIP_WAITING' })"), 'Skip waiting is requested only by update action.');
+reporter.check('UPD-002', app.includes("updateController.apply(waitingWorker)") && read("js/core/update-controller.js").includes("if (!this.canLeave()) return false"), 'Skip waiting is requested only by update action.');
 const errors = read('js/core/errors.js');
 reporter.check('ERROR-001', errors.includes('기존 데이터는 삭제되지 않았습니다.'), 'Public failure message preserves data semantics.');
 

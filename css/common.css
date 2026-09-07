@@ -223,3 +223,6 @@ button:disabled { cursor: default; opacity: .55; }
 #dashboard { overflow-wrap:anywhere; }
 .calendar-dot { display:flex; justify-content:center; gap:1px; height:14px; line-height:14px; margin-top:5px; }
 .calendar-indicator { font-size:9px; font-weight:600; }
+
+#operation-logs pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+#data-diagnostic-result { overflow-wrap: anywhere; }

@@ -1,3 +1,4 @@
+import { runOperationsUiTests } from './operations-ui-tests.mjs';
 import { runDashboardUiTests } from './dashboard-ui-tests.mjs';
 import { runDietUiTests } from './diet-ui-tests.mjs';
 import { runHealthUiTests } from './health-ui-tests.mjs';
@@ -11,8 +12,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.8.0-browser.json');
-const basePath = '/personal-health-pwa-v0.8.0/';
+const outputPath = path.join(root, 'tests/results/v0.9.0-browser.json');
+const basePath = '/personal-health-pwa-v0.9.0/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -71,7 +72,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.8.0',
+    version: '0.9.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -87,8 +88,13 @@ async function waitForDevToolsPort(profileDirectory, child) {
 
   while (Date.now() < deadline) {
     if (fs.existsSync(portFile)) {
-      const [port] = fs.readFileSync(portFile, 'utf8').trim().split(/\r?\n/);
-      return Number(port);
+      try {
+        const [port] = fs.readFileSync(portFile, 'utf8').trim().split(/\r?\n/);
+        if (Number.isInteger(Number(port)) && Number(port) > 0) return Number(port);
+      } catch (error) {
+        if (!['EBUSY', 'EPERM', 'ENOENT'].includes(error.code)) throw error;
+        // Chrome may still hold its just-created port file on Windows. Retry within the existing deadline.
+      }
     }
     if (child.exitCode != null) {
       throw new Error(`Browser exited before DevTools became available: ${child.exitCode}`);
@@ -257,6 +263,7 @@ if (typeof WebSocket !== 'function') {
   process.exit(0);
 }
 
+let swRevision = 0;
 const server = http.createServer((request, response) => {
   const requestPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
 
@@ -287,6 +294,7 @@ const server = http.createServer((request, response) => {
       'Content-Type': mimeTypes[path.extname(filePath)] ?? 'application/octet-stream',
       'Cache-Control': 'no-store'
     });
+    if (relativePath === 'service-worker.js' && swRevision) content = Buffer.from(content.toString().replace('const CACHE_NAME = APP_CONFIG.CACHE_VERSION;', "const CACHE_NAME = APP_CONFIG.CACHE_VERSION + '-ops-update';"));
     response.end(content);
   });
 });
@@ -376,7 +384,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.8.0 · DB 2'),
+      (value) => value?.title === '홈' && value.body.includes('v0.9.0 · DB 2'),
       30000
     );
 
@@ -489,8 +497,8 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.8.0');
-    }, 'The v0.8.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.9.0');
+    }, 'The v0.9.0 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
@@ -521,7 +529,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.8.0 · DB 2'),
+        (state) => state?.title === '홈' && state.body.includes('v0.9.0 · DB 2'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -612,8 +620,9 @@ try {
       }
     } });
     await runDashboardUiTests({ cdp, pollEvaluate, runtimeTest, root });
+    await runOperationsUiTests({ cdp, pollEvaluate, runtimeTest, root, advanceWorker: () => { swRevision++; } });
     const screenshot = await cdp.send('Page.captureScreenshot' , { format: 'png' });
-    fs.writeFileSync(path.join(root, 'tests/results/v0.8.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
+    fs.writeFileSync(path.join(root, 'tests/results/v0.9.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
 
     await cdp.send('Network.emulateNetworkConditions', {
       offline: false,
@@ -629,7 +638,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.8.0',
+      version: '0.9.0',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -647,7 +656,7 @@ try {
   })(), 600000, 'Browser runtime suite exceeded the 600 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.8.0',
+    version: '0.9.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },

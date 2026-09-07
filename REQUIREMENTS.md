@@ -256,3 +256,19 @@
 - **VIEW-QUERY-002** 원본 재조회로 delete/restore/완료취소/수정 결과를 반영한다. calendar_logs/dashboard_summary/저장된 집계 필드와 중복 원본을 생성하지 않는다.
 - **VIEW-QUERY-003** DB2/Schema1/Seed1, Migration 없음. 기존 일반 Repository/Command/Media/Backup 경계를 유지하며 외부 CDN을 추가하지 않는다.
 - **VIEW-QA-001** 수치/중복/원본 변경/Profile/index/대량 월간 Query/모바일 화면/오프라인 재실행/Backup 복원 동등성을 자동검증하고 실제 Pages/Galaxy/설치 QA는 별도 NOT RUN으로 기록한다.
+
+## v0.9.0 Operational Hardening
+
+- **OPS-PERF-001** 운영 DB 이름을 거절하는 테스트 전용 생성기로 운동/예약/체중/식단 각3000, 인바디/사진 metadata 각1000, Blob2000을 만든다. open+bootstrap/홈/월간/최근운동/그래프/식단날짜/export/파일검증/restore를 측정한다. 절대 성능 SLA를 임의로 설정하지 않는다.
+- **OPS-QUERY-001** 운동 최근기록은 기존 by_profile_performed_at 또는 by_profile_exercise_performed_at 역방향 cursor(limit20)를 사용하며 운동명은 필요한 ID만 읽는다. BaseScopedRepository를 개조하지 않는다.
+- **OPS-STORAGE-001** Storage API 전체 usage/quota, 실제 Blob.size 합계, 모든 portable row JSON UTF-8 용량 추정, Persistent Storage 상태를 구분한다. 추정치에는 IndexedDB/인덱스 오버헤드가 포함되지 않는다.
+- **OPS-STORAGE-002** 사진 저장 직전 예상 사용량(usage+준비된 압축본/thumbnail)이 quota90% 이상이면 사용자 경고/계속 여부를 표시한다. API가 없으면 알 수 없음으로 취급하며 QuotaExceeded 시 기존 Command rollback과 사용자 메시지를 유지한다.
+- **OPS-PERSIST-001** granted이면 persist 재요청 없음. 미지원/거절은 사용을 차단하지 않는다. persistence는 백업 대체가 아니다.
+- **OPS-GC-001** metadata→storage_key/thumbnail_storage_key로 모든 Profile 및 삭제 이력까지 참조 판정. 고아 예상 개수/용량 확인 후 명시적으로 실행하고 삭제 transaction 안에서 다시 판정한다. 자동 GC 없음.
+- **OPS-GC-002** 같은 origin/DB의 백업 생성·파일검증·복원·초기화와 GC는 Web Locks shared/exclusive로 상호 배제한다. GC는 대기열에 넣지 않고 busy를 보고한다. Web Locks 미지원 시 GC만 비활성 동작(설명 오류), 백업/일반 기능은 계속 가능하다.
+- **OPS-LOG-001** app_logs 최대200건, 진단 UI 최근50건 및 시각/level/event/사용자 메시지/접힌 상세. 기록/표시/내보내기는 context allowlist와 고정 메시지로 메모·사진·전체 건강정보를 제외한다. portable tombstone은 자동 purge하지 않는다.
+- **OPS-UPDATE-001** 작성 폼이 열려 있으면 controllerchange에서도 강제 reload하지 않는다. 명시적 적용 시 기존 dirty/busy guard를 통과해야 한다. 새 cache 활성화는 앱 전용 prefix만 정리하고 IndexedDB는 유지하며 재부팅 진단에서 DB/Schema 기대값을 확인한다.
+- **OPS-MIG-001** 이전 DB 생성→관계/revision/tombstone fixture→주입 upgrade실패/보존→정상 upgrade/보존→reopen/보존을 재사용 Harness로 검사한다. v0.9 자체 Migration은 없다.
+- **OPS-BACKUP-001** JSON/checksum/중복UUID/관계/version/schema/누락사진/변조사진을 거절하고 populated target을 보존한다. restore/replace/reset 중간 실패는 전체 rollback, device_id 보존. 백업 self-validation/실제 내려받은 파일 확인 전 초기화 금지를 유지한다.
+- **OPS-DIAG-001** 읽기 전용 데이터 진단은 Profile pointer, 운동양식/운동, pass usage/중복활성, 예약완료 연결, 인바디-체중, 사진-식단-Blob, 고아 binary를 코드와 개수로 보고한다. 자동 repair/purge 없음. 전체 건강 원문을 UI/로그에 출력하지 않는다.
+- **OPS-OFFLINE-001** 기존 주요 도메인 CRUD/홈/캘린더/사진/백업/복원과 신규 진단은 App Shell만으로 오프라인 동작한다. 실제 설치형 PWA의 QA는 사용자 보고 전 NOT RUN이다.

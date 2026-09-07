@@ -38,13 +38,14 @@ export class IndexedDbBackupRestoreCommand extends BackupRestoreCommandContract 
         }
         this.checkpoint('restore-after-seed-removal');
         for (const name of BACKUP_STORE_NAMES) {
-          for (const row of document.data[name]) {
+          // Queue a store batch within the same transaction; every failure still aborts all stores.
+          await Promise.all(document.data[name].map(async (row) => {
             await requestToPromise(store(name).add(row));
             this.checkpoint(`restore-row:${name}`);
-          }
+          }));
           this.checkpoint(`restore-after:${name}`);
         }
-        for (const row of document._media ?? []) { await requestToPromise(store('media_blobs').add(row)); this.checkpoint('restore-media-row'); }
+        await Promise.all((document._media ?? []).map(async (row) => { await requestToPromise(store('media_blobs').add(row)); this.checkpoint('restore-media-row'); }));
         this.checkpoint('restore-after-media');
         const deviceStore = store('device_settings');
         const pointer = await requestToPromise(deviceStore.get('current_profile_id'));

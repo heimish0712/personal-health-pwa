@@ -3,6 +3,15 @@ importScripts('./js/config.js');
 const CACHE_NAME = APP_CONFIG.CACHE_VERSION;
 const CACHE_PREFIX = APP_CONFIG.CACHE_PREFIX;
 const APP_SHELL = [
+  './js/core/maintenance-coordinator.js',
+  './js/core/update-controller.js',
+  './js/core/log-privacy.js',
+  './js/core/data-diagnostic.js',
+  './js/data/contracts/operations-reader.contract.js',
+  './js/data/indexeddb/operations.reader.js',
+  './js/application/operations.service.js',
+  './js/pages/settings/operations.page.js',
+
   './js/application/activity-calendar.query.js',
   './js/application/calendar.service.js',
   './js/application/dashboard.service.js',

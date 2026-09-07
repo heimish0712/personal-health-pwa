@@ -14,8 +14,7 @@ export class IndexedDbBackupSnapshotReader extends BackupSnapshotReaderContract 
     const result = await this.unitOfWork.run(includeMedia ? [...BACKUP_STORE_NAMES, 'media_blobs'] : BACKUP_STORE_NAMES, 'readonly', async ({ store }) => {
       const all = await readPortableStores(store);
       const data = Object.fromEntries(BACKUP_STORE_NAMES.map((name) => [name, all[name].filter((row) => name === 'profiles' ? row.id === profileId : row.profile_id === profileId)]));
-      const media = [];
-      if (includeMedia) for (const photo of data.diet_photos) for (const key of [photo.storage_key, photo.thumbnail_storage_key]) { const row = await requestToPromise(store('media_blobs').get(key ?? '')); if (row) media.push(row); }
+      const media = includeMedia ? (await Promise.all(data.diet_photos.flatMap((photo) => [photo.storage_key, photo.thumbnail_storage_key]).map((key) => requestToPromise(store('media_blobs').get(key ?? ''))))).filter(Boolean) : [];
       return { data, media };
     });
     return { profileId, data: sortBackupData(result.data), ...(includeMedia ? { media: result.media } : {}) };

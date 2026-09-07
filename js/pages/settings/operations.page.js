@@ -1,0 +1,12 @@
+import { escapeHtml as e } from '../exercise/exercise-view.js';
+export async function mountOperations(root,{services,isCurrent}) {
+  const section=document.createElement('section');section.className='card';section.id='operations-settings';root.append(section);
+  section.innerHTML='<h2>데이터 진단</h2><p id="portable-storage">사용량 계산 중…</p><p>portable 사용량은 모든 Profile의 JSON UTF-8 추정치입니다. 실제 IndexedDB/인덱스 오버헤드와 다릅니다. 삭제 이력은 자동 정리하지 않습니다.</p><button class="button" id="data-diagnose">데이터 진단 실행</button><p id="data-diagnostic-result" role="status">읽기 전용 검사. 자동 수정하지 않습니다.</p><h3>최근 진단 로그</h3><p>최대 200건 보존 / 최근 50건 표시. 건강정보 원문은 제외합니다.</p><button class="button button-secondary" id="log-refresh">로그 새로고침</button> <button class="button button-secondary" id="log-export">진단 로그 내보내기</button><div id="operation-logs"></div><p id="operations-error" role="alert"></p>';
+  const bind=(id,work)=>section.querySelector(id).onclick=async(event)=>{const button=event.currentTarget;button.disabled=true;try{await work();}catch{if(isCurrent())section.querySelector('#operations-error').textContent='진단 작업에 실패했습니다. 기존 데이터는 변경하지 않았습니다. 다시 시도하세요.';}finally{button.disabled=false;}};
+  const logs=async()=>{const rows=await services.operations.logs();if(isCurrent())section.querySelector('#operation-logs').innerHTML=rows.length?rows.map((r)=>`<details><summary>${e(r.created_at)} · ${e(r.level)} · ${e(r.event)}</summary><p>${e(r.message)}</p><pre>${e(JSON.stringify(r.context??{},null,2))}</pre></details>`).join(''):'최근 로그 없음';};
+  bind('#data-diagnose',async()=>{section.querySelector('#data-diagnostic-result').textContent='검사 중…';const result=await services.operations.diagnose();if(isCurrent())section.querySelector('#data-diagnostic-result').textContent=result.healthy?`정상 · ${result.checkedRows}건 검사`:`확인 필요 · ${result.issues.map((x)=>`${x.code}: ${x.count}건`).join(' / ')}. 자동 수정하지 않았습니다.`;});
+  bind('#log-refresh',logs);
+  bind('#log-export',async()=>{const content=await services.operations.exportLogs();if(!isCurrent())return;const url=URL.createObjectURL(new Blob([content],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='personal-health-diagnostics.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  const storage=await services.operations.storage();if(!isCurrent())return;
+  section.querySelector('#portable-storage').textContent=`portable 데이터 약 ${(storage.portableBytes/1000000).toFixed(2)} MB (${storage.portableCount}건)`;await logs();
+}

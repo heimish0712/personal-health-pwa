@@ -6,7 +6,7 @@ export async function runQaFeedbackUiTests({ cdp, pollEvaluate, runtimeTest, pro
   const snapshot = () => cdp.evaluate(`(async () => { const { bootstrapApplication } = await import('./js/bootstrap/bootstrap.js'); const app = await bootstrapApplication(); return (await app.services.backupExport.exportCurrentProfile()).document; })()`);
   const selectFile = async (selector, doc) => cdp.evaluate(`(() => { const d = new DataTransfer(); d.items.add(new File([${JSON.stringify(JSON.stringify(doc))}], 'saved-backup.json', { type: 'application/json' })); const input = document.querySelector(${JSON.stringify(selector)}); input.files = d.files; input.dispatchEvent(new Event('change', { bubbles: true })); })()`);
   await cdp.evaluate("location.hash = '/calendar'"); await ready('[data-calendar-date]');
-  const shot = await cdp.send('Page.captureScreenshot', { format: 'png' }); fs.writeFileSync(path.join(root, 'tests/results/v0.8.0-calendar.png'), Buffer.from(shot.data, 'base64'));
+  const shot = await cdp.send('Page.captureScreenshot', { format: 'png' }); fs.writeFileSync(path.join(root, 'tests/results/v0.9.0-calendar.png'), Buffer.from(shot.data, 'base64'));
   await cdp.evaluate("location.hash = '/settings'"); await ready('#data-reset');
   const original = await snapshot(); let downloaded;
   await runtimeTest('QA051-23-OFFLINE-BACKUP-RESET', async () => {

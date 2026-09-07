@@ -1,3 +1,5 @@
+import { mountOperations } from './pages/settings/operations.page.js';
+import { UpdateController } from './core/update-controller.js';
 import { renderDashboard, releaseDashboardUrls } from './pages/dashboard.page.js';
 import { parseRoute } from './router.js';
 import { renderDietRoute, releaseDietUrls, mountMediaSettings } from './pages/diet/diet.page.js';
@@ -5,7 +7,7 @@ import { renderWeightRoute } from './pages/weight/weight.page.js';
 import { renderCalendar } from './pages/exercise/pass-schedule.page.js';
 import { bootstrapApplication } from './bootstrap/bootstrap.js';
 import { getActionErrorMessage, getPublicErrorMessage } from './core/errors.js';
-import { canLeaveCurrentRoute, clearNavigationGuard, navigate, startRouter } from './router.js';
+import { hasNavigationGuard, canLeaveCurrentRoute, clearNavigationGuard, navigate, startRouter } from './router.js';
 import { renderBottomNav } from './components/bottom-nav.js';
 import { renderExerciseRoute } from './pages/exercise/exercise.router.js';
 import { mountBackupSettings } from './pages/settings/backup-restore.page.js';
@@ -32,6 +34,7 @@ let waitingWorker = null;
 let toastTimer = null;
 let renderToken = 0;
 let routerStarted = false;
+const updateController = new UpdateController({ hasGuard: hasNavigationGuard, canLeave: canLeaveCurrentRoute, reload: () => window.location.reload(), notify: () => { updateBanner.hidden = false; updateNow.disabled = false; showToast('새 버전이 준비되었습니다. 작성 중 내용을 저장한 후 업데이트를 적용하세요.'); } });
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -88,6 +91,8 @@ async function renderSettings(token) {
       <section class="card"><h2>데이터 보호</h2><p>저장소 진단은 데이터를 변경하지 않습니다. 일반 복원은 초기 상태에서 실행할 수 있습니다. 강제 복원과 전체 초기화는 아래에서 별도로 확인 후 실행합니다.</p></section>`;
     document.querySelector('#diagnose-again')?.addEventListener('click', () => { if (!canLeaveCurrentRoute()) return; const nextToken = ++renderToken; void renderSettings(nextToken); });
     await mountMediaSettings(pageRoot, { services: appContext.services, isCurrent: () => token === renderToken, showToast });
+    if (token !== renderToken) return;
+    await mountOperations(pageRoot, { services: appContext.services, isCurrent: () => token === renderToken });
     if (token !== renderToken) return;
     mountBackupSettings(pageRoot, { services: appContext.services, showToast, isCurrent: () => token === renderToken });
   } catch (error) {
@@ -153,7 +158,7 @@ async function registerServiceWorker() {
       const installingWorker = registration.installing; if (!installingWorker) return;
       installingWorker.addEventListener('statechange', () => { if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) showUpdate(installingWorker); });
     });
-    navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+    navigator.serviceWorker.addEventListener('controllerchange', () => updateController.controllerChanged());
   } catch (error) { showError('오프라인 실행 준비에 실패했습니다. 온라인 상태에서 다시 열어주세요.', error); }
 }
 
@@ -169,9 +174,8 @@ async function initializeApplication() {
 settingsButton.addEventListener('click', () => navigate('/settings'));
 updateLater.addEventListener('click', () => { updateBanner.hidden = true; });
 updateNow.addEventListener('click', () => {
-  if (!waitingWorker) return;
-  if (!canLeaveCurrentRoute()) return;
-  updateNow.disabled = true; waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+  if (!waitingWorker && !updateController.pending) return;
+  try { if (updateController.apply(waitingWorker)) updateNow.disabled = true; } catch (error) { updateNow.disabled = false; showError('업데이트를 적용하지 못했습니다. 다시 시도하세요.', error); }
 });
 window.addEventListener('error', (event) => { void appContext?.logger.error('UNHANDLED_ERROR', 'Unhandled window error.', { name: event.error?.name ?? null }); });
 window.addEventListener('unhandledrejection', (event) => { void appContext?.logger.error('UNHANDLED_ERROR', 'Unhandled promise rejection.', { name: event.reason?.name ?? null }); });

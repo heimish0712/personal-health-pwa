@@ -1,16 +1,5 @@
+import { safeLog } from './log-privacy.js';
 const MEMORY_QUEUE_LIMIT = 50;
-
-function safeContext(context) {
-  if (context == null) return null;
-
-  try {
-    const serialized = JSON.stringify(context);
-    if (serialized.length <= 4000) return JSON.parse(serialized);
-    return { truncated: true, preview: serialized.slice(0, 3900) };
-  } catch {
-    return { serializationFailed: true };
-  }
-}
 
 export class AppLogger {
   #repository = null;
@@ -34,15 +23,15 @@ export class AppLogger {
   }
 
   async #write(level, event, message, context) {
-    const entry = {
+    const entry = safeLog({
       level,
       event,
       message,
-      context: safeContext(context)
-    };
+      context
+    });
 
     const consoleMethod = level === 'ERROR' ? 'error' : level === 'WARN' ? 'warn' : 'info';
-    console[consoleMethod](`[${event}] ${message}`, context ?? '');
+    console[consoleMethod](`[${entry.event}] ${entry.message}`, entry.context ?? '');
 
     if (!this.#repository) {
       this.#queue.push(entry);

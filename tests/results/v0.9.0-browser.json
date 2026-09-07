@@ -1,0 +1,2070 @@
+{
+  "version": "0.9.0",
+  "suite": "browser-runtime",
+  "executedAt": "2026-09-07T08:57:37.184Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+  "basePath": "/personal-health-pwa-v0.9.0/",
+  "summary": {
+    "total": 411,
+    "passed": 411,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "DB-001",
+      "status": "PASS",
+      "evidence": "DB version is 2."
+    },
+    {
+      "id": "DB-002",
+      "status": "PASS",
+      "evidence": "15 Object Stores exist."
+    },
+    {
+      "id": "DB-003",
+      "status": "PASS",
+      "evidence": "All real Object Store key paths and Index definitions match the approved schema."
+    },
+    {
+      "id": "DB-005",
+      "status": "PASS",
+      "evidence": "Test database is separate from the production database."
+    },
+    {
+      "id": "PROFILE-001",
+      "status": "PASS",
+      "evidence": "One local Profile was created."
+    },
+    {
+      "id": "PROFILE-002-ID",
+      "status": "PASS",
+      "evidence": "Profile ID is UUID v4."
+    },
+    {
+      "id": "PROFILE-003",
+      "status": "PASS",
+      "evidence": "Current profile pointer and IdentityContext are aligned."
+    },
+    {
+      "id": "SEED-001",
+      "status": "PASS",
+      "evidence": "One default Pilates type exists."
+    },
+    {
+      "id": "SEED-002",
+      "status": "PASS",
+      "evidence": "Pilates template v1 exists."
+    },
+    {
+      "id": "UUID-001",
+      "status": "PASS",
+      "evidence": "Seed entities use UUID v4."
+    },
+    {
+      "id": "TIME-001",
+      "status": "PASS",
+      "evidence": "Entity timestamps use UTC ISO format."
+    },
+    {
+      "id": "PROFILE-002",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate profiles."
+    },
+    {
+      "id": "SEED-003",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate seed records."
+    },
+    {
+      "id": "SEED-004",
+      "status": "PASS",
+      "evidence": "Seed upgrade does not overwrite a user rename."
+    },
+    {
+      "id": "SEED-005",
+      "status": "PASS",
+      "evidence": "Soft-deleted seed is not restored automatically."
+    },
+    {
+      "id": "SCOPE-CREATE-001",
+      "status": "PASS",
+      "evidence": "Repository ignores an untrusted input profile_id."
+    },
+    {
+      "id": "REV-001",
+      "status": "PASS",
+      "evidence": "New entity revision is 1."
+    },
+    {
+      "id": "REV-002",
+      "status": "PASS",
+      "evidence": "Update increments revision and preserves created_at."
+    },
+    {
+      "id": "REV-003",
+      "status": "PASS",
+      "evidence": "Stale expectedRevision is rejected."
+    },
+    {
+      "id": "PROTECTED-001",
+      "status": "PASS",
+      "evidence": "A caller cannot move an entity to another Profile through an update patch."
+    },
+    {
+      "id": "REV-004",
+      "status": "PASS",
+      "evidence": "Soft-delete rejects a stale expectedRevision."
+    },
+    {
+      "id": "DELETE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted record is excluded from normal get."
+    },
+    {
+      "id": "DELETE-002",
+      "status": "PASS",
+      "evidence": "Deleted record remains queryable through explicit include-deleted path."
+    },
+    {
+      "id": "REV-005",
+      "status": "PASS",
+      "evidence": "Restore rejects a stale expectedRevision."
+    },
+    {
+      "id": "DELETE-003",
+      "status": "PASS",
+      "evidence": "Restore keeps ID and increments revision."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-001",
+      "status": "PASS",
+      "evidence": "Multiple user-created exercises without system_key are allowed."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-002",
+      "status": "PASS",
+      "evidence": "Multiple schedules without completed_exercise_log_id are allowed."
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-003",
+      "status": "PASS",
+      "evidence": "Multiple manual weights without source_ref_id are allowed."
+    },
+    {
+      "id": "SCOPE-001",
+      "status": "PASS",
+      "evidence": "Profile A cannot read Profile B data."
+    },
+    {
+      "id": "SCOPE-002",
+      "status": "PASS",
+      "evidence": "Profile A cannot update Profile B data."
+    },
+    {
+      "id": "UNIQUE-001",
+      "status": "PASS",
+      "evidence": "Duplicate profile/system_key is rejected by a unique compound index."
+    },
+    {
+      "id": "UNIQUE-002",
+      "status": "PASS",
+      "evidence": "Duplicate profile/exercise/version is rejected."
+    },
+    {
+      "id": "UNIQUE-003",
+      "status": "PASS",
+      "evidence": "Duplicate pass/exercise usage is rejected."
+    },
+    {
+      "id": "TX-002",
+      "status": "PASS",
+      "evidence": "Explicit abort leaves no partial records."
+    },
+    {
+      "id": "TX-001",
+      "status": "PASS",
+      "evidence": "Bootstrap failure rolls back Profile, seed, and device pointer together."
+    },
+    {
+      "id": "PROFILE-004",
+      "status": "PASS",
+      "evidence": "Invalid profile pointer is repaired without creating another Profile."
+    },
+    {
+      "id": "DB-004",
+      "status": "PASS",
+      "evidence": "Record survives database close and reopen."
+    },
+    {
+      "id": "EX-TYPE-001",
+      "status": "PASS",
+      "evidence": "Default Pilates seed is visible through the exercise query service."
+    },
+    {
+      "id": "EX-TYPE-002",
+      "status": "PASS",
+      "evidence": "A user-created exercise type is created through the application service."
+    },
+    {
+      "id": "EX-TPL-001",
+      "status": "PASS",
+      "evidence": "Exercise creation atomically creates template v1."
+    },
+    {
+      "id": "EX-TPL-007",
+      "status": "PASS",
+      "evidence": "Custom fields receive a stable UUID-based key."
+    },
+    {
+      "id": "EX-LOG-001",
+      "status": "PASS",
+      "evidence": "Exercise log is created against the current active template."
+    },
+    {
+      "id": "EX-LOG-002",
+      "status": "PASS",
+      "evidence": "Exercise memo is stored as a common fixed field."
+    },
+    {
+      "id": "EX-LOG-003",
+      "status": "PASS",
+      "evidence": "Dynamic exercise values are validated and normalized."
+    },
+    {
+      "id": "EX-TPL-003",
+      "status": "PASS",
+      "evidence": "Template edit creates a new active version."
+    },
+    {
+      "id": "EX-TPL-004",
+      "status": "PASS",
+      "evidence": "Previous template is retained as superseded."
+    },
+    {
+      "id": "EX-TPL-007-KEY",
+      "status": "PASS",
+      "evidence": "Changing a custom field label preserves its internal key."
+    },
+    {
+      "id": "EX-TPL-009",
+      "status": "PASS",
+      "evidence": "Stale template ID/revision pair is rejected."
+    },
+    {
+      "id": "EX-TPL-005",
+      "status": "PASS",
+      "evidence": "Existing record keeps its original template after a newer template is created."
+    },
+    {
+      "id": "EX-LOG-014",
+      "status": "PASS",
+      "evidence": "Historical record can still be edited with its historical template."
+    },
+    {
+      "id": "EX-LOG-006",
+      "status": "PASS",
+      "evidence": "Exercise log update preserves created_at."
+    },
+    {
+      "id": "EX-LOG-007",
+      "status": "PASS",
+      "evidence": "Exercise log update changes updated_at and revision."
+    },
+    {
+      "id": "EX-LOG-009",
+      "status": "PASS",
+      "evidence": "Stale exercise log revision is rejected."
+    },
+    {
+      "id": "EX-TPL-006",
+      "status": "PASS",
+      "evidence": "New record uses the latest active template."
+    },
+    {
+      "id": "EX-VAL-004",
+      "status": "PASS",
+      "evidence": "Invalid numeric dynamic value is rejected by the application service."
+    },
+    {
+      "id": "EX-VAL-008",
+      "status": "PASS",
+      "evidence": "Blank exercise name is rejected."
+    },
+    {
+      "id": "EX-TYPE-005",
+      "status": "PASS",
+      "evidence": "Exercise type can be deactivated."
+    },
+    {
+      "id": "EX-VAL-003",
+      "status": "PASS",
+      "evidence": "Inactive exercise cannot receive a new log."
+    },
+    {
+      "id": "EX-TYPE-006",
+      "status": "PASS",
+      "evidence": "Exercise type can be reactivated."
+    },
+    {
+      "id": "EX-TYPE-007",
+      "status": "PASS",
+      "evidence": "Exercise type uses soft-delete."
+    },
+    {
+      "id": "EX-TYPE-008",
+      "status": "PASS",
+      "evidence": "Soft-deleted exercise is excluded from active list."
+    },
+    {
+      "id": "EX-VAL-002",
+      "status": "PASS",
+      "evidence": "Deleted exercise cannot receive a new log."
+    },
+    {
+      "id": "EX-TYPE-RESTORE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted exercise can be restored without changing ID."
+    },
+    {
+      "id": "EX-LOG-010",
+      "status": "PASS",
+      "evidence": "Exercise log uses soft-delete."
+    },
+    {
+      "id": "EX-LOG-011",
+      "status": "PASS",
+      "evidence": "Deleted exercise log is excluded from normal detail lookup."
+    },
+    {
+      "id": "EX-LOG-012",
+      "status": "PASS",
+      "evidence": "Deleted exercise log is available through explicit include-deleted lookup."
+    },
+    {
+      "id": "EX-LOG-RESTORE-001",
+      "status": "PASS",
+      "evidence": "Deleted exercise log restores with the same ID."
+    },
+    {
+      "id": "EX-TYPE-009",
+      "status": "PASS",
+      "evidence": "Exercise query service keeps Profile data isolated."
+    },
+    {
+      "id": "EX-LOG-013",
+      "status": "PASS",
+      "evidence": "Exercise log service cannot read another Profile log."
+    },
+    {
+      "id": "EX-TPL-002",
+      "status": "PASS",
+      "evidence": "Exercise type + template creation rolls back together on mid-command failure."
+    },
+    {
+      "id": "LOG-001",
+      "status": "PASS",
+      "evidence": "App log records can be written and read."
+    },
+    {
+      "id": "LOG-002",
+      "status": "PASS",
+      "evidence": "App log retention is capped at 200 records."
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only diagnostic reports a healthy database."
+    },
+    {
+      "id": "BACKUP-EXP-001",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-002",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-003",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-004",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-005",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-006",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-007",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-008",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-009",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-010",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-011",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked."
+    },
+    {
+      "id": "BACKUP-EXP-012",
+      "status": "PASS",
+      "evidence": "Photo metadata prevents a falsely complete v1 export."
+    },
+    {
+      "id": "RESTORE-001",
+      "status": "PASS",
+      "evidence": "Pristine seeded database restored via 13-store command."
+    },
+    {
+      "id": "RESTORE-002",
+      "status": "PASS",
+      "evidence": "Original Profile ID preserved."
+    },
+    {
+      "id": "RESTORE-003",
+      "status": "PASS",
+      "evidence": "id preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-004",
+      "status": "PASS",
+      "evidence": "created_at preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-005",
+      "status": "PASS",
+      "evidence": "updated_at preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-006",
+      "status": "PASS",
+      "evidence": "deleted_at preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-007",
+      "status": "PASS",
+      "evidence": "revision preserved for every portable row."
+    },
+    {
+      "id": "RESTORE-008",
+      "status": "PASS",
+      "evidence": "Template references and dynamic values preserved."
+    },
+    {
+      "id": "RESTORE-009",
+      "status": "PASS",
+      "evidence": "Historical templates preserved."
+    },
+    {
+      "id": "RESTORE-010",
+      "status": "PASS",
+      "evidence": "Deleted rows remain deleted."
+    },
+    {
+      "id": "RESTORE-011",
+      "status": "PASS",
+      "evidence": "Device ID and device metadata untouched."
+    },
+    {
+      "id": "RESTORE-012",
+      "status": "PASS",
+      "evidence": "Current Profile pointer is restored."
+    },
+    {
+      "id": "RESTORE-013",
+      "status": "PASS",
+      "evidence": "Valid file can be previewed on a populated target but cannot be written."
+    },
+    {
+      "id": "RESTORE-014",
+      "status": "PASS",
+      "evidence": "Five fault points roll back Seed removals, portable rows and pointer together."
+    },
+    {
+      "id": "RESTORE-015",
+      "status": "PASS",
+      "evidence": "Entire portable canonical hash matches original."
+    },
+    {
+      "id": "RESTORE-016",
+      "status": "PASS",
+      "evidence": "Reopen and bootstrap preserve all restored values without Seed mutation."
+    },
+    {
+      "id": "RESTORE-STALE-PREVIEW",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "RESTORE-CHANGED-SEED",
+      "status": "PASS",
+      "evidence": "Completed without error."
+    },
+    {
+      "id": "RESTORE-CONCURRENT",
+      "status": "PASS",
+      "evidence": "Two connections cannot mix or duplicate concurrent restores."
+    },
+    {
+      "id": "BACKUP-SNAPSHOT-ATOMIC",
+      "status": "PASS",
+      "evidence": "Snapshot observes both type/template writes together or neither."
+    },
+    {
+      "id": "PASS-001",
+      "status": "PASS",
+      "evidence": "Initial pass has 60 calculated uses."
+    },
+    {
+      "id": "PASS-002",
+      "status": "PASS",
+      "evidence": "Exercise debits once: 60 -> 59."
+    },
+    {
+      "id": "PASS-003",
+      "status": "PASS",
+      "evidence": "Same pass edit neither adds nor mutates usage."
+    },
+    {
+      "id": "PASS-004",
+      "status": "PASS",
+      "evidence": "Removing selection cancels usage."
+    },
+    {
+      "id": "PASS-005",
+      "status": "PASS",
+      "evidence": "Reapply reactivates same cancelled usage ID."
+    },
+    {
+      "id": "PASS-006",
+      "status": "PASS",
+      "evidence": "Delete restores capacity."
+    },
+    {
+      "id": "PASS-007",
+      "status": "PASS",
+      "evidence": "Restore revalidates and debits."
+    },
+    {
+      "id": "PASS-008",
+      "status": "PASS",
+      "evidence": "Switch cancels A and activates B atomically; max one active."
+    },
+    {
+      "id": "PASS-009",
+      "status": "PASS",
+      "evidence": "A -> B -> A keeps pair identity and cancelled B history."
+    },
+    {
+      "id": "PASS-010",
+      "status": "PASS",
+      "evidence": "Actual exercise date outside expiry rejects edit without removing existing usage."
+    },
+    {
+      "id": "PASS-011",
+      "status": "PASS",
+      "evidence": "Rejected date edit preserves previous charge."
+    },
+    {
+      "id": "PASS-012",
+      "status": "PASS",
+      "evidence": "Invalid total is rejected."
+    },
+    {
+      "id": "PASS-013",
+      "status": "PASS",
+      "evidence": "Total cannot be less than two active uses."
+    },
+    {
+      "id": "PASS-014",
+      "status": "PASS",
+      "evidence": "Pass date edits cannot exclude existing used exercise day."
+    },
+    {
+      "id": "PASS-015",
+      "status": "PASS",
+      "evidence": "Pass with history is deactivated, not deleted."
+    },
+    {
+      "id": "PASS-016",
+      "status": "PASS",
+      "evidence": "Existing charge remains editable on inactive pass."
+    },
+    {
+      "id": "PASS-017",
+      "status": "PASS",
+      "evidence": "Restore cannot recharge inactive pass."
+    },
+    {
+      "id": "SCHEDULE-001",
+      "status": "PASS",
+      "evidence": "Schedule create/edit/cancel never debit."
+    },
+    {
+      "id": "SCHEDULE-002",
+      "status": "PASS",
+      "evidence": "Concurrent duplicate completion creates one log and usage."
+    },
+    {
+      "id": "SCHEDULE-003",
+      "status": "PASS",
+      "evidence": "Linked completed log must be undone through schedule command."
+    },
+    {
+      "id": "SCHEDULE-004",
+      "status": "PASS",
+      "evidence": "Undo atomically restores schedule and capacity, soft-deletes log."
+    },
+    {
+      "id": "SCHEDULE-005",
+      "status": "PASS",
+      "evidence": "Stale retry after undo cannot complete again."
+    },
+    {
+      "id": "SCHEDULE-006",
+      "status": "PASS",
+      "evidence": "Direct restore cannot reactivate cancelled schedule log."
+    },
+    {
+      "id": "SCHEDULE-007",
+      "status": "PASS",
+      "evidence": "Explicit re-complete restores same log and usage identity."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-schedule",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-schedule",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data."
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows."
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows."
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows."
+    },
+    {
+      "id": "PASS-CONCURRENT-LAST",
+      "status": "PASS",
+      "evidence": "Concurrent last-use claims allow exactly one complete write."
+    },
+    {
+      "id": "PASS-WRONG-TYPE",
+      "status": "PASS",
+      "evidence": "Cross-exercise pass selection rejected."
+    },
+    {
+      "id": "PASS-DATE-BOUNDARY",
+      "status": "PASS",
+      "evidence": "Validity uses Seoul exercise day, inclusive start, not UTC day or today."
+    },
+    {
+      "id": "QUERY-ACTIVITY-RANGE",
+      "status": "PASS",
+      "evidence": "Existing compound date indexes return scoped live schedules/logs for period."
+    },
+    {
+      "id": "ACTIVITY-REOPEN",
+      "status": "PASS",
+      "evidence": "Database reopen preserves complete pass/schedule state and revisions."
+    },
+    {
+      "id": "SCHEDULE-OPTIONAL-PASS",
+      "status": "PASS",
+      "evidence": "Schedule completion without pass creates only an exercise log."
+    },
+    {
+      "id": "SCHEDULE-COMPLETED-EDIT",
+      "status": "PASS",
+      "evidence": "Completed schedule cannot be edited without undo."
+    },
+    {
+      "id": "ACTIVITY-INVALID-DATE",
+      "status": "PASS",
+      "evidence": "Impossible local dates are rejected, not normalized."
+    },
+    {
+      "id": "ACTIVITY-SCOPE-PASS",
+      "status": "PASS",
+      "evidence": "Command cannot mutate another profile pass."
+    },
+    {
+      "id": "ACTIVITY-SCOPE-QUERY",
+      "status": "PASS",
+      "evidence": "Indexed pass query is profile-scoped."
+    },
+    {
+      "id": "PASS-RESTORE-EXHAUSTED",
+      "status": "PASS",
+      "evidence": "Restore rechecks capacity used by a later exercise."
+    },
+    {
+      "id": "PASS-RESTORE-ROLLBACK",
+      "status": "PASS",
+      "evidence": "Failed restore leaves deleted state and usage unchanged."
+    },
+    {
+      "id": "ACTIVITY-BACKUP",
+      "status": "PASS",
+      "evidence": "Backup v1 restores all pass selections, cancelled history and undone schedule links with exact hash."
+    },
+    {
+      "id": "QA051-01",
+      "status": "PASS",
+      "evidence": "Completion defaults to first usable active pass; expired top row excluded."
+    },
+    {
+      "id": "QA051-02",
+      "status": "PASS",
+      "evidence": "No usable pass defaults to no charge."
+    },
+    {
+      "id": "QA051-03",
+      "status": "PASS",
+      "evidence": "Monthly calendar initially selects and separately marks today."
+    },
+    {
+      "id": "QA051-05",
+      "status": "PASS",
+      "evidence": "Linked completion is one projected calendar item."
+    },
+    {
+      "id": "QA051-06",
+      "status": "PASS",
+      "evidence": "Direct exercise log remains a separate projected item."
+    },
+    {
+      "id": "QA051-04",
+      "status": "PASS",
+      "evidence": "Selecting date renders only that date without full-store reads."
+    },
+    {
+      "id": "QA051-MONTH",
+      "status": "PASS",
+      "evidence": "Next/previous month navigation works."
+    },
+    {
+      "id": "QA051-CROSS-MONTH",
+      "status": "PASS",
+      "evidence": "Completed projection uses actual exercise date across month boundaries and resolves indexed linkage."
+    },
+    {
+      "id": "QA051-07",
+      "status": "PASS",
+      "evidence": "Exercise change preserves date, time and memo DOM values."
+    },
+    {
+      "id": "QA051-08",
+      "status": "PASS",
+      "evidence": "Same compatible template field key retains entered value."
+    },
+    {
+      "id": "QA051-09",
+      "status": "PASS",
+      "evidence": "Missing, incompatible and invalid select values are removed."
+    },
+    {
+      "id": "QA051-10",
+      "status": "PASS",
+      "evidence": "Active pass shows deactivate action."
+    },
+    {
+      "id": "QA051-11",
+      "status": "PASS",
+      "evidence": "Inactive pass shows activate action."
+    },
+    {
+      "id": "QA051-12",
+      "status": "PASS",
+      "evidence": "Status toggles preserve all usage/remaining and increment pass revision only."
+    },
+    {
+      "id": "QA051-17",
+      "status": "PASS",
+      "evidence": "Normal restore remains blocked on non-pristine target."
+    },
+    {
+      "id": "QA051-20-replace-cleared:profiles",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer."
+    },
+    {
+      "id": "QA051-20-replace-cleared:pass_usage_logs",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer."
+    },
+    {
+      "id": "QA051-20-restore-after:exercise_logs",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer."
+    },
+    {
+      "id": "QA051-20-restore-before-commit",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer."
+    },
+    {
+      "id": "QA051-18",
+      "status": "PASS",
+      "evidence": "Forced replace succeeds on populated database and switches profile."
+    },
+    {
+      "id": "QA051-19",
+      "status": "PASS",
+      "evidence": "Old records are fully replaced, not merged."
+    },
+    {
+      "id": "QA051-21",
+      "status": "PASS",
+      "evidence": "Forced restore canonical hash equals imported snapshot."
+    },
+    {
+      "id": "QA051-22",
+      "status": "PASS",
+      "evidence": "Device identity metadata remains exact."
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-replace-cleared:exercise_logs",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically."
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-reset-after:profiles",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically."
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-reset-after:exercise_templates",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically."
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-reset-before-commit",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically."
+    },
+    {
+      "id": "QA051-RESET-DOWNLOAD-GATE",
+      "status": "PASS",
+      "evidence": "Backup-first reset cannot execute on download click alone."
+    },
+    {
+      "id": "QA051-13",
+      "status": "PASS",
+      "evidence": "Reset executes after reading back and validating downloaded backup."
+    },
+    {
+      "id": "QA051-16",
+      "status": "PASS",
+      "evidence": "Reset leaves initial Profile/Pilates/template and device ID intact."
+    },
+    {
+      "id": "QA051-14",
+      "status": "PASS",
+      "evidence": "Backup failure prevents creation/execution of reset plan; no data removed."
+    },
+    {
+      "id": "QA051-15",
+      "status": "PASS",
+      "evidence": "Explicit no-backup reset recreates pristine state."
+    },
+    {
+      "id": "QA051-STALE-RESET",
+      "status": "PASS",
+      "evidence": "Data changed after confirmation preparation blocks stale reset."
+    },
+    {
+      "id": "QA051-WRONG-DOWNLOAD",
+      "status": "PASS",
+      "evidence": "Selecting unrelated valid backup cannot acknowledge current-data backup."
+    },
+    {
+      "id": "QA051-BACKUP-FIRST-REPLACE",
+      "status": "PASS",
+      "evidence": "Backup-first forced restore validates local saved backup then replaces."
+    },
+    {
+      "id": "HEALTH-01-CREATE",
+      "status": "PASS",
+      "evidence": "Manual creation preserves scoped metadata and UTC conversion."
+    },
+    {
+      "id": "HEALTH-02-UPDATE",
+      "status": "PASS",
+      "evidence": "Manual edit increments revision and preserves memo."
+    },
+    {
+      "id": "HEALTH-03-STALE-WEIGHT",
+      "status": "PASS",
+      "evidence": "Stale manual revision blocked."
+    },
+    {
+      "id": "HEALTH-04-DELETE",
+      "status": "PASS",
+      "evidence": "Soft delete removes weight from latest summary."
+    },
+    {
+      "id": "HEALTH-05-RESTORE",
+      "status": "PASS",
+      "evidence": "Restore preserves UUID and increments revision."
+    },
+    {
+      "id": "HEALTH-06-SAME-DAY",
+      "status": "PASS",
+      "evidence": "Same-day measurements remain separate rows."
+    },
+    {
+      "id": "HEALTH-07-LATEST-DELTA",
+      "status": "PASS",
+      "evidence": "Latest and delta use measured_at rather than creation time."
+    },
+    {
+      "id": "HEALTH-08-VALIDATION",
+      "status": "PASS",
+      "evidence": "Reject impossible dates and nonfinite/non-numeric/nonpositive weight."
+    },
+    {
+      "id": "HEALTH-09-LINK-CREATE",
+      "status": "PASS",
+      "evidence": "InBody and linked weight atomically created."
+    },
+    {
+      "id": "HEALTH-10-LINK-GUARD",
+      "status": "PASS",
+      "evidence": "Linked weight cannot be independently edited, deleted or restored."
+    },
+    {
+      "id": "HEALTH-11-LINK-SYNC",
+      "status": "PASS",
+      "evidence": "Time, value and memo synchronized without another row."
+    },
+    {
+      "id": "HEALTH-12-STALE-INBODY",
+      "status": "PASS",
+      "evidence": "Stale InBody write cannot mutate linked weight."
+    },
+    {
+      "id": "HEALTH-13-LINK-OFF",
+      "status": "PASS",
+      "evidence": "OFF soft-deletes linked row."
+    },
+    {
+      "id": "HEALTH-14-LINK-REUSE",
+      "status": "PASS",
+      "evidence": "ON reuses the unique soft-deleted row."
+    },
+    {
+      "id": "HEALTH-15-DELETE-PAIR",
+      "status": "PASS",
+      "evidence": "Delete affects both records."
+    },
+    {
+      "id": "HEALTH-16-RESTORE-PAIR",
+      "status": "PASS",
+      "evidence": "Restore validates and restores the same linked row."
+    },
+    {
+      "id": "HEALTH-17-OPTIONAL",
+      "status": "PASS",
+      "evidence": "Missing metrics remain null; optional zero value remains zero."
+    },
+    {
+      "id": "HEALTH-18-INBODY-VALIDATION",
+      "status": "PASS",
+      "evidence": "Link requires weight; negative mass and percent above 100 rejected."
+    },
+    {
+      "id": "HEALTH-19-ROLLBACK-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Injected create failure leaves no partial rows or metadata changes."
+    },
+    {
+      "id": "HEALTH-20-save-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones."
+    },
+    {
+      "id": "HEALTH-20-delete-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones."
+    },
+    {
+      "id": "HEALTH-20-restore-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones."
+    },
+    {
+      "id": "HEALTH-19-ROLLBACK-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Injected create failure leaves no partial rows or metadata changes."
+    },
+    {
+      "id": "HEALTH-20-save-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones."
+    },
+    {
+      "id": "HEALTH-20-delete-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones."
+    },
+    {
+      "id": "HEALTH-20-restore-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones."
+    },
+    {
+      "id": "HEALTH-21-GRAPH-SOURCE",
+      "status": "PASS",
+      "evidence": "Weight graph reads only weight rows, never duplicates InBody weight."
+    },
+    {
+      "id": "HEALTH-22-GRAPH-METRICS",
+      "status": "PASS",
+      "evidence": "InBody metrics skip missing values and include real zero values."
+    },
+    {
+      "id": "HEALTH-23-RANGE-BOUNDARY",
+      "status": "PASS",
+      "evidence": "Profile/date index uses inclusive start and exclusive end."
+    },
+    {
+      "id": "HEALTH-24-PERIODS",
+      "status": "PASS",
+      "evidence": "Local 7/30-day boundaries and 3-calendar-month end-day clamp correct."
+    },
+    {
+      "id": "HEALTH-25-NO-FULL-SCAN",
+      "status": "PASS",
+      "evidence": "Measurement periods and latest summary actually use existing IDB indexes."
+    },
+    {
+      "id": "HEALTH-26-PROFILE",
+      "status": "PASS",
+      "evidence": "Foreign Profile reads and mutations are isolated."
+    },
+    {
+      "id": "HEALTH-27-PRECISION",
+      "status": "PASS",
+      "evidence": "Editing preserves seconds and milliseconds, including imported values."
+    },
+    {
+      "id": "HEALTH-28-BACKUP",
+      "status": "PASS",
+      "evidence": "Pristine restore preserves UUID, revision, deleted state, all metrics, source/ref and link intent exactly."
+    },
+    {
+      "id": "HEALTH-29-REOPEN",
+      "status": "PASS",
+      "evidence": "Database reopen/bootstrap leaves measurements unchanged."
+    },
+    {
+      "id": "HEALTH-30-BACKUP-CONFLICT",
+      "status": "PASS",
+      "evidence": "Valid-checksum backup with inconsistent active pair rejected."
+    },
+    {
+      "id": "HEALTH-31-NO-LINK-RESTORE",
+      "status": "PASS",
+      "evidence": "Restoring unlinked InBody does not create weight."
+    },
+    {
+      "id": "HEALTH-32-OFF-INTENT",
+      "status": "PASS",
+      "evidence": "OFF intent survives InBody delete and restore without reviving weight."
+    },
+    {
+      "id": "HEALTH-33-CONCURRENT",
+      "status": "PASS",
+      "evidence": "Concurrent edits serialize; one stale revision rejected and pair consistent."
+    },
+    {
+      "id": "HEALTH-34-LEGACY",
+      "status": "PASS",
+      "evidence": "Legacy backups with no link flag infer existing relation safely."
+    },
+    {
+      "id": "HEALTH-35-CALENDAR",
+      "status": "PASS",
+      "evidence": "Calendar displays manual weight and one combined InBody/weight entry with real routes."
+    },
+    {
+      "id": "HEALTH-36-FORM",
+      "status": "PASS",
+      "evidence": "InBody form displays metrics, link intent and literal memo."
+    },
+    {
+      "id": "HEALTH-37-SVG",
+      "status": "PASS",
+      "evidence": "Local SVG preserves same-day points and has accessible values."
+    },
+    {
+      "id": "HEALTH-38-SINGLE-POINT",
+      "status": "PASS",
+      "evidence": "Single point / flat series has finite chart coordinates."
+    },
+    {
+      "id": "DIET-MIG-01",
+      "status": "PASS",
+      "evidence": "Legacy DB1 contains exact original 14 stores before upgrade."
+    },
+    {
+      "id": "DIET-MIG-02",
+      "status": "PASS",
+      "evidence": "Injected upgrade aborts without deleting user database."
+    },
+    {
+      "id": "DIET-MIG-03",
+      "status": "PASS",
+      "evidence": "Failed upgrade preserves all v0.6 UUID/revision/relation/tombstones."
+    },
+    {
+      "id": "DIET-MIG-04",
+      "status": "PASS",
+      "evidence": "Successful 1→2 adds only media_blobs; all portable data and device identity unchanged."
+    },
+    {
+      "id": "DIET-01-CRUD",
+      "status": "PASS",
+      "evidence": "Diet create has scoped UUID/revision and UTC time."
+    },
+    {
+      "id": "DIET-02-EDIT",
+      "status": "PASS",
+      "evidence": "Memo edit increments revision."
+    },
+    {
+      "id": "DIET-03-SAME-MEAL",
+      "status": "PASS",
+      "evidence": "Multiple same-date/same-meal records allowed."
+    },
+    {
+      "id": "DIET-04-STALE",
+      "status": "PASS",
+      "evidence": "Stale revision rejected."
+    },
+    {
+      "id": "DIET-22-WEBP-FALLBACK",
+      "status": "PASS",
+      "evidence": "Unsupported WebP output falls back to resized/re-encoded JPEG, never original file."
+    },
+    {
+      "id": "DIET-23-ORIENTATION",
+      "status": "PASS",
+      "evidence": "EXIF rotation is normalized before main and thumbnail resizing."
+    },
+    {
+      "id": "DIET-05-PROCESS",
+      "status": "PASS",
+      "evidence": "Decode/resize/re-encode and thumbnail use local browser codec."
+    },
+    {
+      "id": "DIET-06-CHECKSUM",
+      "status": "PASS",
+      "evidence": "Prepared Blob hashes and sizes match metadata."
+    },
+    {
+      "id": "DIET-07-PROCESS-FAIL",
+      "status": "PASS",
+      "evidence": "Image decode failure creates no database records."
+    },
+    {
+      "id": "DIET-08-ONE-PHOTO",
+      "status": "PASS",
+      "evidence": "One metadata row references separate main/thumbnail binaries."
+    },
+    {
+      "id": "DIET-09-MIXED",
+      "status": "PASS",
+      "evidence": "Existing and new photos retain stable order in one save."
+    },
+    {
+      "id": "DIET-10-REMOVE",
+      "status": "PASS",
+      "evidence": "Photo removal soft-deletes metadata while retaining binary for safe history/backup."
+    },
+    {
+      "id": "DIET-11-DELETE",
+      "status": "PASS",
+      "evidence": "Diet deletion tombstones active photos and leaves no binary without any metadata reference."
+    },
+    {
+      "id": "DIET-12-RESTORE",
+      "status": "PASS",
+      "evidence": "Restore revives only photos removed with diet, not earlier individually removed photos."
+    },
+    {
+      "id": "DIET-13-GC",
+      "status": "PASS",
+      "evidence": "GC finds active-unreferenced files but deletes only true orphans; tombstone files remain restorable."
+    },
+    {
+      "id": "DIET-14-ROLLBACK-diet-after-log",
+      "status": "PASS",
+      "evidence": "Injected save failure leaves no partial diet, metadata or Blob."
+    },
+    {
+      "id": "DIET-14-ROLLBACK-diet-after-photo",
+      "status": "PASS",
+      "evidence": "Injected save failure leaves no partial diet, metadata or Blob."
+    },
+    {
+      "id": "DIET-14-ROLLBACK-diet-after-blob",
+      "status": "PASS",
+      "evidence": "Injected save failure leaves no partial diet, metadata or Blob."
+    },
+    {
+      "id": "DIET-14-ROLLBACK-diet-before-commit",
+      "status": "PASS",
+      "evidence": "Injected save failure leaves no partial diet, metadata or Blob."
+    },
+    {
+      "id": "DIET-15-QUOTA",
+      "status": "PASS",
+      "evidence": "QuotaExceeded at binary write rolls back existing record and shows safe retry guidance."
+    },
+    {
+      "id": "DIET-24-save-ROLLBACK",
+      "status": "PASS",
+      "evidence": "Existing edit/delete/restore rollback preserves diet, photos and binary exactly."
+    },
+    {
+      "id": "DIET-24-delete-ROLLBACK",
+      "status": "PASS",
+      "evidence": "Existing edit/delete/restore rollback preserves diet, photos and binary exactly."
+    },
+    {
+      "id": "DIET-24-restore-ROLLBACK",
+      "status": "PASS",
+      "evidence": "Existing edit/delete/restore rollback preserves diet, photos and binary exactly."
+    },
+    {
+      "id": "DIET-16-PROFILE",
+      "status": "PASS",
+      "evidence": "Other Profile cannot read photos or mutate diet."
+    },
+    {
+      "id": "DIET-17-REOPEN",
+      "status": "PASS",
+      "evidence": "Reopening database preserves binary and metadata."
+    },
+    {
+      "id": "DIET-BACKUP-01",
+      "status": "PASS",
+      "evidence": "Photo snapshot produces valid v2 ZIP with manifest/data and all media files including tombstones."
+    },
+    {
+      "id": "DIET-BACKUP-02",
+      "status": "PASS",
+      "evidence": "Pristine v2 restore preserves every UUID/revision/relation/media hash and device identity."
+    },
+    {
+      "id": "DIET-BACKUP-03",
+      "status": "PASS",
+      "evidence": "Restore then re-export has identical canonical portable payload and media manifests."
+    },
+    {
+      "id": "DIET-BACKUP-04-missing",
+      "status": "PASS",
+      "evidence": "Missing/corrupt/extra/duplicate binary or invalid JSON refuses whole restore before writes."
+    },
+    {
+      "id": "DIET-BACKUP-04-tampered",
+      "status": "PASS",
+      "evidence": "Missing/corrupt/extra/duplicate binary or invalid JSON refuses whole restore before writes."
+    },
+    {
+      "id": "DIET-BACKUP-04-extra",
+      "status": "PASS",
+      "evidence": "Missing/corrupt/extra/duplicate binary or invalid JSON refuses whole restore before writes."
+    },
+    {
+      "id": "DIET-BACKUP-04-json",
+      "status": "PASS",
+      "evidence": "Missing/corrupt/extra/duplicate binary or invalid JSON refuses whole restore before writes."
+    },
+    {
+      "id": "DIET-BACKUP-04-duplicate",
+      "status": "PASS",
+      "evidence": "Missing/corrupt/extra/duplicate binary or invalid JSON refuses whole restore before writes."
+    },
+    {
+      "id": "DIET-BACKUP-04-relation",
+      "status": "PASS",
+      "evidence": "Missing/corrupt/extra/duplicate binary or invalid JSON refuses whole restore before writes."
+    },
+    {
+      "id": "DIET-BACKUP-10-FORCE-ROLLBACK-replace-cleared:media_blobs",
+      "status": "PASS",
+      "evidence": "Force replace failure restores pre-existing portable rows and different media binaries together."
+    },
+    {
+      "id": "DIET-BACKUP-10-FORCE-ROLLBACK-restore-after-media",
+      "status": "PASS",
+      "evidence": "Force replace failure restores pre-existing portable rows and different media binaries together."
+    },
+    {
+      "id": "DIET-BACKUP-05-FORCE",
+      "status": "PASS",
+      "evidence": "Explicit force replace restores portable data and binaries atomically."
+    },
+    {
+      "id": "DIET-BACKUP-06-restore-row:diet_photos",
+      "status": "PASS",
+      "evidence": "Restore fault rolls back metadata/binary/pointer together."
+    },
+    {
+      "id": "DIET-BACKUP-06-restore-media-row",
+      "status": "PASS",
+      "evidence": "Restore fault rolls back metadata/binary/pointer together."
+    },
+    {
+      "id": "DIET-BACKUP-06-restore-after-media",
+      "status": "PASS",
+      "evidence": "Restore fault rolls back metadata/binary/pointer together."
+    },
+    {
+      "id": "DIET-BACKUP-06-restore-before-commit",
+      "status": "PASS",
+      "evidence": "Restore fault rolls back metadata/binary/pointer together."
+    },
+    {
+      "id": "DIET-BACKUP-07-V1",
+      "status": "PASS",
+      "evidence": "Original v1 JSON still restores exactly into DB2."
+    },
+    {
+      "id": "DIET-18-INDEX",
+      "status": "PASS",
+      "evidence": "Diet day and photo list use Profile/time and Profile/diet/sort indexes."
+    },
+    {
+      "id": "DIET-19-THUMBNAIL",
+      "status": "PASS",
+      "evidence": "List loads only thumbnail binary through Media Service."
+    },
+    {
+      "id": "DIET-20-DETAIL",
+      "status": "PASS",
+      "evidence": "Detail loads compressed main binary through Media Service."
+    },
+    {
+      "id": "DIET-21-CALENDAR",
+      "status": "PASS",
+      "evidence": "Calendar projection uses original diet rows and links to detail."
+    },
+    {
+      "id": "DIET-BACKUP-08-BACKUP-FIRST",
+      "status": "PASS",
+      "evidence": "Backup-first destructive flow includes actual ZIP binary, not JSON-only metadata."
+    },
+    {
+      "id": "DIET-BACKUP-09-RESET",
+      "status": "PASS",
+      "evidence": "Authorized reset clears portable records and binary together."
+    },
+    {
+      "id": "DASH-01-EMPTY",
+      "status": "PASS",
+      "evidence": "Empty profile renders zero counts and absent measurements."
+    },
+    {
+      "id": "DASH-02-WEIGHT",
+      "status": "PASS",
+      "evidence": "Latest measurement and previous same-day measurement determine delta."
+    },
+    {
+      "id": "DASH-03-WEEK",
+      "status": "PASS",
+      "evidence": "Monday local midnight boundary excludes Sunday and counts actual logs once."
+    },
+    {
+      "id": "DASH-04-PASS",
+      "status": "PASS",
+      "evidence": "Remaining count comes from used, nondeleted ledger rows."
+    },
+    {
+      "id": "DASH-05-DIET",
+      "status": "PASS",
+      "evidence": "Today diet count, latest record and first sorted thumbnail."
+    },
+    {
+      "id": "DASH-06-INBODY",
+      "status": "PASS",
+      "evidence": "Latest InBody uses measured_at cursor."
+    },
+    {
+      "id": "DASH-07-SCHEDULE",
+      "status": "PASS",
+      "evidence": "Today schedule excludes cancelled/completed; latest exercise includes completion."
+    },
+    {
+      "id": "CAL-01-COMPLETED",
+      "status": "PASS",
+      "evidence": "Linked completion projects one event with both source routes."
+    },
+    {
+      "id": "CAL-02-DIRECT",
+      "status": "PASS",
+      "evidence": "Direct exercise remains distinct."
+    },
+    {
+      "id": "CAL-03-HEALTH",
+      "status": "PASS",
+      "evidence": "Linked measurement is one event with weight and InBody indicators; manual weight separate."
+    },
+    {
+      "id": "CAL-04-DIET",
+      "status": "PASS",
+      "evidence": "Diet events use original IDs and detail routes."
+    },
+    {
+      "id": "DASH-08-DELETE",
+      "status": "PASS",
+      "evidence": "Soft-delete immediately changes both projections and balance."
+    },
+    {
+      "id": "DASH-09-RESTORE",
+      "status": "PASS",
+      "evidence": "Restore reappears on next query."
+    },
+    {
+      "id": "CAL-05-UNDO",
+      "status": "PASS",
+      "evidence": "Undo updates pending event and excludes soft-deleted linked exercise."
+    },
+    {
+      "id": "CAL-06-CROSS-MONTH",
+      "status": "PASS",
+      "evidence": "Actual date governs completed events even when scheduled date belongs to another month."
+    },
+    {
+      "id": "DASH-10-EDIT",
+      "status": "PASS",
+      "evidence": "Diet date edit and linked measurement edit reflected without stored summaries."
+    },
+    {
+      "id": "DASH-16-DELETED-SOURCES",
+      "status": "PASS",
+      "evidence": "Deleted latest rows are skipped by cursors and calendar; inactive passes excluded by status index."
+    },
+    {
+      "id": "DASH-11-PROFILE",
+      "status": "PASS",
+      "evidence": "Profile indexes and point lookups do not expose other profile records."
+    },
+    {
+      "id": "DASH-12-INDEX",
+      "status": "PASS",
+      "evidence": "Actual views succeed while ObjectStore.getAll is disabled; bounded Index.getAll/cursors and point gets only."
+    },
+    {
+      "id": "DASH-13-BACKUP-V2",
+      "status": "PASS",
+      "evidence": "ZIP restore preserves exact projected values, IDs, relationships and thumbnail."
+    },
+    {
+      "id": "DASH-14-REOPEN",
+      "status": "PASS",
+      "evidence": "Reopen retains both read views exactly."
+    },
+    {
+      "id": "DASH-15-RENDER",
+      "status": "PASS",
+      "evidence": "Actual dashboard escapes text, shows values, routes and local thumbnail."
+    },
+    {
+      "id": "CAL-07-SELECTED",
+      "status": "PASS",
+      "evidence": "Selected-date list contains only that local day."
+    },
+    {
+      "id": "CAL-08-QUICK",
+      "status": "PASS",
+      "evidence": "Quick record carries selected date and return destination to existing form."
+    },
+    {
+      "id": "CAL-09-INVALID-DATE",
+      "status": "PASS",
+      "evidence": "Malformed/nonexistent date context ignored."
+    },
+    {
+      "id": "CAL-10-TODAY",
+      "status": "PASS",
+      "evidence": "Default selected day follows current profile timezone."
+    },
+    {
+      "id": "CAL-11-LARGE",
+      "status": "PASS",
+      "evidence": "24,000 synthetic rows across five domains, 200 month matches: 23.0 ms; bounded measurement index."
+    },
+    {
+      "id": "OPS-DIAG-HEALTHY",
+      "status": "PASS",
+      "evidence": "Read-only diagnostic accepts linked reservations/usage/InBody/photos and portable tombstones."
+    },
+    {
+      "id": "OPS-DIAG-EXERCISE_TEMPLATE_BROKEN",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-PASS_USAGE_REFERENCE_BROKEN",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-SCHEDULE_LOG_BROKEN",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-INBODY_WEIGHT_BROKEN",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-MEDIA_MISSING",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-DUPLICATE_ACTIVE_USAGE",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-CURRENT_PROFILE_INVALID",
+      "status": "PASS",
+      "evidence": "Targeted corrupt relation detected without exposing health data or repairing it."
+    },
+    {
+      "id": "OPS-DIAG-READONLY",
+      "status": "PASS",
+      "evidence": "Diagnostic does not modify UUID, revision, tombstones, binary or pointer."
+    },
+    {
+      "id": "OPS-STORAGE-ESTIMATE",
+      "status": "PASS",
+      "evidence": "Portable JSON UTF-8 estimate has exact test bytes and explicit approximate semantics."
+    },
+    {
+      "id": "OPS-GC-PREVIEW",
+      "status": "PASS",
+      "evidence": "GC preview reports exact orphan count and binary bytes."
+    },
+    {
+      "id": "OPS-GC-PRESERVE",
+      "status": "PASS",
+      "evidence": "Only orphan removed; both tombstone-referenced media retained."
+    },
+    {
+      "id": "OPS-GC-BACKUP-LOCK",
+      "status": "PASS",
+      "evidence": "Independent coordinator cannot GC while backup shared lock is held."
+    },
+    {
+      "id": "OPS-GC-NESTED-BACKUP",
+      "status": "PASS",
+      "evidence": "Backup-first nested shared operation does not deadlock."
+    },
+    {
+      "id": "OPS-GC-EXCLUSIVE",
+      "status": "PASS",
+      "evidence": "Backup refuses an active exclusive maintenance operation."
+    },
+    {
+      "id": "OPS-GC-UNSUPPORTED",
+      "status": "PASS",
+      "evidence": "GC safely unavailable without cross-context lock support."
+    },
+    {
+      "id": "OPS-PERSIST-GRANTED",
+      "status": "PASS",
+      "evidence": "Granted persistence is not requested again."
+    },
+    {
+      "id": "OPS-PERSIST-DENIED",
+      "status": "PASS",
+      "evidence": "Denied persistence is a nonfatal result."
+    },
+    {
+      "id": "OPS-SPACE-WARNING",
+      "status": "PASS",
+      "evidence": "Warning includes prepared image bytes when projected usage reaches 90 percent."
+    },
+    {
+      "id": "OPS-LOG-PRIVACY",
+      "status": "PASS",
+      "evidence": "Retention capped at 200; stored/exported messages and contexts exclude private payload."
+    },
+    {
+      "id": "OPS-UPDATE-DIRTY",
+      "status": "PASS",
+      "evidence": "External controller change and rejected update never reload dirty form."
+    },
+    {
+      "id": "OPS-UPDATE-ACCEPT",
+      "status": "PASS",
+      "evidence": "Explicit accepted update applies pending controller reload."
+    },
+    {
+      "id": "OPS-BACKUP-checksum",
+      "status": "PASS",
+      "evidence": "Invalid backup rejected on populated target without modifying existing data."
+    },
+    {
+      "id": "OPS-BACKUP-uuid",
+      "status": "PASS",
+      "evidence": "Invalid backup rejected on populated target without modifying existing data."
+    },
+    {
+      "id": "OPS-BACKUP-reference",
+      "status": "PASS",
+      "evidence": "Invalid backup rejected on populated target without modifying existing data."
+    },
+    {
+      "id": "OPS-BACKUP-version",
+      "status": "PASS",
+      "evidence": "Invalid backup rejected on populated target without modifying existing data."
+    },
+    {
+      "id": "OPS-BACKUP-schema",
+      "status": "PASS",
+      "evidence": "Invalid backup rejected on populated target without modifying existing data."
+    },
+    {
+      "id": "OPS-BACKUP-JSON",
+      "status": "PASS",
+      "evidence": "Malformed JSON cannot mutate populated target."
+    },
+    {
+      "id": "OPS-BACKUP-MEDIA-missing",
+      "status": "PASS",
+      "evidence": "Missing/altered media rejects entire ZIP and preserves target."
+    },
+    {
+      "id": "OPS-BACKUP-MEDIA-checksum",
+      "status": "PASS",
+      "evidence": "Missing/altered media rejects entire ZIP and preserves target."
+    },
+    {
+      "id": "OPS-RECOVERY-replace",
+      "status": "PASS",
+      "evidence": "Injected last-stage failure preserves all previous data, media, pointer and device ID."
+    },
+    {
+      "id": "OPS-RECOVERY-reset",
+      "status": "PASS",
+      "evidence": "Injected last-stage failure preserves all previous data, media, pointer and device ID."
+    },
+    {
+      "id": "OPS-PERF-VIEWS",
+      "status": "PASS",
+      "evidence": "Large test-only fixture: 3000 each exercise/schedule/weight/diet, 1000 InBody/photos, 2000 media blobs; all source views correct. {\"sizes\":{\"exercise\":3000,\"schedules\":3000,\"weights\":3000,\"inbodies\":1000,\"diets\":3000,\"photos\":1000,\"blobs\":2000,\"mediaBytes\":20256000},\"bootMs\":12.2,\"homeMs\":18.8,\"calendarMs\":52.6,\"legacyRecentMs\":138.1,\"recentMs\":6.9,\"graphMs\":5.3,\"dietDayMs\":15.3,\"exportMs\":7094.7,\"validateMs\":2582.9,\"restoreMs\":10267.8}"
+    },
+    {
+      "id": "OPS-PERF-RECENT-INDEX",
+      "status": "PASS",
+      "evidence": "Recent exercise now reads a bounded profile/time cursor and only referenced types; prior algorithm materialized 3000 logs."
+    },
+    {
+      "id": "OPS-PERF-RESTORE",
+      "status": "PASS",
+      "evidence": "Large ZIP pristine restore retains dashboard relationships and every binary."
+    },
+    {
+      "id": "OPS-MIG-FAIL",
+      "status": "PASS",
+      "evidence": "Failed actual upgrade leaves previous DB UUID/revision/tombstones/relations/device identity intact."
+    },
+    {
+      "id": "OPS-MIG-UPGRADE",
+      "status": "PASS",
+      "evidence": "Reusable old-version fixture upgrades without modifying portable rows."
+    },
+    {
+      "id": "OPS-MIG-REOPEN",
+      "status": "PASS",
+      "evidence": "Close/reopen after upgrade preserves exact fixture."
+    },
+    {
+      "id": "PWA-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The application boots successfully from a GitHub Pages-style repository subpath."
+    },
+    {
+      "id": "MANIFEST-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The manifest resolves inside the repository subpath."
+    },
+    {
+      "id": "MANIFEST-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Chromium parses the manifest without errors and resolves standalone scope to the repository subpath."
+    },
+    {
+      "id": "NAV-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "All five approved bottom navigation tabs render."
+    },
+    {
+      "id": "NAV-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Hash routing changes the active page without a server route."
+    },
+    {
+      "id": "EX-UI-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "Exercise main page renders the default Pilates seed and actual record controls."
+    },
+    {
+      "id": "EX-UI-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Exercise type creation route and dynamic template editor render."
+    },
+    {
+      "id": "EX-UI-RUNTIME-003",
+      "status": "PASS",
+      "evidence": "Exercise template editor is data-driven from the approved field catalog."
+    },
+    {
+      "id": "DIAG-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The read-only settings diagnostic reports 15/15 stores and a connected Profile."
+    },
+    {
+      "id": "SW-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The Service Worker activates and controls the GitHub Pages-style scope."
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The v0.9.0 App Shell cache exists."
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-002",
+      "status": "PASS",
+      "evidence": "Activation removes the simulated v0.5.0 App Shell cache without clearing unrelated cache names."
+    },
+    {
+      "id": "OFFLINE-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The cached App Shell and IndexedDB-backed home screen reload while network access is disabled."
+    },
+    {
+      "id": "OFFLINE-DIAG-001",
+      "status": "PASS",
+      "evidence": "The Profile and 15-store diagnostic remain available offline."
+    },
+    {
+      "id": "BACKUP-UI-EXPORT",
+      "status": "PASS",
+      "evidence": "Offline settings export downloads an actual JSON file in the disposable browser profile."
+    },
+    {
+      "id": "BACKUP-UI-PRISTINE-PREVIEW",
+      "status": "PASS",
+      "evidence": "Valid file previews on the seeded target and enables restore."
+    },
+    {
+      "id": "BACKUP-UI-OFFLINE-RESTORE",
+      "status": "PASS",
+      "evidence": "Offline UI restore commits, verifies and reloads with the original Profile ID."
+    },
+    {
+      "id": "BACKUP-UI-POPULATED-PREVIEW",
+      "status": "PASS",
+      "evidence": "Same valid file is previewable on populated data but restore is disabled."
+    },
+    {
+      "id": "BACKUP-UI-RESTORED-HASH",
+      "status": "PASS",
+      "evidence": "After offline UI reload, full portable payload hash still matches the imported file."
+    },
+    {
+      "id": "ACTIVITY-UI-PASS",
+      "status": "PASS",
+      "evidence": "Offline pass form saves a 60-use pass and displays calculated remaining."
+    },
+    {
+      "id": "ACTIVITY-UI-LOG",
+      "status": "PASS",
+      "evidence": "Offline exercise form selects pass and detail shows 59 remaining."
+    },
+    {
+      "id": "ACTIVITY-UI-UNLINK",
+      "status": "PASS",
+      "evidence": "Edit UI can remove debit without deleting historical usage."
+    },
+    {
+      "id": "ACTIVITY-UI-SCHEDULE",
+      "status": "PASS",
+      "evidence": "Offline schedule form saves without any charge."
+    },
+    {
+      "id": "ACTIVITY-UI-COMPLETE",
+      "status": "PASS",
+      "evidence": "Double-submit completion UI commits exactly one log and one debit offline."
+    },
+    {
+      "id": "ACTIVITY-UI-UNDO",
+      "status": "PASS",
+      "evidence": "Completed schedule UI undo returns remaining to 60."
+    },
+    {
+      "id": "ACTIVITY-UI-RECOMPLETE",
+      "status": "PASS",
+      "evidence": "Re-complete then offline app reload preserves exact data hash and 59 remaining."
+    },
+    {
+      "id": "ACTIVITY-UI-MOBILE",
+      "status": "PASS",
+      "evidence": "412px mobile viewport shows pass balance without horizontal overflow (not real-device QA)."
+    },
+    {
+      "id": "QA051-23-OFFLINE-BACKUP-RESET",
+      "status": "PASS",
+      "evidence": "Offline UI backup writes a real downloaded file; validated file read-back gates reset; initial seed reloads."
+    },
+    {
+      "id": "QA051-23-OFFLINE-FORCE",
+      "status": "PASS",
+      "evidence": "Offline populated target keeps normal restore blocked; explicit no-backup forced replace reloads with exact original hash."
+    },
+    {
+      "id": "QA051-OFFLINE-NO-BACKUP-RESET",
+      "status": "PASS",
+      "evidence": "Offline no-backup reset requires final confirmation and recreates initial state."
+    },
+    {
+      "id": "HEALTH-UI-01-OFFLINE-CREATE",
+      "status": "PASS",
+      "evidence": "Offline actual form creates manual weight; memo is escaped."
+    },
+    {
+      "id": "HEALTH-UI-02-OFFLINE-INBODY",
+      "status": "PASS",
+      "evidence": "Offline InBody form creates atomic pair with seven metrics."
+    },
+    {
+      "id": "HEALTH-UI-03-LINK-REDIRECT",
+      "status": "PASS",
+      "evidence": "Direct linked-weight edit routes to authoritative InBody form."
+    },
+    {
+      "id": "HEALTH-UI-04-SYNC-OFF-ON",
+      "status": "PASS",
+      "evidence": "Actual UI syncs pair, OFF deletes, ON reuses the original row."
+    },
+    {
+      "id": "HEALTH-UI-05-DELETE-RESTORE",
+      "status": "PASS",
+      "evidence": "Offline UI delete/restore maintains both records."
+    },
+    {
+      "id": "HEALTH-UI-06-GRAPH",
+      "status": "PASS",
+      "evidence": "Offline seven-metric SVG and same-day points render without mobile horizontal overflow."
+    },
+    {
+      "id": "HEALTH-UI-07-CALENDAR-HOME",
+      "status": "PASS",
+      "evidence": "Calendar combines linked pair; home shows latest weight, delta and InBody metrics."
+    },
+    {
+      "id": "HEALTH-UI-08-OFFLINE-RELOAD",
+      "status": "PASS",
+      "evidence": "Offline PWA relaunch preserves exact portable payload including measurements."
+    },
+    {
+      "id": "HEALTH-UI-09-MANUAL-EDIT-DELETE-RESTORE",
+      "status": "PASS",
+      "evidence": "Manual weight actual edit/delete/restore works after offline reload."
+    },
+    {
+      "id": "DIET-UI-01-OFFLINE",
+      "status": "PASS",
+      "evidence": "Offline actual form processes two images, camera input present, double-submit produces one diet with two photos."
+    },
+    {
+      "id": "DIET-UI-02-LIST",
+      "status": "PASS",
+      "evidence": "Mobile list renders local thumbnail blobs, with no horizontal overflow."
+    },
+    {
+      "id": "DIET-UI-03-MIXED",
+      "status": "PASS",
+      "evidence": "Edit mixes retained and new images; removed photo tombstone remains in backup."
+    },
+    {
+      "id": "DIET-UI-04-REOPEN",
+      "status": "PASS",
+      "evidence": "Offline relaunch reads compressed full photos with identical data/media hashes."
+    },
+    {
+      "id": "DIET-UI-05-DELETE-RESTORE",
+      "status": "PASS",
+      "evidence": "UI deletion/restoration preserves active pair and does not revive earlier removed photo."
+    },
+    {
+      "id": "DIET-UI-06-CALENDAR",
+      "status": "PASS",
+      "evidence": "Calendar diet entry opens source record."
+    },
+    {
+      "id": "DIET-UI-07-ZIP-DOWNLOAD",
+      "status": "PASS",
+      "evidence": "Offline settings actually downloads a complete ZIP to disk and displays storage estimate."
+    },
+    {
+      "id": "DIET-UI-08-SECOND-BROWSER",
+      "status": "PASS",
+      "evidence": "Downloaded v2 file restores in a second fresh Chrome Profile; original portable hash, media checksums and photos match."
+    },
+    {
+      "id": "DASH-UI-01-SUMMARY",
+      "status": "PASS",
+      "evidence": "Rendered home counts and measurement agree with fresh query after existing CRUD/media QA."
+    },
+    {
+      "id": "DASH-UI-02-THUMBNAIL",
+      "status": "PASS",
+      "evidence": "Dashboard decodes one local thumbnail from the latest diet."
+    },
+    {
+      "id": "CAL-UI-01-MONTH",
+      "status": "PASS",
+      "evidence": "Month navigation and date selection preserve date in route."
+    },
+    {
+      "id": "CAL-UI-QUICK-weight",
+      "status": "PASS",
+      "evidence": "Existing form defaults selected date; save returns to that date with new source event."
+    },
+    {
+      "id": "CAL-UI-QUICK-inbody",
+      "status": "PASS",
+      "evidence": "Existing form defaults selected date; save returns to that date with new source event."
+    },
+    {
+      "id": "CAL-UI-QUICK-diet",
+      "status": "PASS",
+      "evidence": "Existing form defaults selected date; save returns to that date with new source event."
+    },
+    {
+      "id": "CAL-UI-QUICK-exercise",
+      "status": "PASS",
+      "evidence": "Existing form defaults selected date; save returns to that date with new source event."
+    },
+    {
+      "id": "CAL-UI-02-DIRTY",
+      "status": "PASS",
+      "evidence": "Dirty guard rejects discard; accepting discard returns to selected calendar date."
+    },
+    {
+      "id": "CAL-UI-03-OFFLINE",
+      "status": "PASS",
+      "evidence": "Network blocked and full reload retains identical calendar; dashboard and local assets function offline."
+    },
+    {
+      "id": "OPS-UI-STORAGE",
+      "status": "PASS",
+      "evidence": "Settings shows quota/media/portable estimate, persistence caveat and read-only relational diagnostic."
+    },
+    {
+      "id": "OPS-UI-GC-CANCEL",
+      "status": "PASS",
+      "evidence": "Explicit GC preview can be cancelled before deletion."
+    },
+    {
+      "id": "OPS-UI-OFFLINE-DIAGNOSTIC",
+      "status": "PASS",
+      "evidence": "Storage and data/log diagnostics work fully offline without horizontal overflow."
+    },
+    {
+      "id": "OPS-UI-UPDATE-REJECT",
+      "status": "PASS",
+      "evidence": "Actual waiting worker remains pending when dirty form update is rejected."
+    },
+    {
+      "id": "OPS-UI-EXTERNAL-ACTIVATION",
+      "status": "PASS",
+      "evidence": "Real controllerchange from activation outside UI preserves mounted dirty form and offers deferred reload."
+    },
+    {
+      "id": "OPS-UI-UPDATE-APPLY",
+      "status": "PASS",
+      "evidence": "Accepted reload activates new app cache, preserves unrelated cache and exact IndexedDB payload; startup diagnostic normal."
+    }
+  ]
+}

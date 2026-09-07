@@ -1,3 +1,4 @@
+import { safeLog } from '../../../core/log-privacy.js';
 import { cloneValue } from '../../../core/entity-metadata.js';
 import { STORE_NAMES } from '../schema.js';
 import { requestToPromise } from '../idb-request.js';
@@ -16,14 +17,14 @@ export class AppLogRepository {
   }
 
   async append({ level, event, message, context = null }) {
-    const record = {
+    const record = safeLog({
       id: this.#idGenerator.generate(),
       level,
       event,
       message,
       context: cloneValue(context),
       created_at: this.#clock.nowIso()
-    };
+    });
 
     await this.#database.runTransaction([STORE_NAMES.APP_LOGS], 'readwrite', async ({ store }) => {
       const objectStore = store(STORE_NAMES.APP_LOGS);

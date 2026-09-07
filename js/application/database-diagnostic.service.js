@@ -40,7 +40,7 @@ export class DatabaseDiagnosticService {
     const profileConnected = Boolean(profile && pointer?.value === profile.id);
 
     return {
-      status: missingStores.length === 0 && profileConnected ? 'normal' : 'warning',
+      status: missingStores.length === 0 && profileConnected && schema.version === globalThis.APP_CONFIG.DB_VERSION && this.#schemaVersion === globalThis.APP_CONFIG.SCHEMA_VERSION ? 'normal' : 'warning',
       databaseName: schema.name,
       databaseVersion: schema.version,
       schemaVersion: this.#schemaVersion,

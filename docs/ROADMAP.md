@@ -19,7 +19,7 @@ App `0.3.0` / DB `1` / Schema `1` / Seed `1`.
 | 4 | 식단 + 사진 | media_blobs, 압축·thumbnail, 데이터 보존 Migration, 캘린더 표시 확장 |
 | 5 | Backup v2 | data.json + media/ ZIP, 사진 복원, JSON Backup v1 읽기 호환 |
 | 6 | v0.8.0 홈 + 통합 캘린더 구현 | 원본 기반 Query/Projection, 날짜별 빠른 기록. 자동/실기기 판정은 REGRESSION_TEST 참조 |
-| 7 | 운영 안정화 | 누적 데이터, 오프라인·업데이트, 저장 실패·복구, 성능, 실기기 회귀검증 |
+| 7 | v0.9.0 운영 안정화 구현 | 누적 데이터, 오프라인·업데이트, 저장 실패·복구, 성능, 실기기 회귀검증 |
 | 8 | Supabase/Auth/Sync | Profile 소유권 연결, Outbox, 재시도·충돌, 기기간 동기화, 원격 사진 저장 |
 
 홈과 캘린더는 원본 기능이 추가될 때 점진적으로 연결한다. 단계 6은 통합 완성 시점이다. 사용자 최종 지시로 Backup Core=v0.4.0, 이용권·예약=v0.5.0을 확정했다.

@@ -1,0 +1,31 @@
+{
+  "version": "0.9.0",
+  "executedAt": "2026-09-07T08:57:39.596Z",
+  "environments": {
+    "node": "v24.16.0",
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36"
+  },
+  "note": "Single-run measurements, not a device SLA. bootMs is new DB connection plus seed/bootstrap, not process cold launch. legacyRecentMs reproduces the previous full-scan path on the same fixture.",
+  "measurements": {
+    "sizes": {
+      "exercise": 3000,
+      "schedules": 3000,
+      "weights": 3000,
+      "inbodies": 1000,
+      "diets": 3000,
+      "photos": 1000,
+      "blobs": 2000,
+      "mediaBytes": 20256000
+    },
+    "bootMs": 12.2,
+    "homeMs": 18.8,
+    "calendarMs": 52.6,
+    "legacyRecentMs": 138.1,
+    "recentMs": 6.9,
+    "graphMs": 5.3,
+    "dietDayMs": 15.3,
+    "exportMs": 7094.7,
+    "validateMs": 2582.9,
+    "restoreMs": 10267.8
+  }
+}

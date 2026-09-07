@@ -4,7 +4,7 @@
 
 ## 현재 버전
 
-- App: **v0.8.0**
+- App: **v0.9.0**
 - IndexedDB: **v2**
 - Logical Schema: **v1**
 - Seed: **v1**
@@ -179,3 +179,7 @@ node tests/run-all-tests.mjs
 DB1→2 Migration은 media_blobs Store만 추가하고 기존 데이터는 변경하지 않습니다. Portable Schema1/Seed1은 유지합니다. 이전 앱 파일만 다시 배포해 DB2를 downgrade할 수는 없습니다. 업데이트 전 JSON과 업데이트 후 사진 포함 ZIP을 보관하고 문제 발생 시 원본 DB를 유지한 채 별도 pristine 환경에서 백업을 확인하세요.
 
 실제 Galaxy/Pages 절차는 [MANUAL_QA.md](MANUAL_QA.md), 구현·검증 및 산출물은 [RELEASE_REPORT.md](RELEASE_REPORT.md)에서 확인합니다.
+
+## 운영 안정화 (v0.9.0)
+
+설정에서 portable/사진 사용량, 데이터 관계 진단, 최근 로그/내보내기, 고아 파일 미리보기와 명시적 정리를 제공합니다. 작성 중 업데이트 보호와 백업·GC 상호 배제를 유지합니다. DB2/Schema1, 이번 Migration 없음. [운영·복구 안내](OPERATIONS.md)와 [실기기 QA](MANUAL_QA.md)를 확인하세요.

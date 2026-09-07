@@ -7,12 +7,15 @@ export class BackupImportService {
   #generation = 0;
   #busy = false;
   #replacement = null;
-  constructor({ validationService, restoreCommand, snapshotReader, identityContext, idGenerator, exportService }) {
+  constructor({ validationService, restoreCommand, snapshotReader, identityContext, idGenerator, exportService, coordinator }) {
     this.validationService = validationService; this.restoreCommand = restoreCommand;
-    this.snapshotReader = snapshotReader; this.identityContext = identityContext; this.idGenerator = idGenerator; this.exportService = exportService;
+    this.snapshotReader = snapshotReader; this.identityContext = identityContext; this.idGenerator = idGenerator; this.exportService = exportService; this.coordinator = coordinator;
   }
+  inspectFile(file) { const work = () => this.#inspectFile(file); return this.coordinator ? this.coordinator.backup(work) : work(); }
+  prepareReplacement(options) { const work = () => this.#prepareReplacement(options); return this.coordinator ? this.coordinator.backup(work) : work(); }
+  confirmReplacement(id, downloadedFile) { const work = () => this.#confirmReplacement(id, downloadedFile); return this.coordinator ? this.coordinator.backup(work) : work(); }
   discardPreview() { if (!this.#busy) { this.#generation++; this.#inspection = null; this.#replacement = null; } }
-  async inspectFile(file) {
+  async #inspectFile(file) {
     if (this.#busy) throw backupError('RESTORE_BUSY');
     this.discardPreview();
     const generation = this.#generation;
@@ -28,7 +31,7 @@ export class BackupImportService {
       pristine: target.pristine
     });
   }
-  async restorePreview(id) { return this.#restore(id); }
+  async restorePreview(id) { return this.coordinator ? this.coordinator.backup(() => this.#restore(id)) : this.#restore(id); }
   async #restore(id, { mode = 'pristine', expectedFingerprint } = {}) {
     if (this.#busy) throw backupError('RESTORE_BUSY');
     const inspection = this.#inspection;
@@ -50,7 +53,7 @@ export class BackupImportService {
     } finally { this.#busy = false; }
   }
   cancelReplacement() { if (!this.#busy) this.#replacement = null; }
-  async prepareReplacement({ kind, previewId, backupFirst }) {
+  async #prepareReplacement({ kind, previewId, backupFirst }) {
     if (this.#busy) throw backupError('RESTORE_BUSY');
     if (!['reset', 'replace'].includes(kind) || typeof backupFirst !== 'boolean') throw backupError('RESTORE_PREVIEW_EXPIRED');
     if (kind === 'replace' && (!this.#inspection || this.#inspection.id !== previewId)) throw backupError('RESTORE_PREVIEW_EXPIRED');
@@ -66,7 +69,7 @@ export class BackupImportService {
       return { id, kind, backup };
     } finally { this.#busy = false; }
   }
-  async confirmReplacement(id, downloadedFile = null) {
+  async #confirmReplacement(id, downloadedFile = null) {
     if (this.#busy) throw backupError('RESTORE_BUSY');
     const pending = this.#replacement;
     if (!pending || pending.id !== id) throw backupError('RESTORE_PREVIEW_EXPIRED');
