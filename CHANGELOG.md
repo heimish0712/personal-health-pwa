@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.6.0 - 2026-09-07
+
+- 체중 탭: 일반 체중/인바디 생성·조회·수정·soft-delete·복원, 메모, 같은 날 여러 측정 지원.
+- 최근 체중과 직전 측정 대비 변화량을 measured_at 기준으로 조회. 홈 최근 체중/인바디 요약 연결.
+- InbodyCommand Port + 2 Store IndexedDB transaction으로 인바디와 연결 체중을 원자적으로 저장·동기화·삭제·복원.
+- 연결 체중은 source=inbody/source_ref_id로 식별하고 일반 화면의 변경은 원본 인바디로 안내. 연동 OFF는 soft-delete, 다시 ON은 동일 UUID 재사용.
+- 인바디 link_weight 선택 의도 보존. 기존 필드 없는 행은 실제 연결 관계로 해석. 선택 측정값은 null을 지원하고 유한 숫자/명백한 불가능값만 검증.
+- 기존 Profile+measured_at index로 기간 조회, 역방향 cursor로 최근 측정 조회. 범용 Repository 변경 없음.
+- 7개 지표/7일·30일·3개월·전체 로컬 SVG 그래프. 체중은 weight_logs만 사용하며 같은 날의 실제 측정값을 각각 표시.
+- 기존 월간 캘린더에 체중/인바디 원본 조회를 추가하고 연결된 쌍은 하나의 관계 표시로 통합.
+- Backup v1 호환 유지, 새 연동 의도/값의 정합성 검증과 pristine 복원 보존 회귀 추가.
+- 측정 편집은 초·밀리초를 보존. 오프라인 폼 CRUD/그래프/캘린더/홈과 재실행 검증 추가.
+- APP/cache 0.6.0. DB1 / Schema1 / Seed1 / Backup1 유지, Migration 없음.
+
 ## v0.5.1 - 2026-09-07
 
 - 예약 완료에서 실제 운동일에 사용할 수 있는 활성/잔여 이용권 중 목록 첫 항목 기본 선택. 차감 없음 및 다른 이용권 선택 유지.

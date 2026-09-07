@@ -174,3 +174,12 @@ IndexedDB는 제거하지 않고 향후 Sync Outbox와 Remote Gateway를 추가�
 Store/Index/keyPath는 변경하지 않는다. exercise_logs.pass_id는 UUID 또는 null(차감 없음); 기존 누락 데이터는 현재 used usage로 호환한다. 삭제 시 pass_id를 유지한다.
 exercise_schedules.completion_revision은 마지막 완료 요청 expectedRevision이다. completed_exercise_log_id는 최초 완료 전에는 생략, 완료 취소 후에도 유지한다. 재완료는 동일 log ID/역사적 template_id를 보존한다.
 pass_usage_logs의 기존 uq_profile_pass_exercise는 유지한다. 같은 쌍 재적용은 cancelled→used 재활성화이며 revision 증가, created_at/ID 보존이다. 상세 업무 규칙은 PASS_SCHEDULE_DESIGN.md 참조.
+
+
+## v0.6.0 측정 payload (DB1, Migration 없음)
+
+weight_logs: measured_at UTC ISO, weight 양수, memo 문자열, source=manual|inbody. manual은 source_ref_id 키를 생략한다. inbody는 원본 inbody_logs.id를 source_ref_id로 지정한다. 기존 uq_profile_source_ref가 삭제행까지 한 관계 1행을 보장한다.
+
+inbody_logs: measured_at, memo, link_weight(boolean 선택 의도), weight/skeletal_muscle_mass/body_fat_mass/body_fat_percentage/bmi/visceral_fat_level/basal_metabolic_rate(number|null). 구버전 link_weight 누락 행은 기존 관계로 추론하고 다음 Command 저장 시 명시한다. 필드 추가는 기존 자유형 payload 안에서 수행하며 Store/Index/Schema 버전 변경이 아니다.
+
+두 엔티티의 UUID/profile_id/created_at은 불변, 변경마다 revision+1. 연동 ON 쌍은 측정시각/체중/메모가 일치한다. 삭제 상태에서 ON 의도는 보존하여 함께 복원한다. OFF 의도는 원본만 복원한다. 그래프 및 Calendar는 원본 조회 projection이며 별도 저장하지 않는다.

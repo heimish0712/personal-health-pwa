@@ -55,6 +55,7 @@ export async function bootstrapApplication(options = {}) {
       exerciseManagement: container.exerciseManagementService,
       exerciseLog: container.exerciseLogService,
       activity: container.passScheduleService,
+      health: container.healthService,
       exerciseQuery: container.exerciseQueryService,
       backupExport: container.backupExportService,
       backupImport: container.backupImportService

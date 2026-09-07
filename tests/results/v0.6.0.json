@@ -1,0 +1,3134 @@
+{
+  "version": "0.6.0",
+  "previousVersion": "0.5.1",
+  "executedAt": "2026-09-07T05:37:14.770Z",
+  "environments": {
+    "node": "v24.16.0",
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36"
+  },
+  "summary": {
+    "total": 510,
+    "passed": 477,
+    "failed": 0,
+    "notRun": 33
+  },
+  "suites": [
+    {
+      "suite": "smoke",
+      "summary": {
+        "total": 72,
+        "passed": 72,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "architecture",
+      "summary": {
+        "total": 29,
+        "passed": 29,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "schema",
+      "summary": {
+        "total": 60,
+        "passed": 60,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "exercise-service",
+      "summary": {
+        "total": 19,
+        "passed": 19,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "backup",
+      "summary": {
+        "total": 26,
+        "passed": 26,
+        "failed": 0,
+        "notRun": 0
+      }
+    },
+    {
+      "suite": "browser-runtime",
+      "summary": {
+        "total": 271,
+        "passed": 271,
+        "failed": 0,
+        "notRun": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "FILE:index.html",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:manifest.json",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:service-worker.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:css/variables.css",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:css/common.css",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:css/layout.css",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/config.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/app.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/router.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/components/bottom-nav.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/bootstrap/bootstrap.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/bootstrap/container.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/application/exercise-management.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/application/exercise-log.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/application/exercise-query.service.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/core/exercise-fields.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/core/datetime.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/components/dirty-form-guard.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/contracts/exercise-management-command.contract.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/indexeddb/commands/exercise-management.command.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise.router.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-management.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-type-form.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-log-form.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-log-detail.page.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/pages/exercise/exercise-view.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/indexeddb/database.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:js/data/indexeddb/schema.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:icons/icon-192.png",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:icons/icon-512.png",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:README.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:CHANGELOG.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:REQUIREMENTS.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:REGRESSION_TEST.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:RELEASE_REPORT.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:docs/ARCHITECTURE.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:docs/DATA_MODEL.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:docs/MIGRATION_POLICY.md",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/architecture-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/schema-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/exercise-service-test.mjs",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/browser/db-test.html",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "FILE:tests/browser/db-test.js",
+      "status": "PASS",
+      "evidence": "Required file exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002",
+      "status": "PASS",
+      "evidence": "manifest display=standalone",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002-START",
+      "status": "PASS",
+      "evidence": "Relative GitHub Pages start_url.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002-SCOPE",
+      "status": "PASS",
+      "evidence": "Relative GitHub Pages scope.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-002-ICONS",
+      "status": "PASS",
+      "evidence": "192/512 icons are defined.",
+      "suite": "smoke"
+    },
+    {
+      "id": "VERSION-001",
+      "status": "PASS",
+      "evidence": "App version is v0.6.0.",
+      "suite": "smoke"
+    },
+    {
+      "id": "DB-CONFIG-001",
+      "status": "PASS",
+      "evidence": "DB version is 1.",
+      "suite": "smoke"
+    },
+    {
+      "id": "SCHEMA-CONFIG-001",
+      "status": "PASS",
+      "evidence": "Schema version is 1.",
+      "suite": "smoke"
+    },
+    {
+      "id": "SEED-CONFIG-001",
+      "status": "PASS",
+      "evidence": "Seed version is 1.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:홈",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:캘린더",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:운동",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:식단",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV:체중",
+      "status": "PASS",
+      "evidence": "Five-tab navigation retained.",
+      "suite": "smoke"
+    },
+    {
+      "id": "APP-004",
+      "status": "PASS",
+      "evidence": "App Shell is cached.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-001",
+      "status": "PASS",
+      "evidence": "Only this app's old caches are removed.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-002",
+      "status": "PASS",
+      "evidence": "Cache lifecycle does not delete IndexedDB.",
+      "suite": "smoke"
+    },
+    {
+      "id": "UPD-001",
+      "status": "PASS",
+      "evidence": "Update remains user-triggered.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-ASSET-001",
+      "status": "PASS",
+      "evidence": "New application modules are in App Shell.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-ASSET-002",
+      "status": "PASS",
+      "evidence": "All application modules are cached: no missing modules",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-ASSET-003",
+      "status": "PASS",
+      "evidence": "Test files are excluded from the production App Shell.",
+      "suite": "smoke"
+    },
+    {
+      "id": "CACHE-REVALIDATE-001",
+      "status": "PASS",
+      "evidence": "A new Service Worker revalidates App Shell files while installing.",
+      "suite": "smoke"
+    },
+    {
+      "id": "UPD-002",
+      "status": "PASS",
+      "evidence": "Skip waiting is requested only by update action.",
+      "suite": "smoke"
+    },
+    {
+      "id": "ERROR-001",
+      "status": "PASS",
+      "evidence": "Public failure message preserves data semantics.",
+      "suite": "smoke"
+    },
+    {
+      "id": "ERROR-004",
+      "status": "PASS",
+      "evidence": "CRUD conflicts are mapped to safe public operation messages.",
+      "suite": "smoke"
+    },
+    {
+      "id": "EX-UI-001",
+      "status": "PASS",
+      "evidence": "Exercise route is delegated to the exercise page module.",
+      "suite": "smoke"
+    },
+    {
+      "id": "EX-UI-002",
+      "status": "PASS",
+      "evidence": "Exercise route modules are part of the offline App Shell.",
+      "suite": "smoke"
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only DB diagnostic action exists.",
+      "suite": "smoke"
+    },
+    {
+      "id": "NAV-004",
+      "status": "PASS",
+      "evidence": "Settings remains a header entry.",
+      "suite": "smoke"
+    },
+    {
+      "id": "ARCH-001",
+      "status": "PASS",
+      "evidence": "Direct IndexedDB API outside adapter: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-002",
+      "status": "PASS",
+      "evidence": "Application service adapter imports: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-003",
+      "status": "PASS",
+      "evidence": "UI entry imports neither repositories nor IndexedDB adapters.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-003-CONTEXT",
+      "status": "PASS",
+      "evidence": "UI receives a narrow application context instead of the concrete container.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-004",
+      "status": "PASS",
+      "evidence": "Container binds concrete adapters to application services.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-004-ID",
+      "status": "PASS",
+      "evidence": "IdentityContext is injected through the container.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-004-LOGGER",
+      "status": "PASS",
+      "evidence": "A logger can be injected and reused across bootstrap retries.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:getById",
+      "status": "PASS",
+      "evidence": "getById is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:getByIdIncludingDeleted",
+      "status": "PASS",
+      "evidence": "getByIdIncludingDeleted is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:list",
+      "status": "PASS",
+      "evidence": "list is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:count",
+      "status": "PASS",
+      "evidence": "count is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:create",
+      "status": "PASS",
+      "evidence": "create is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:update",
+      "status": "PASS",
+      "evidence": "update is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:softDelete",
+      "status": "PASS",
+      "evidence": "softDelete is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT:restore",
+      "status": "PASS",
+      "evidence": "restore is part of the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:hardDelete",
+      "status": "PASS",
+      "evidence": "hardDelete is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:clear",
+      "status": "PASS",
+      "evidence": "clear is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:upsert",
+      "status": "PASS",
+      "evidence": "upsert is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "CONTRACT-NO:put",
+      "status": "PASS",
+      "evidence": "put is not exposed by the repository contract.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-005",
+      "status": "PASS",
+      "evidence": "Generic transaction use in application services: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-006",
+      "status": "PASS",
+      "evidence": "Page/UI code does not call repositories directly.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-007",
+      "status": "PASS",
+      "evidence": "Bootstrap does not expose the concrete container to the UI.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-008",
+      "status": "PASS",
+      "evidence": "Startup log memory survives an application bootstrap retry.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-001",
+      "status": "PASS",
+      "evidence": "Exercise pages do not access repositories/adapters directly: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-003",
+      "status": "PASS",
+      "evidence": "Exercise services have no IndexedDB adapter imports: none",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-004",
+      "status": "PASS",
+      "evidence": "Dynamic exercise log form has no exercise-name branching.",
+      "suite": "architecture"
+    },
+    {
+      "id": "ARCH-EX-005",
+      "status": "PASS",
+      "evidence": "Exercise management command owns the multi-store atomic boundary.",
+      "suite": "architecture"
+    },
+    {
+      "id": "MIG-SAFE-001",
+      "status": "PASS",
+      "evidence": "Migration code neither deletes nor clears existing stores.",
+      "suite": "architecture"
+    },
+    {
+      "id": "DATA-DEL-004",
+      "status": "PASS",
+      "evidence": "Production application code does not delete the user database.",
+      "suite": "architecture"
+    },
+    {
+      "id": "SCHEMA-001",
+      "status": "PASS",
+      "evidence": "Exactly 14 Object Stores are defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-002",
+      "status": "PASS",
+      "evidence": "Store definition count matches expected count.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-003",
+      "status": "PASS",
+      "evidence": "12 stores are classified as future sync targets.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-004",
+      "status": "PASS",
+      "evidence": "2 stores are classified as local-only.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-005",
+      "status": "PASS",
+      "evidence": "Profile keyPath is id.",
+      "suite": "schema"
+    },
+    {
+      "id": "SCHEMA-006",
+      "status": "PASS",
+      "evidence": "Device settings keyPath is key.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile_status_sort",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile_name",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_types:uq_profile_system_key",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_templates:by_profile_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_templates:by_profile_exercise_status",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_templates:uq_profile_exercise_version",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_performed_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_exercise_performed_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_template",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_status_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_exercise_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:exercise_schedules:uq_profile_completed_log",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:passes:by_profile_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:passes:by_profile_status",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:passes:by_profile_expiry",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_pass",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_pass_status",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_exercise_log",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:pass_usage_logs:uq_profile_pass_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_logs:by_profile_eaten_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_logs:by_profile_meal_eaten_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_photos:by_profile_diet_sort",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:diet_photos:uq_profile_storage_key",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:weight_logs:by_profile_measured_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:weight_logs:by_profile_source",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:weight_logs:uq_profile_source_ref",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:inbody_logs:by_profile_measured_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:user_settings:uq_profile_key",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:app_logs:by_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:app_logs:by_level_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX:app_logs:by_event_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_types:uq_profile_system_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_templates:uq_profile_exercise_version",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_schedules:uq_profile_completed_log",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:pass_usage_logs:uq_profile_pass_exercise",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:diet_photos:uq_profile_storage_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:weight_logs:uq_profile_source_ref",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE:user_settings:uq_profile_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:profiles",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_types",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_templates",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_schedules",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:passes",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:pass_usage_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:diet_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:diet_photos",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:weight_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:inbody_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:user_settings",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:device_settings",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:app_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store.",
+      "suite": "schema"
+    },
+    {
+      "id": "UNIT-EX-001",
+      "status": "PASS",
+      "evidence": "Exercise type and template v1 are created through contracts.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-EX-002",
+      "status": "PASS",
+      "evidence": "Custom field receives stable generated key.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-001",
+      "status": "PASS",
+      "evidence": "New log uses active template and normalizes numeric values.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TIME-001",
+      "status": "PASS",
+      "evidence": "Asia/Seoul datetime conversion is deterministic.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TPL-001",
+      "status": "PASS",
+      "evidence": "Template change creates v2 and supersedes v1.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TPL-002",
+      "status": "PASS",
+      "evidence": "Custom field label change preserves key.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TPL-003",
+      "status": "PASS",
+      "evidence": "Stale template ID/revision pair is rejected.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-002",
+      "status": "PASS",
+      "evidence": "Historical log keeps template v1.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-003",
+      "status": "PASS",
+      "evidence": "Historical log update keeps original template ID and increments revision.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-004",
+      "status": "PASS",
+      "evidence": "Stale log revision is rejected.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-005",
+      "status": "PASS",
+      "evidence": "New log uses latest active template.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-VAL-001",
+      "status": "PASS",
+      "evidence": "Invalid number is rejected.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TYPE-001",
+      "status": "PASS",
+      "evidence": "Exercise type can be deactivated.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-VAL-002",
+      "status": "PASS",
+      "evidence": "Inactive exercise rejects new logs.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TYPE-002",
+      "status": "PASS",
+      "evidence": "Exercise type soft-delete is used.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-TYPE-003",
+      "status": "PASS",
+      "evidence": "Exercise type restore keeps ID.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-006",
+      "status": "PASS",
+      "evidence": "Deleted log is hidden from normal read.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-LOG-007",
+      "status": "PASS",
+      "evidence": "Deleted log can be restored.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "UNIT-QUERY-001",
+      "status": "PASS",
+      "evidence": "Weekly summary is calculated from source logs, not stored counters.",
+      "suite": "exercise-service"
+    },
+    {
+      "id": "BACKUP-VAL-001",
+      "status": "PASS",
+      "evidence": "Valid backup with historical template and deleted record accepted.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-002",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-003",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_FORMAT_INVALID, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-004",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_VERSION_UNSUPPORTED, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-005",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_SCHEMA_UNSUPPORTED, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-006",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_COUNTS_MISMATCH, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-007",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_CHECKSUM_MISMATCH, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-008",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_DUPLICATE_ID, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-009",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_SCOPE_MISMATCH, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-010",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-011",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-012",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-013",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-014",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_REFERENCE_BROKEN, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-VAL-015",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_UNIQUE_CONFLICT, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-FILE-LIMIT",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-COMPATIBILITY",
+      "status": "PASS",
+      "evidence": "App and DB implementation versions are informational, not rejection gates.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-CANONICAL",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-UNIQUE-SCHEMA-PARITY",
+      "status": "PASS",
+      "evidence": "All seven DB v1 unique indexes match the validator.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-INVALID-TIME",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-INVALID-REVISION",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-INVALID-FIELD",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-JSON-LOSS",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-MALFORMED-ROWS",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_ROW_INVALID, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-MEDIA-IMPORT",
+      "status": "PASS",
+      "evidence": "Rejects with BACKUP_MEDIA_UNSUPPORTED, before any database access.",
+      "suite": "backup"
+    },
+    {
+      "id": "BACKUP-ARCHITECTURE",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "backup"
+    },
+    {
+      "id": "DB-001",
+      "status": "PASS",
+      "evidence": "DB version is 1.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DB-002",
+      "status": "PASS",
+      "evidence": "14 Object Stores exist.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DB-003",
+      "status": "PASS",
+      "evidence": "All real Object Store key paths and Index definitions match the approved schema.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DB-005",
+      "status": "PASS",
+      "evidence": "Test database is separate from the production database.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PROFILE-001",
+      "status": "PASS",
+      "evidence": "One local Profile was created.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PROFILE-002-ID",
+      "status": "PASS",
+      "evidence": "Profile ID is UUID v4.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PROFILE-003",
+      "status": "PASS",
+      "evidence": "Current profile pointer and IdentityContext are aligned.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SEED-001",
+      "status": "PASS",
+      "evidence": "One default Pilates type exists.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SEED-002",
+      "status": "PASS",
+      "evidence": "Pilates template v1 exists.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UUID-001",
+      "status": "PASS",
+      "evidence": "Seed entities use UUID v4.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "TIME-001",
+      "status": "PASS",
+      "evidence": "Entity timestamps use UTC ISO format.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PROFILE-002",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate profiles.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SEED-003",
+      "status": "PASS",
+      "evidence": "Repeated bootstrap does not duplicate seed records.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SEED-004",
+      "status": "PASS",
+      "evidence": "Seed upgrade does not overwrite a user rename.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SEED-005",
+      "status": "PASS",
+      "evidence": "Soft-deleted seed is not restored automatically.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCOPE-CREATE-001",
+      "status": "PASS",
+      "evidence": "Repository ignores an untrusted input profile_id.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "REV-001",
+      "status": "PASS",
+      "evidence": "New entity revision is 1.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "REV-002",
+      "status": "PASS",
+      "evidence": "Update increments revision and preserves created_at.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "REV-003",
+      "status": "PASS",
+      "evidence": "Stale expectedRevision is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PROTECTED-001",
+      "status": "PASS",
+      "evidence": "A caller cannot move an entity to another Profile through an update patch.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "REV-004",
+      "status": "PASS",
+      "evidence": "Soft-delete rejects a stale expectedRevision.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DELETE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted record is excluded from normal get.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DELETE-002",
+      "status": "PASS",
+      "evidence": "Deleted record remains queryable through explicit include-deleted path.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "REV-005",
+      "status": "PASS",
+      "evidence": "Restore rejects a stale expectedRevision.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DELETE-003",
+      "status": "PASS",
+      "evidence": "Restore keeps ID and increments revision.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-001",
+      "status": "PASS",
+      "evidence": "Multiple user-created exercises without system_key are allowed.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-002",
+      "status": "PASS",
+      "evidence": "Multiple schedules without completed_exercise_log_id are allowed.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UNIQUE-OPTIONAL-003",
+      "status": "PASS",
+      "evidence": "Multiple manual weights without source_ref_id are allowed.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCOPE-001",
+      "status": "PASS",
+      "evidence": "Profile A cannot read Profile B data.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCOPE-002",
+      "status": "PASS",
+      "evidence": "Profile A cannot update Profile B data.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UNIQUE-001",
+      "status": "PASS",
+      "evidence": "Duplicate profile/system_key is rejected by a unique compound index.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UNIQUE-002",
+      "status": "PASS",
+      "evidence": "Duplicate profile/exercise/version is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "UNIQUE-003",
+      "status": "PASS",
+      "evidence": "Duplicate pass/exercise usage is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "TX-002",
+      "status": "PASS",
+      "evidence": "Explicit abort leaves no partial records.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "TX-001",
+      "status": "PASS",
+      "evidence": "Bootstrap failure rolls back Profile, seed, and device pointer together.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PROFILE-004",
+      "status": "PASS",
+      "evidence": "Invalid profile pointer is repaired without creating another Profile.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DB-004",
+      "status": "PASS",
+      "evidence": "Record survives database close and reopen.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-001",
+      "status": "PASS",
+      "evidence": "Default Pilates seed is visible through the exercise query service.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-002",
+      "status": "PASS",
+      "evidence": "A user-created exercise type is created through the application service.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-001",
+      "status": "PASS",
+      "evidence": "Exercise creation atomically creates template v1.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-007",
+      "status": "PASS",
+      "evidence": "Custom fields receive a stable UUID-based key.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-001",
+      "status": "PASS",
+      "evidence": "Exercise log is created against the current active template.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-002",
+      "status": "PASS",
+      "evidence": "Exercise memo is stored as a common fixed field.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-003",
+      "status": "PASS",
+      "evidence": "Dynamic exercise values are validated and normalized.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-003",
+      "status": "PASS",
+      "evidence": "Template edit creates a new active version.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-004",
+      "status": "PASS",
+      "evidence": "Previous template is retained as superseded.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-007-KEY",
+      "status": "PASS",
+      "evidence": "Changing a custom field label preserves its internal key.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-009",
+      "status": "PASS",
+      "evidence": "Stale template ID/revision pair is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-005",
+      "status": "PASS",
+      "evidence": "Existing record keeps its original template after a newer template is created.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-014",
+      "status": "PASS",
+      "evidence": "Historical record can still be edited with its historical template.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-006",
+      "status": "PASS",
+      "evidence": "Exercise log update preserves created_at.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-007",
+      "status": "PASS",
+      "evidence": "Exercise log update changes updated_at and revision.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-009",
+      "status": "PASS",
+      "evidence": "Stale exercise log revision is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-006",
+      "status": "PASS",
+      "evidence": "New record uses the latest active template.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-VAL-004",
+      "status": "PASS",
+      "evidence": "Invalid numeric dynamic value is rejected by the application service.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-VAL-008",
+      "status": "PASS",
+      "evidence": "Blank exercise name is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-005",
+      "status": "PASS",
+      "evidence": "Exercise type can be deactivated.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-VAL-003",
+      "status": "PASS",
+      "evidence": "Inactive exercise cannot receive a new log.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-006",
+      "status": "PASS",
+      "evidence": "Exercise type can be reactivated.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-007",
+      "status": "PASS",
+      "evidence": "Exercise type uses soft-delete.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-008",
+      "status": "PASS",
+      "evidence": "Soft-deleted exercise is excluded from active list.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-VAL-002",
+      "status": "PASS",
+      "evidence": "Deleted exercise cannot receive a new log.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-RESTORE-001",
+      "status": "PASS",
+      "evidence": "Soft-deleted exercise can be restored without changing ID.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-010",
+      "status": "PASS",
+      "evidence": "Exercise log uses soft-delete.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-011",
+      "status": "PASS",
+      "evidence": "Deleted exercise log is excluded from normal detail lookup.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-012",
+      "status": "PASS",
+      "evidence": "Deleted exercise log is available through explicit include-deleted lookup.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-RESTORE-001",
+      "status": "PASS",
+      "evidence": "Deleted exercise log restores with the same ID.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TYPE-009",
+      "status": "PASS",
+      "evidence": "Exercise query service keeps Profile data isolated.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-LOG-013",
+      "status": "PASS",
+      "evidence": "Exercise log service cannot read another Profile log.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-TPL-002",
+      "status": "PASS",
+      "evidence": "Exercise type + template creation rolls back together on mid-command failure.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "LOG-001",
+      "status": "PASS",
+      "evidence": "App log records can be written and read.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "LOG-002",
+      "status": "PASS",
+      "evidence": "App log retention is capped at 200 records.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DIAG-001",
+      "status": "PASS",
+      "evidence": "Read-only diagnostic reports a healthy database.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-001",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-002",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-003",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-004",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-005",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-006",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-007",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-008",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-009",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-010",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-011",
+      "status": "PASS",
+      "evidence": "Actual IndexedDB export snapshot checked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-EXP-012",
+      "status": "PASS",
+      "evidence": "Photo metadata prevents a falsely complete v1 export.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-001",
+      "status": "PASS",
+      "evidence": "Pristine seeded database restored via 13-store command.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-002",
+      "status": "PASS",
+      "evidence": "Original Profile ID preserved.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-003",
+      "status": "PASS",
+      "evidence": "id preserved for every portable row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-004",
+      "status": "PASS",
+      "evidence": "created_at preserved for every portable row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-005",
+      "status": "PASS",
+      "evidence": "updated_at preserved for every portable row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-006",
+      "status": "PASS",
+      "evidence": "deleted_at preserved for every portable row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-007",
+      "status": "PASS",
+      "evidence": "revision preserved for every portable row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-008",
+      "status": "PASS",
+      "evidence": "Template references and dynamic values preserved.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-009",
+      "status": "PASS",
+      "evidence": "Historical templates preserved.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-010",
+      "status": "PASS",
+      "evidence": "Deleted rows remain deleted.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-011",
+      "status": "PASS",
+      "evidence": "Device ID and device metadata untouched.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-012",
+      "status": "PASS",
+      "evidence": "Current Profile pointer is restored.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-013",
+      "status": "PASS",
+      "evidence": "Valid file can be previewed on a populated target but cannot be written.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-014",
+      "status": "PASS",
+      "evidence": "Five fault points roll back Seed removals, portable rows and pointer together.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-015",
+      "status": "PASS",
+      "evidence": "Entire portable canonical hash matches original.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-016",
+      "status": "PASS",
+      "evidence": "Reopen and bootstrap preserve all restored values without Seed mutation.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-STALE-PREVIEW",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-CHANGED-SEED",
+      "status": "PASS",
+      "evidence": "Completed without error.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "RESTORE-CONCURRENT",
+      "status": "PASS",
+      "evidence": "Two connections cannot mix or duplicate concurrent restores.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-SNAPSHOT-ATOMIC",
+      "status": "PASS",
+      "evidence": "Snapshot observes both type/template writes together or neither.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-001",
+      "status": "PASS",
+      "evidence": "Initial pass has 60 calculated uses.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-002",
+      "status": "PASS",
+      "evidence": "Exercise debits once: 60 -> 59.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-003",
+      "status": "PASS",
+      "evidence": "Same pass edit neither adds nor mutates usage.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-004",
+      "status": "PASS",
+      "evidence": "Removing selection cancels usage.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-005",
+      "status": "PASS",
+      "evidence": "Reapply reactivates same cancelled usage ID.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-006",
+      "status": "PASS",
+      "evidence": "Delete restores capacity.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-007",
+      "status": "PASS",
+      "evidence": "Restore revalidates and debits.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-008",
+      "status": "PASS",
+      "evidence": "Switch cancels A and activates B atomically; max one active.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-009",
+      "status": "PASS",
+      "evidence": "A -> B -> A keeps pair identity and cancelled B history.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-010",
+      "status": "PASS",
+      "evidence": "Actual exercise date outside expiry rejects edit without removing existing usage.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-011",
+      "status": "PASS",
+      "evidence": "Rejected date edit preserves previous charge.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-012",
+      "status": "PASS",
+      "evidence": "Invalid total is rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-013",
+      "status": "PASS",
+      "evidence": "Total cannot be less than two active uses.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-014",
+      "status": "PASS",
+      "evidence": "Pass date edits cannot exclude existing used exercise day.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-015",
+      "status": "PASS",
+      "evidence": "Pass with history is deactivated, not deleted.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-016",
+      "status": "PASS",
+      "evidence": "Existing charge remains editable on inactive pass.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-017",
+      "status": "PASS",
+      "evidence": "Restore cannot recharge inactive pass.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-001",
+      "status": "PASS",
+      "evidence": "Schedule create/edit/cancel never debit.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-002",
+      "status": "PASS",
+      "evidence": "Concurrent duplicate completion creates one log and usage.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-003",
+      "status": "PASS",
+      "evidence": "Linked completed log must be undone through schedule command.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-004",
+      "status": "PASS",
+      "evidence": "Undo atomically restores schedule and capacity, soft-deletes log.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-005",
+      "status": "PASS",
+      "evidence": "Stale retry after undo cannot complete again.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-006",
+      "status": "PASS",
+      "evidence": "Direct restore cannot reactivate cancelled schedule log.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-007",
+      "status": "PASS",
+      "evidence": "Explicit re-complete restores same log and usage identity.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-UNDO-activity-after-schedule",
+      "status": "PASS",
+      "evidence": "Injected undo failure leaves complete portable data identical.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-COMPLETE-activity-after-schedule",
+      "status": "PASS",
+      "evidence": "Injected completion failure creates no partial data.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-log",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-cancel",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ATOMIC-SWITCH-activity-after-usage",
+      "status": "PASS",
+      "evidence": "Injected pass switch failure preserves original log and all usage rows.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-CONCURRENT-LAST",
+      "status": "PASS",
+      "evidence": "Concurrent last-use claims allow exactly one complete write.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-WRONG-TYPE",
+      "status": "PASS",
+      "evidence": "Cross-exercise pass selection rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-DATE-BOUNDARY",
+      "status": "PASS",
+      "evidence": "Validity uses Seoul exercise day, inclusive start, not UTC day or today.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QUERY-ACTIVITY-RANGE",
+      "status": "PASS",
+      "evidence": "Existing compound date indexes return scoped live schedules/logs for period.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-REOPEN",
+      "status": "PASS",
+      "evidence": "Database reopen preserves complete pass/schedule state and revisions.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-OPTIONAL-PASS",
+      "status": "PASS",
+      "evidence": "Schedule completion without pass creates only an exercise log.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SCHEDULE-COMPLETED-EDIT",
+      "status": "PASS",
+      "evidence": "Completed schedule cannot be edited without undo.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-INVALID-DATE",
+      "status": "PASS",
+      "evidence": "Impossible local dates are rejected, not normalized.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-SCOPE-PASS",
+      "status": "PASS",
+      "evidence": "Command cannot mutate another profile pass.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-SCOPE-QUERY",
+      "status": "PASS",
+      "evidence": "Indexed pass query is profile-scoped.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-RESTORE-EXHAUSTED",
+      "status": "PASS",
+      "evidence": "Restore rechecks capacity used by a later exercise.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PASS-RESTORE-ROLLBACK",
+      "status": "PASS",
+      "evidence": "Failed restore leaves deleted state and usage unchanged.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-BACKUP",
+      "status": "PASS",
+      "evidence": "Backup v1 restores all pass selections, cancelled history and undone schedule links with exact hash.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-01",
+      "status": "PASS",
+      "evidence": "Completion defaults to first usable active pass; expired top row excluded.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-02",
+      "status": "PASS",
+      "evidence": "No usable pass defaults to no charge.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-03",
+      "status": "PASS",
+      "evidence": "Monthly calendar initially selects and separately marks today.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-05",
+      "status": "PASS",
+      "evidence": "Linked completion is one projected calendar item.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-06",
+      "status": "PASS",
+      "evidence": "Direct exercise log remains a separate projected item.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-04",
+      "status": "PASS",
+      "evidence": "Selecting date renders only that date without full-store reads.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-MONTH",
+      "status": "PASS",
+      "evidence": "Next/previous month navigation works.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-CROSS-MONTH",
+      "status": "PASS",
+      "evidence": "Completed projection uses actual exercise date across month boundaries and resolves indexed linkage.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-07",
+      "status": "PASS",
+      "evidence": "Exercise change preserves date, time and memo DOM values.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-08",
+      "status": "PASS",
+      "evidence": "Same compatible template field key retains entered value.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-09",
+      "status": "PASS",
+      "evidence": "Missing, incompatible and invalid select values are removed.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-10",
+      "status": "PASS",
+      "evidence": "Active pass shows deactivate action.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-11",
+      "status": "PASS",
+      "evidence": "Inactive pass shows activate action.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-12",
+      "status": "PASS",
+      "evidence": "Status toggles preserve all usage/remaining and increment pass revision only.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-17",
+      "status": "PASS",
+      "evidence": "Normal restore remains blocked on non-pristine target.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-20-replace-cleared:profiles",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-20-replace-cleared:pass_usage_logs",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-20-restore-after:exercise_logs",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-20-restore-before-commit",
+      "status": "PASS",
+      "evidence": "Forced replace injected failure rolls back every portable row and pointer.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-18",
+      "status": "PASS",
+      "evidence": "Forced replace succeeds on populated database and switches profile.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-19",
+      "status": "PASS",
+      "evidence": "Old records are fully replaced, not merged.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-21",
+      "status": "PASS",
+      "evidence": "Forced restore canonical hash equals imported snapshot.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-22",
+      "status": "PASS",
+      "evidence": "Device identity metadata remains exact.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-replace-cleared:exercise_logs",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-reset-after:profiles",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-reset-after:exercise_templates",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-RESET-ATOMIC-reset-before-commit",
+      "status": "PASS",
+      "evidence": "Reset failure restores all data and seed/pointer atomically.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-RESET-DOWNLOAD-GATE",
+      "status": "PASS",
+      "evidence": "Backup-first reset cannot execute on download click alone.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-13",
+      "status": "PASS",
+      "evidence": "Reset executes after reading back and validating downloaded backup.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-16",
+      "status": "PASS",
+      "evidence": "Reset leaves initial Profile/Pilates/template and device ID intact.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-14",
+      "status": "PASS",
+      "evidence": "Backup failure prevents creation/execution of reset plan; no data removed.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-15",
+      "status": "PASS",
+      "evidence": "Explicit no-backup reset recreates pristine state.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-STALE-RESET",
+      "status": "PASS",
+      "evidence": "Data changed after confirmation preparation blocks stale reset.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-WRONG-DOWNLOAD",
+      "status": "PASS",
+      "evidence": "Selecting unrelated valid backup cannot acknowledge current-data backup.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-BACKUP-FIRST-REPLACE",
+      "status": "PASS",
+      "evidence": "Backup-first forced restore validates local saved backup then replaces.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-01-CREATE",
+      "status": "PASS",
+      "evidence": "Manual creation preserves scoped metadata and UTC conversion.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-02-UPDATE",
+      "status": "PASS",
+      "evidence": "Manual edit increments revision and preserves memo.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-03-STALE-WEIGHT",
+      "status": "PASS",
+      "evidence": "Stale manual revision blocked.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-04-DELETE",
+      "status": "PASS",
+      "evidence": "Soft delete removes weight from latest summary.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-05-RESTORE",
+      "status": "PASS",
+      "evidence": "Restore preserves UUID and increments revision.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-06-SAME-DAY",
+      "status": "PASS",
+      "evidence": "Same-day measurements remain separate rows.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-07-LATEST-DELTA",
+      "status": "PASS",
+      "evidence": "Latest and delta use measured_at rather than creation time.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-08-VALIDATION",
+      "status": "PASS",
+      "evidence": "Reject impossible dates and nonfinite/non-numeric/nonpositive weight.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-09-LINK-CREATE",
+      "status": "PASS",
+      "evidence": "InBody and linked weight atomically created.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-10-LINK-GUARD",
+      "status": "PASS",
+      "evidence": "Linked weight cannot be independently edited, deleted or restored.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-11-LINK-SYNC",
+      "status": "PASS",
+      "evidence": "Time, value and memo synchronized without another row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-12-STALE-INBODY",
+      "status": "PASS",
+      "evidence": "Stale InBody write cannot mutate linked weight.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-13-LINK-OFF",
+      "status": "PASS",
+      "evidence": "OFF soft-deletes linked row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-14-LINK-REUSE",
+      "status": "PASS",
+      "evidence": "ON reuses the unique soft-deleted row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-15-DELETE-PAIR",
+      "status": "PASS",
+      "evidence": "Delete affects both records.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-16-RESTORE-PAIR",
+      "status": "PASS",
+      "evidence": "Restore validates and restores the same linked row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-17-OPTIONAL",
+      "status": "PASS",
+      "evidence": "Missing metrics remain null; optional zero value remains zero.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-18-INBODY-VALIDATION",
+      "status": "PASS",
+      "evidence": "Link requires weight; negative mass and percent above 100 rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-19-ROLLBACK-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Injected create failure leaves no partial rows or metadata changes.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-20-save-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-20-delete-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-20-restore-inbody-after-record",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-19-ROLLBACK-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Injected create failure leaves no partial rows or metadata changes.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-20-save-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-20-delete-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-20-restore-inbody-after-weight",
+      "status": "PASS",
+      "evidence": "Existing pair changes roll back both stores including revision and tombstones.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-21-GRAPH-SOURCE",
+      "status": "PASS",
+      "evidence": "Weight graph reads only weight rows, never duplicates InBody weight.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-22-GRAPH-METRICS",
+      "status": "PASS",
+      "evidence": "InBody metrics skip missing values and include real zero values.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-23-RANGE-BOUNDARY",
+      "status": "PASS",
+      "evidence": "Profile/date index uses inclusive start and exclusive end.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-24-PERIODS",
+      "status": "PASS",
+      "evidence": "Local 7/30-day boundaries and 3-calendar-month end-day clamp correct.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-25-NO-FULL-SCAN",
+      "status": "PASS",
+      "evidence": "Measurement periods and latest summary actually use existing IDB indexes.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-26-PROFILE",
+      "status": "PASS",
+      "evidence": "Foreign Profile reads and mutations are isolated.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-27-PRECISION",
+      "status": "PASS",
+      "evidence": "Editing preserves seconds and milliseconds, including imported values.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-28-BACKUP",
+      "status": "PASS",
+      "evidence": "Pristine restore preserves UUID, revision, deleted state, all metrics, source/ref and link intent exactly.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-29-REOPEN",
+      "status": "PASS",
+      "evidence": "Database reopen/bootstrap leaves measurements unchanged.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-30-BACKUP-CONFLICT",
+      "status": "PASS",
+      "evidence": "Valid-checksum backup with inconsistent active pair rejected.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-31-NO-LINK-RESTORE",
+      "status": "PASS",
+      "evidence": "Restoring unlinked InBody does not create weight.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-32-OFF-INTENT",
+      "status": "PASS",
+      "evidence": "OFF intent survives InBody delete and restore without reviving weight.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-33-CONCURRENT",
+      "status": "PASS",
+      "evidence": "Concurrent edits serialize; one stale revision rejected and pair consistent.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-34-LEGACY",
+      "status": "PASS",
+      "evidence": "Legacy backups with no link flag infer existing relation safely.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-35-CALENDAR",
+      "status": "PASS",
+      "evidence": "Calendar displays manual weight and one combined InBody/weight entry with real routes.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-36-FORM",
+      "status": "PASS",
+      "evidence": "InBody form displays metrics, link intent and literal memo.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-37-SVG",
+      "status": "PASS",
+      "evidence": "Local SVG preserves same-day points and has accessible values.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-38-SINGLE-POINT",
+      "status": "PASS",
+      "evidence": "Single point / flat series has finite chart coordinates.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "PWA-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The application boots successfully from a GitHub Pages-style repository subpath.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "MANIFEST-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The manifest resolves inside the repository subpath.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "MANIFEST-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Chromium parses the manifest without errors and resolves standalone scope to the repository subpath.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "NAV-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "All five approved bottom navigation tabs render.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "NAV-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Hash routing changes the active page without a server route.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-UI-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "Exercise main page renders the default Pilates seed and actual record controls.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-UI-RUNTIME-002",
+      "status": "PASS",
+      "evidence": "Exercise type creation route and dynamic template editor render.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "EX-UI-RUNTIME-003",
+      "status": "PASS",
+      "evidence": "Exercise template editor is data-driven from the approved field catalog.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "DIAG-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The read-only settings diagnostic reports 14/14 stores and a connected Profile.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "SW-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The Service Worker activates and controls the GitHub Pages-style scope.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-001",
+      "status": "PASS",
+      "evidence": "The v0.6.0 App Shell cache exists.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "CACHE-RUNTIME-LOCAL-002",
+      "status": "PASS",
+      "evidence": "Activation removes the simulated v0.5.0 App Shell cache without clearing unrelated cache names.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "OFFLINE-RUNTIME-001",
+      "status": "PASS",
+      "evidence": "The cached App Shell and IndexedDB-backed home screen reload while network access is disabled.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "OFFLINE-DIAG-001",
+      "status": "PASS",
+      "evidence": "The Profile and 14-store diagnostic remain available offline.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-UI-EXPORT",
+      "status": "PASS",
+      "evidence": "Offline settings export downloads an actual JSON file in the disposable browser profile.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-UI-PRISTINE-PREVIEW",
+      "status": "PASS",
+      "evidence": "Valid file previews on the seeded target and enables restore.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-UI-OFFLINE-RESTORE",
+      "status": "PASS",
+      "evidence": "Offline UI restore commits, verifies and reloads with the original Profile ID.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-UI-POPULATED-PREVIEW",
+      "status": "PASS",
+      "evidence": "Same valid file is previewable on populated data but restore is disabled.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "BACKUP-UI-RESTORED-HASH",
+      "status": "PASS",
+      "evidence": "After offline UI reload, full portable payload hash still matches the imported file.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-PASS",
+      "status": "PASS",
+      "evidence": "Offline pass form saves a 60-use pass and displays calculated remaining.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-LOG",
+      "status": "PASS",
+      "evidence": "Offline exercise form selects pass and detail shows 59 remaining.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-UNLINK",
+      "status": "PASS",
+      "evidence": "Edit UI can remove debit without deleting historical usage.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-SCHEDULE",
+      "status": "PASS",
+      "evidence": "Offline schedule form saves without any charge.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-COMPLETE",
+      "status": "PASS",
+      "evidence": "Double-submit completion UI commits exactly one log and one debit offline.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-UNDO",
+      "status": "PASS",
+      "evidence": "Completed schedule UI undo returns remaining to 60.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-RECOMPLETE",
+      "status": "PASS",
+      "evidence": "Re-complete then offline app reload preserves exact data hash and 59 remaining.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "ACTIVITY-UI-MOBILE",
+      "status": "PASS",
+      "evidence": "412px mobile viewport shows pass balance without horizontal overflow (not real-device QA).",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-23-OFFLINE-BACKUP-RESET",
+      "status": "PASS",
+      "evidence": "Offline UI backup writes a real downloaded file; validated file read-back gates reset; initial seed reloads.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-23-OFFLINE-FORCE",
+      "status": "PASS",
+      "evidence": "Offline populated target keeps normal restore blocked; explicit no-backup forced replace reloads with exact original hash.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "QA051-OFFLINE-NO-BACKUP-RESET",
+      "status": "PASS",
+      "evidence": "Offline no-backup reset requires final confirmation and recreates initial state.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-01-OFFLINE-CREATE",
+      "status": "PASS",
+      "evidence": "Offline actual form creates manual weight; memo is escaped.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-02-OFFLINE-INBODY",
+      "status": "PASS",
+      "evidence": "Offline InBody form creates atomic pair with seven metrics.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-03-LINK-REDIRECT",
+      "status": "PASS",
+      "evidence": "Direct linked-weight edit routes to authoritative InBody form.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-04-SYNC-OFF-ON",
+      "status": "PASS",
+      "evidence": "Actual UI syncs pair, OFF deletes, ON reuses the original row.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-05-DELETE-RESTORE",
+      "status": "PASS",
+      "evidence": "Offline UI delete/restore maintains both records.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-06-GRAPH",
+      "status": "PASS",
+      "evidence": "Offline seven-metric SVG and same-day points render without mobile horizontal overflow.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-07-CALENDAR-HOME",
+      "status": "PASS",
+      "evidence": "Calendar combines linked pair; home shows latest weight, delta and InBody metrics.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-08-OFFLINE-RELOAD",
+      "status": "PASS",
+      "evidence": "Offline PWA relaunch preserves exact portable payload including measurements.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-UI-09-MANUAL-EDIT-DELETE-RESTORE",
+      "status": "PASS",
+      "evidence": "Manual weight actual edit/delete/restore works after offline reload.",
+      "suite": "browser-runtime"
+    },
+    {
+      "id": "HEALTH-MANUAL-01",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-01.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-02",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-02.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-03",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-03.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-04",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-04.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-05",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-05.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-06",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-06.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-07",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-07.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "HEALTH-MANUAL-08",
+      "status": "NOT_RUN",
+      "evidence": "Installed PWA user QA: MANUAL_QA.md HEALTH-MANUAL-08.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-01",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-01.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-02",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-02.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-03",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-03.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-04",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-04.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-05",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-05.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-06",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-06.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-07",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-07.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "QA051-MANUAL-08",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md QA051-MANUAL-08.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-PASS",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 1.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-SCHEDULE",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 2.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-VALIDITY",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 3.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-LIMIT",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 4.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-CONFLICT",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 5.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-HISTORY",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 6.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-BACKUP",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 7.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "V05-QA-REGRESSION",
+      "status": "NOT_RUN",
+      "evidence": "User GitHub Pages/Galaxy QA: MANUAL_QA.md section 8.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "BACKUP-QA-EXPORT",
+      "status": "NOT_RUN",
+      "evidence": "User: Galaxy download and retained JSON file from actual existing data.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "BACKUP-QA-PREVIEW",
+      "status": "NOT_RUN",
+      "evidence": "User: valid file preview on populated device, restore blocked.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "BACKUP-QA-RESTORE",
+      "status": "NOT_RUN",
+      "evidence": "User: restore on a pristine browser, original Profile and records preserved.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "BACKUP-QA-OFFLINE",
+      "status": "NOT_RUN",
+      "evidence": "User: offline export/restore and record CRUD after offline relaunch.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-001",
+      "status": "NOT_RUN",
+      "evidence": "Deploy v0.6.0 to the user GitHub Pages repository.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-002",
+      "status": "NOT_RUN",
+      "evidence": "Verify install/update behavior on Galaxy Chrome.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-003",
+      "status": "NOT_RUN",
+      "evidence": "Verify standalone launch on the installed app.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "APP-004",
+      "status": "NOT_RUN",
+      "evidence": "Verify offline relaunch on the deployed installed app.",
+      "suite": "manual-deployment"
+    },
+    {
+      "id": "CACHE-RUNTIME-001",
+      "status": "NOT_RUN",
+      "evidence": "Verify v0.4.0 App Shell replacement by v0.6.0 on the deployed origin.",
+      "suite": "manual-deployment"
+    }
+  ],
+  "aggregationNote": "Final actual suite outputs aggregated after rerunning browser-runtime. Initial navigator.onLine check replaced with an uncached HEAD request proving network blocking; source payload hashes matched in every reload attempt."
+}

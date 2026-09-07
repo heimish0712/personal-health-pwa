@@ -74,13 +74,14 @@ export async function renderCalendar(context) {
   const names = new Map(types.map((t) => [t.id, t.name]));
   if (!isCurrent()) return;
   let selected = today, month = today.slice(0, 7), sequence = 0, entries = [];
-  root.innerHTML = `<section class="card"><div class="section-heading"><h2>예약 · 운동기록</h2><button class="button" id="new-schedule">+ 예약</button></div><div class="calendar-toolbar"><button class="button button-secondary" id="calendar-prev" aria-label="이전 달">‹</button><h3 id="calendar-month" aria-live="polite"></h3><button class="button button-secondary" id="calendar-next" aria-label="다음 달">›</button></div><button class="text-button" id="calendar-today">오늘</button><div class="calendar-grid" id="calendar-grid" aria-label="월간 달력"></div><p class="section-description">밑줄: 오늘 · 채움: 선택 날짜 · 점: 일정 있음</p></section><h2 id="calendar-selected"></h2><div id="calendar-results" aria-live="polite"></div>`;
+  root.innerHTML = `<section class="card"><div class="section-heading"><h2>예약 · 운동 · 체중</h2><button class="button" id="new-schedule">+ 예약</button></div><div class="calendar-toolbar"><button class="button button-secondary" id="calendar-prev" aria-label="이전 달">‹</button><h3 id="calendar-month" aria-live="polite"></h3><button class="button button-secondary" id="calendar-next" aria-label="다음 달">›</button></div><button class="text-button" id="calendar-today">오늘</button><div class="calendar-grid" id="calendar-grid" aria-label="월간 달력"></div><p class="section-description">밑줄: 오늘 · 채움: 선택 날짜 · 점: 일정 있음</p></section><h2 id="calendar-selected"></h2><div id="calendar-results" aria-live="polite"></div>`;
   action(context, '#new-schedule', () => context.navigate('/exercise/schedule/new'));
   const renderSelection = () => {
     root.querySelector('#calendar-selected').textContent = `${selected} 일정`;
     root.querySelectorAll('[data-calendar-date]').forEach((b) => { b.classList.toggle('selected', b.dataset.calendarDate === selected); b.setAttribute('aria-pressed', String(b.dataset.calendarDate === selected)); });
     const rows = entries.filter((r) => dateKey(r.at, timezone) === selected);
-    root.querySelector('#calendar-results').innerHTML = rows.length ? rows.map((r) => `<section class="card" data-calendar-entry="${r.id}"><h3>${e(names.get(r.exercise_type_id))} · ${e(r.label)}</h3><p>${e(formatLocalDateTime(r.at, timezone))}</p><p>${e(r.memo)}</p>${r.schedule ? `<button class="button" data-schedule="${r.schedule.id}">예약 열기</button>` : ''} ${r.log ? `<button class="button button-secondary" data-log="${r.log.id}">기록 열기</button>` : ''}</section>`).join('') : '<section class="card">이 날짜의 예약·운동기록이 없습니다.</section>';
+    root.querySelector('#calendar-results').innerHTML = rows.length ? rows.map((r) => `<section class="card" data-calendar-entry="${r.id}"><h3>${r.healthRoute ? e(r.label) : `${e(names.get(r.exercise_type_id))} · ${e(r.label)}`}</h3><p>${e(formatLocalDateTime(r.at, timezone))}</p><p>${e(r.memo)}</p>${r.healthRoute ? `<p>${e(r.healthValue)}</p><button class="button" data-health-route="${r.healthRoute}">측정 기록 열기</button>` : ''}${r.schedule ? `<button class="button" data-schedule="${r.schedule.id}">예약 열기</button>` : ''} ${r.log ? `<button class="button button-secondary" data-log="${r.log.id}">기록 열기</button>` : ''}</section>`).join('') : '<section class="card">이 날짜의 기록이 없습니다.</section>';
+    action(context, '[data-health-route]', (b) => context.navigate(b.dataset.healthRoute));
     action(context, '[data-schedule]', (b) => context.navigate(`/exercise/schedule/${b.dataset.schedule}/edit`));
     action(context, '[data-log]', (b) => context.navigate(`/exercise/log/${b.dataset.log}`));
   };
@@ -89,7 +90,8 @@ export async function renderCalendar(context) {
     const [year, m] = month.split('-').map(Number);
     const next = new Date(Date.UTC(year, m, 1)).toISOString().slice(0, 10);
     root.querySelector('#calendar-results').textContent = '일정을 불러오는 중…';
-    const rows = await services.activity.calendarEntries(`${month}-01T00:00`, `${next}T00:00`);
+    const groups = await Promise.all([services.activity.calendarEntries(`${month}-01T00:00`, `${next}T00:00`), services.health.calendarEntries(`${month}-01T00:00`, `${next}T00:00`)]);
+    const rows = groups.flat().sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id));
     if (!isCurrent() || token !== sequence) return;
     entries = rows;
     root.querySelector('#calendar-month').textContent = `${year}년 ${m}월`;

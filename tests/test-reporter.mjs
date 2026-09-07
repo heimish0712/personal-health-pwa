@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export class TestReporter {
-  constructor(suite, version = '0.5.1') {
+  constructor(suite, version = '0.6.0') {
     this.suite = suite;
     this.version = version;
     this.cases = [];

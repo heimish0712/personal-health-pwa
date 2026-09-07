@@ -207,3 +207,19 @@
 - **QA051-23/24** 오프라인 백업·초기화·강제 복원, 기존 전체 회귀 FAIL0. 실제 Pages/Galaxy 검증은 별도 NOT RUN.
 - 초기화/강제 교체 범위는 전체 portable Store(모든 Profile)다. Backup v1은 한 Profile만 export하므로 복수 Profile이 감지된 경우 백업 후 전체 교체 경로는 차단하고 별도 보관하도록 안내한다. 백업 없이 실행은 모든 Profile 삭제 경고와 최종 확인을 거친다.
 - 대상 fingerprint를 준비 및 transaction 시점에 비교한다. 다른 탭의 변경·먼저 완료된 교체가 있으면 오래된 계획으로 덮어쓰지 않는다.
+
+
+## v0.6.0 Weight & InBody — 구현 기준
+
+- **HEALTH-CRUD** 일반 체중/인바디 CRUD는 Profile/UUID/revision/soft-delete를 유지한다. 일반 체중은 단일 Repository, 연동 인바디는 Semantic Command를 사용한다. 직접 usage 변경 등 기존 업무 범위는 변경하지 않는다.
+- **HEALTH-TIME** 동일 날짜의 여러 기록 허용. 저장 UTC ISO, 입력/기간/달력은 Profile timezone. 정렬은 measured_at, 동일 시각은 UUID 순서로 결정한다. 최신과 직전은 역순 상위 2개 활성 weight_logs이며 생성 시각을 사용하지 않는다. 초·밀리초가 있는 가져온 기록도 편집 중 보존한다.
+- **HEALTH-METRIC** measured_at 필수. 일반 weight는 양의 유한 숫자 필수. 인바디의 weight/골격근량/체지방량/체지방률/BMI/내장지방레벨/기초대사량은 선택, 미입력 null. weight/BMI는 양수, 다른 지표는 0 이상, 체지방률은 100 이하. 문자열/boolean/NaN/Infinity 불가. 메모는 최대 2000자, 의료적 정상/이상 판정 없음.
+- **HEALTH-LINK** `이 체중을 체중 기록에도 추가` ON이면 weight 필수. source=inbody/source_ref_id=원본UUID, 기존 uq_profile_source_ref index 재사용. 연결 체중의 독립 변경을 Service에서 차단하고 UI는 인바디 화면으로 이동시킨다.
+- **HEALTH-ATOMIC** 저장/수정은 값·일시·메모 동기화, OFF는 연결 행 soft-delete, ON은 삭제된 동일 행 restore/reuse. 삭제/복원은 한 transaction. link_weight는 삭제 시 보존되는 선택 의도, OFF 상태 복원은 연결 체중을 되살리지 않는다. legacy 필드 누락은 기존 연결로 추론한다. stale revision/다른 Profile/중간 실패 시 두 Store 모두 변경 없음.
+- **HEALTH-GRAPH** 체중은 weight_logs만, 나머지는 inbody_logs만 원본. 삭제/미입력 값 제외, 0은 유효 지표에서 표시. 같은 날 여러 시점 유지. 단일 값/평탄한 값도 표시 가능. SVG와 펼칠 수 있는 실제 측정 목록 제공, 외부 CDN 없음. 별도 그래프 Store 없음.
+- **HEALTH-PERIOD** 7/30일은 Profile의 오늘을 포함한 최근 7/30개 날짜, 3개월은 오늘에서 달력상 3개월 전 날짜부터 오늘까지(없는 날짜는 해당 월 말일). 끝은 내일 00:00 미포함. 전체는 미래 측정을 포함한 모든 날짜. listByDateRange는 시작 포함/종료 제외인 기존 복합 Index 조회. 범용 list는 유지.
+- **HEALTH-CALENDAR** 월별 원본 조회 결과에서 날짜별 체중/인바디 표시. linked pair는 `인바디 · 체중 연동` 한 항목, 체중 목록에서는 각 엔티티와 연결 안내를 표시. Calendar Store 신설 금지.
+- **HEALTH-HOME** 기존 카드 구조 안에 최근 체중/직전 변화량/최근 인바디 주요값과 시각 추가. 삭제 기록 제외.
+- **HEALTH-BACKUP** JSON Backup v1에서 모든 측정값/UUID/revision/deleted_at/source/source_ref_id/link_weight 보존. 명시적 연동 의도가 있는 데이터는 쌍의 상태·값·시간·메모를 검증한다. 필드 없는 정상 v0.4/0.5 백업 호환 유지. 일반 pristine 복원/별도 강제 replace·초기화 정책 유지.
+- **HEALTH-DB** APP0.6.0, DB1/Schema1/Seed1/Backup1, 기존 14 Store 유지. 인덱스/Store 변경 없음, Migration 없음. 기존 스키마리스 행의 선택 payload 추가만 사용.
+- **HEALTH-QA** 자동/실기기 QA 분리. 새 버전 실기기 8건과 기존 25건은 미실행이면 NOT RUN. 이전 FINAL v0.3 186/0/0과 과거 결과 파일은 보존하며 새 버전 자동 결과로 덮어쓰지 않는다.

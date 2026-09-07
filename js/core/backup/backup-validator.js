@@ -1,3 +1,4 @@
+import { HEALTH_METRICS } from '../health-rules.js';
 import { isUuid } from '../id-generator.js';
 import { canonicalJson } from './canonical-json.js';
 import { payloadHash } from './backup-integrity.js';
@@ -127,7 +128,20 @@ export function validateBackupRows(document) {
     assert(isUtcIso(row.measured_at) && finite(row.weight) && row.weight > 0 && text(row.source));
     if (row.source === 'inbody') ref('inbody_logs', row.source_ref_id);
   }
-  for (const row of data.inbody_logs) assert(isUtcIso(row.measured_at));
+  const linkedWeights = new Map(data.weight_logs.filter((r) => r.source === 'inbody').map((r) => [r.source_ref_id, r]));
+  for (const row of [...data.weight_logs, ...data.inbody_logs]) assert(row.memo == null || text(row.memo));
+  for (const row of data.inbody_logs) {
+    assert(isUtcIso(row.measured_at));
+    for (const m of HEALTH_METRICS) if (row[m.key] != null) assert(finite(row[m.key]) && (m.positive ? row[m.key] > 0 : row[m.key] >= 0) && (m.max === undefined || row[m.key] <= m.max));
+    // v1 legacy backups need no new field. Explicit v0.6 intent enforces both sides.
+    if (Object.hasOwn(row, 'link_weight')) {
+      assert(typeof row.link_weight === 'boolean');
+      const linked = linkedWeights.get(row.id), active = row.link_weight && row.deleted_at === null;
+      assert(!row.link_weight || row.weight > 0);
+      assert(active ? linked?.deleted_at === null : !linked || linked.deleted_at !== null, 'BACKUP_REFERENCE_BROKEN');
+      if (active) assert(linked.weight === row.weight && linked.measured_at === row.measured_at && linked.memo === row.memo, 'BACKUP_REFERENCE_BROKEN');
+    }
+  }
   for (const row of data.user_settings) assert(text(row.key) && row.key.length > 0 && Object.hasOwn(row, 'value'));
   for (const [name, indexes] of Object.entries(BACKUP_UNIQUE_KEYS)) {
     for (const keys of indexes) {

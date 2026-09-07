@@ -56,3 +56,8 @@ App `0.3.0` / DB `1` / Schema `1` / Seed `1`.
 
 
 v0.5.1 QA 패치에서 월간 캘린더 projection, 입력 유지, 상태 버튼, 안전한 초기화·명시적 강제 복원을 추가했다. 기능 간 데이터 통합/merge/Sync는 도입하지 않았다.
+
+
+## v0.6.0 구현 상태 (2026-09-07)
+
+체중/인바디 CRUD, 원자적 연동, 기존 측정 인덱스 조회, 7지표 SVG/4기간, Calendar 및 홈 최근 측정 연결을 구현했다. DB1/Schema1 유지, Migration 없음. 식단·사진은 후속 단계이며 media_blobs/Backup v2는 이번 버전에 포함하지 않는다. 자동/실기기 검증 판정은 REGRESSION_TEST.md를 따른다.

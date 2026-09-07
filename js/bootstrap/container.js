@@ -1,3 +1,5 @@
+import { HealthService } from '../application/health.service.js';
+import { IndexedDbInbodyCommand } from '../data/indexeddb/commands/inbody.command.js';
 import { IndexedDbActivityCommand } from '../data/indexeddb/commands/activity.command.js';
 import { PassScheduleService } from '../application/pass-schedule.service.js';
 import { AppLogger } from '../core/app-logger.js';
@@ -104,6 +106,8 @@ export function createContainer({
     exerciseManagementCommand,
     idGenerator
   });
+  const inbodyCommand = new IndexedDbInbodyCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
+  const healthService = new HealthService({ repositories, command: inbodyCommand, identityContext, clock });
   const activityCommand = new IndexedDbActivityCommand({ unitOfWork, identityContext, clock, idGenerator, faultInjector });
   const passScheduleService = new PassScheduleService({ command: activityCommand, repositories, identityContext });
   const exerciseLogService = new ExerciseLogService({
@@ -149,6 +153,8 @@ export function createContainer({
     exerciseManagementService,
     exerciseLogService,
     activityCommand,
+    inbodyCommand,
+    healthService,
     passScheduleService,
     exerciseQueryService,
     backupSnapshotReader,

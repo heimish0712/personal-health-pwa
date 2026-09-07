@@ -3,6 +3,12 @@ importScripts('./js/config.js');
 const CACHE_NAME = APP_CONFIG.CACHE_VERSION;
 const CACHE_PREFIX = APP_CONFIG.CACHE_PREFIX;
 const APP_SHELL = [
+  './js/core/health-rules.js',
+  './js/application/health.service.js',
+  './js/data/contracts/inbody-command.contract.js',
+  './js/data/indexeddb/commands/inbody.command.js',
+  './js/data/indexeddb/repositories/measurement-query.js',
+  './js/pages/weight/weight.page.js',
   './js/core/exercise-draft.js',
   './js/application/pass-schedule.service.js',
   './js/core/pass-rules.js',

@@ -199,3 +199,11 @@ button:disabled { cursor: default; opacity: .55; }
 .calendar-day.selected { background:#202c3b; color:white; }
 .calendar-day:focus-visible { outline:3px solid #4686c6; outline-offset:1px; }
 .calendar-dot { display:block; height:10px; line-height:10px; font-size:13px; }
+
+.health-graph { display: block; width: 100%; max-height: 380px; color: var(--muted); }
+.health-graph text { font-size: 11px; fill: currentColor; }
+.health-record { padding: 14px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.health-record:last-child { border-bottom: 0; }
+.health-values { padding-left: 22px; font-size: 13px; }
+.health-memo { white-space: pre-wrap; overflow-wrap: anywhere; }
+#home-health { overflow-wrap: anywhere; }

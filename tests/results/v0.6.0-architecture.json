@@ -1,0 +1,158 @@
+{
+  "version": "0.6.0",
+  "suite": "architecture",
+  "executedAt": "2026-09-07T05:30:59.949Z",
+  "summary": {
+    "total": 29,
+    "passed": 29,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "ARCH-001",
+      "status": "PASS",
+      "evidence": "Direct IndexedDB API outside adapter: none"
+    },
+    {
+      "id": "ARCH-002",
+      "status": "PASS",
+      "evidence": "Application service adapter imports: none"
+    },
+    {
+      "id": "ARCH-003",
+      "status": "PASS",
+      "evidence": "UI entry imports neither repositories nor IndexedDB adapters."
+    },
+    {
+      "id": "ARCH-003-CONTEXT",
+      "status": "PASS",
+      "evidence": "UI receives a narrow application context instead of the concrete container."
+    },
+    {
+      "id": "ARCH-004",
+      "status": "PASS",
+      "evidence": "Container binds concrete adapters to application services."
+    },
+    {
+      "id": "ARCH-004-ID",
+      "status": "PASS",
+      "evidence": "IdentityContext is injected through the container."
+    },
+    {
+      "id": "ARCH-004-LOGGER",
+      "status": "PASS",
+      "evidence": "A logger can be injected and reused across bootstrap retries."
+    },
+    {
+      "id": "CONTRACT:getById",
+      "status": "PASS",
+      "evidence": "getById is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:getByIdIncludingDeleted",
+      "status": "PASS",
+      "evidence": "getByIdIncludingDeleted is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:list",
+      "status": "PASS",
+      "evidence": "list is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:count",
+      "status": "PASS",
+      "evidence": "count is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:create",
+      "status": "PASS",
+      "evidence": "create is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:update",
+      "status": "PASS",
+      "evidence": "update is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:softDelete",
+      "status": "PASS",
+      "evidence": "softDelete is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT:restore",
+      "status": "PASS",
+      "evidence": "restore is part of the repository contract."
+    },
+    {
+      "id": "CONTRACT-NO:hardDelete",
+      "status": "PASS",
+      "evidence": "hardDelete is not exposed by the repository contract."
+    },
+    {
+      "id": "CONTRACT-NO:clear",
+      "status": "PASS",
+      "evidence": "clear is not exposed by the repository contract."
+    },
+    {
+      "id": "CONTRACT-NO:upsert",
+      "status": "PASS",
+      "evidence": "upsert is not exposed by the repository contract."
+    },
+    {
+      "id": "CONTRACT-NO:put",
+      "status": "PASS",
+      "evidence": "put is not exposed by the repository contract."
+    },
+    {
+      "id": "ARCH-005",
+      "status": "PASS",
+      "evidence": "Generic transaction use in application services: none"
+    },
+    {
+      "id": "ARCH-006",
+      "status": "PASS",
+      "evidence": "Page/UI code does not call repositories directly."
+    },
+    {
+      "id": "ARCH-007",
+      "status": "PASS",
+      "evidence": "Bootstrap does not expose the concrete container to the UI."
+    },
+    {
+      "id": "ARCH-008",
+      "status": "PASS",
+      "evidence": "Startup log memory survives an application bootstrap retry."
+    },
+    {
+      "id": "ARCH-EX-001",
+      "status": "PASS",
+      "evidence": "Exercise pages do not access repositories/adapters directly: none"
+    },
+    {
+      "id": "ARCH-EX-003",
+      "status": "PASS",
+      "evidence": "Exercise services have no IndexedDB adapter imports: none"
+    },
+    {
+      "id": "ARCH-EX-004",
+      "status": "PASS",
+      "evidence": "Dynamic exercise log form has no exercise-name branching."
+    },
+    {
+      "id": "ARCH-EX-005",
+      "status": "PASS",
+      "evidence": "Exercise management command owns the multi-store atomic boundary."
+    },
+    {
+      "id": "MIG-SAFE-001",
+      "status": "PASS",
+      "evidence": "Migration code neither deletes nor clears existing stores."
+    },
+    {
+      "id": "DATA-DEL-004",
+      "status": "PASS",
+      "evidence": "Production application code does not delete the user database."
+    }
+  ]
+}

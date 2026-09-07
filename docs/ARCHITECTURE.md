@@ -107,3 +107,10 @@ Supabase 연결 후에도 IndexedDB는 즉시 읽고 쓰는 로컬 원장으로 
 ## v0.5.1 사용자 QA에 따른 명시적 확장
 
 일반 pristine 복원 경로를 유지하면서 별도 replace restore와 전체 초기화를 지원한다. portable Store 삭제/삽입과 current_profile_id 전환은 전용 BackupRestore Command transaction 한 번으로 수행한다. 일반 CRUD나 DB Migration에 clear를 추가하지 않으며 device_id 등 기기 데이터는 유지한다. 백업 후 실행은 저장된 파일 재검증, 대상 fingerprint 재확인 후에만 진행한다. DB1/Schema1/Seed1/Backup1 유지, Migration 없음. 자세한 구현은 [QA_V051_DESIGN.md](QA_V051_DESIGN.md)를 따른다.
+
+
+## v0.6.0 Health boundary
+
+Weight Page/Home/Calendar → HealthService → WeightRepository/InbodyRepository 또는 InbodyCommandContract → IndexedDbInbodyCommand. 단일 manual CRUD는 Repository에서 revision 검사, 다중 Store 명령은 원본 조회·Profile·revision·유효성 검사·동기화를 2 Store transaction 안에서 완료한다. Service에 generic transaction을 노출하지 않는다. 향후 Supabase adapter는 saveInbody/deleteInbody/restoreInbody RPC 경계로 대체할 수 있다.
+
+기간 조회는 by_profile_measured_at 복합 Index의 반개방 구간, 최근 조회는 같은 Index의 역방향 cursor를 사용한다. 범용 list는 유지한다. 쌍 조회는 uq_profile_source_ref unique index. 앱 shell에 모든 신규 모듈을 포함하며 그래프는 로컬 SVG와 실제 측정 목록으로 렌더링한다.

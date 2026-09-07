@@ -1,5 +1,38 @@
 # Regression Test
 
+## v0.6.0 Weight & InBody
+
+- 최종 결과: **477 PASS / 0 FAIL / 33 NOT RUN** (전체 510건).
+- 기존 자동 424건 + 신규 53건(IndexedDB 44, 실제 UI 9). 과거 v0.3/v0.4/v0.5 결과 파일은 보존했다.
+- APP/cache0.6.0 / DB1 / Schema1 / Seed1 / Backup1 / 14 Store. Migration 없음.
+- Node v24.16.0, 실제 Chrome/IndexedDB, Pages형 localhost 하위 경로, 격리된 DB/임시 브라우저 Profile 사용. 사용자 운영 DB 접근 없음.
+- 실행: `node tests/run-all-tests.mjs`로 전체 실행 후 실패한 신규 브라우저 판정 보완 → `node tests/browser-runner.mjs` 최종 종료코드0. 통과한 다른 Suite 결과와 최종 browser 결과를 재집계했다. 재현 명령은 기존처럼 `node tests/run-all-tests.mjs`.
+
+| Suite | PASS | FAIL | NOT RUN |
+|---|---:|---:|---:|
+| smoke | 72 | 0 | 0 |
+| architecture | 29 | 0 | 0 |
+| schema | 60 | 0 | 0 |
+| exercise-service | 19 | 0 | 0 |
+| backup | 26 | 0 | 0 |
+| browser-runtime | 271 | 0 | 0 |
+| 실제 Pages/Galaxy QA | 0 | 0 | 33 |
+| **합계** | **477** | **0** | **33** |
+
+### 신규 검증 근거
+
+- HEALTH-01~08: 일반 CRUD, UUID/revision, 같은 날짜 여러 건, 과거 기록을 나중에 입력해도 최신/직전 판정 정확, 수치/날짜 검증.
+- HEALTH-09~18,31~34: 원본 권한, 연동 생성/동기화/OFF/ON/삭제/복원, 선택값, 명시적 OFF 복원의 의도, 동시 stale 충돌, legacy 관계 추론.
+- HEALTH-19/20의 8개 fault 시나리오: 첫 Store 저장 직후 및 linked 저장 직후 create/update/delete/restore 강제 실패, 전체 portable snapshot 전후 일치(부분 변경0).
+- HEALTH-21~27: 그래프 원본/미입력/0, 인덱스 기간 경계·7/30일·월말 3개월, getAll 전체조회 금지 상태에서 전용 Query/최근 cursor 조회, Profile 격리, 밀리초 보존.
+- HEALTH-28~30: JSON 내보내기/새 pristine 환경 복원, 측정 UUID/revision/삭제/관계/선택값 일치, DB 재실행, checksum을 맞춘 불일치 쌍 거절.
+- HEALTH-35~38: 실제 Calendar DOM, 인바디 form, 접근 가능한 SVG의 같은날 점/단일점. HEALTH-UI-01~09는 실제 오프라인 form CRUD·원본 이동·OFF/ON·삭제/복원·7개 지표·412px 폭·Calendar/Home·앱 재실행.
+- 최초 신규 UI 재실행 판정에서 navigator.onLine=true가 나왔으나 전후 payloadHash는 같았다. Chrome CDP의 online 표시만으로 판단하지 않고 Service Worker가 처리하지 않는 HEAD/no-store 요청의 실제 네트워크 실패를 확인하도록 테스트를 보완했다. 앱 데이터 손실이나 제품 코드 오류는 없었으며 최종 재실행 검증 통과.
+- 모바일 결과 `tests/results/v0.6.0-mobile.png`를 직접 확인: 입력 버튼, 체중/변화량, 같은날 SVG 점이 412px 폭에서 가로 넘침 없이 표시된다. 실제 Galaxy 결과로 취급하지 않는다.
+- `tests/results/v0.6.0.json`은 최종 Suite 재집계, `tests/results/v0.6.0-browser.json`은 실제 브라우저 세부 결과. requirements 매핑은 `tests/traceability.json`.
+
+실제 Pages 배포/설치/업데이트/비행기모드/다운로드와 추가 HEALTH-MANUAL-01~08은 사용자 미실행으로 NOT RUN. 과거 v0.3 FINAL 186/0/0은 당시 사용자 실기기 판정으로 보존한다.
+
 ## v0.5.1 사용자 QA 반영
 
 - 실행일: 2026-09-07T04:30:44.026Z
