@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.8.0 — Dashboard + Unified Calendar
+
+- 홈: 오늘 예약/식단, 주간 실제 운동 횟수·시간, 최근 운동·체중·인바디, 원장 기반 이용권 잔여횟수, 식단 thumbnail과 빠른 기록.
+- CalendarService/DashboardService가 원본 Repository Query를 조합. 완료 예약+운동, 인바디+연동 체중을 단일 사건으로 표현.
+- 선택 날짜를 hash context로 기존 입력 폼에 전달하고 저장/취소 후 해당 날짜로 복귀. dirty guard 유지.
+- 기존 기간 인덱스 재사용, 운동/식단 최신값 역방향 cursor와 활성 pass 상태 조회 추가. BaseScopedRepository 변경 없음.
+- APP/cache 0.8.0 / DB 2 / Schema 1 / Seed 1 / Backup 2(v1 호환). Store/index 변경 및 Migration 없음.
+- 검증 결과 및 미실행 실기기 QA는 REGRESSION_TEST.md 참조. 과거 결과 파일 보존.
+
 ## v0.7.0 - 2026-09-07
 
 - 식단 탭에 날짜별 목록, 식사 구분/내용/메모, CRUD와 삭제/복원, 같은 식사구분 여러 기록 추가.

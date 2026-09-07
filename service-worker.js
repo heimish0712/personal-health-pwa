@@ -3,6 +3,10 @@ importScripts('./js/config.js');
 const CACHE_NAME = APP_CONFIG.CACHE_VERSION;
 const CACHE_PREFIX = APP_CONFIG.CACHE_PREFIX;
 const APP_SHELL = [
+  './js/application/activity-calendar.query.js',
+  './js/application/calendar.service.js',
+  './js/application/dashboard.service.js',
+  './js/pages/dashboard.page.js',
   './js/application/diet.service.js',
   './js/application/media.service.js',
   './js/core/media-rules.js',

@@ -1,3 +1,4 @@
+import { initialRecordTime } from '../../router.js';
 import { HEALTH_METRICS, healthLocalInput, healthPoints, measurementOrder } from '../../core/health-rules.js';
 import { nowLocalInput, utcIsoToLocalInput, formatLocalDateTime } from '../../core/datetime.js';
 import { escapeHtml as e } from '../exercise/exercise-view.js';
@@ -57,7 +58,7 @@ export async function renderHealthDetail(context, kind, id) {
   setTitle(kind === 'inbody' ? '인바디 기록' : '체중 기록');
   const linked = kind === 'weight' && row.source === 'inbody';
   root.innerHTML = `<section class="card"><h2>${kind === 'inbody' ? '인바디' : '체중'}${row.deleted_at ? ' · 삭제됨' : ''}</h2><p>${e(formatLocalDateTime(row.measured_at, timezone))}</p><p>${e(metricText(row)) || '입력된 측정값 없음'}</p><p class="health-memo">${e(row.memo)}</p>${linked ? `<p>이 체중은 인바디가 원본입니다. 수정·삭제·복원은 원본 인바디에서 진행하세요. 연동 OFF로 삭제된 경우 다시 ON으로 복원합니다.</p><button class="button" id="health-origin">원본 인바디 열기</button>` : `<p>${kind === 'inbody' ? (row.link_weight ? '체중 연동 ON' : '체중 연동 OFF') : '일반 체중 기록'}</p><div class="form-actions">${row.deleted_at ? '<button class="button" id="health-restore">복원</button>' : '<button class="button" id="health-edit">수정</button><button class="button button-danger" id="health-delete">삭제</button>'}</div>`}</section><button class="button button-secondary" id="health-back">체중 목록</button>`;
-  actions(context, '#health-back', () => context.navigate('/weight'));
+  actions(context, '#health-back', () => context.navigate(context.returnRoute ?? '/weight'));
   actions(context, '#health-origin', () => context.navigate(`/weight/inbody/${row.source_ref_id}${row.deleted_at ? '' : '/edit'}`));
   actions(context, '#health-edit', () => context.navigate(`/weight/${kind === 'weight' ? 'log' : 'inbody'}/${id}/edit`));
   for (const operation of ['delete', 'restore']) actions(context, `#health-${operation}`, async () => {
@@ -74,11 +75,11 @@ export async function renderHealthForm(context, kind, id) {
   if (kind === 'weight' && row?.source === 'inbody') { context.navigate(`/weight/inbody/${row.source_ref_id}/edit`); return; }
   const inbody = kind === 'inbody'; setTitle(`${inbody ? '인바디' : '체중'} ${id ? '수정' : '추가'}`);
   const metrics = inbody ? HEALTH_METRICS : HEALTH_METRICS.slice(0, 1);
-  root.innerHTML = `<form id="health-form" class="form-stack"><section class="card"><div class="form-field"><label for="health-at">측정 일시</label><input id="health-at" type="datetime-local" step="0.001" required value="${row ? healthLocalInput(row.measured_at, timezone) : nowLocalInput(timezone)}"></div>${metrics.map((m) => `<div class="form-field"><label for="health-${m.key}">${m.label} ${e(m.unit)}${inbody ? ' (선택)' : ''}</label><input id="health-${m.key}" type="number" step="any" min="0" ${m.max ? `max="${m.max}"` : ''} ${inbody ? '' : 'required'} value="${row?.[m.key] ?? ''}"></div>`).join('')}<div class="form-field"><label for="health-memo">메모</label><textarea id="health-memo" maxlength="2000">${e(row?.memo ?? '')}</textarea></div>${inbody ? `<label><input type="checkbox" id="health-link" ${row?.link_weight ? 'checked' : ''}> 이 체중을 체중 기록에도 추가</label><p>연동 시 체중·측정 일시·메모가 함께 저장됩니다. OFF로 바꾸면 연결 체중을 삭제하고, 다시 ON으로 바꾸면 같은 기록을 복원합니다.</p>` : ''}<p id="health-form-error" class="warning-text" role="alert"></p></section><div class="form-actions"><button type="button" class="button button-secondary" id="health-cancel">취소</button><button type="submit" class="button" id="health-save">저장</button></div></form>`;
+  root.innerHTML = `<form id="health-form" class="form-stack"><section class="card"><div class="form-field"><label for="health-at">측정 일시</label><input id="health-at" type="datetime-local" step="0.001" required value="${row ? healthLocalInput(row.measured_at, timezone) : initialRecordTime(context, nowLocalInput(timezone))}"></div>${metrics.map((m) => `<div class="form-field"><label for="health-${m.key}">${m.label} ${e(m.unit)}${inbody ? ' (선택)' : ''}</label><input id="health-${m.key}" type="number" step="any" min="0" ${m.max ? `max="${m.max}"` : ''} ${inbody ? '' : 'required'} value="${row?.[m.key] ?? ''}"></div>`).join('')}<div class="form-field"><label for="health-memo">메모</label><textarea id="health-memo" maxlength="2000">${e(row?.memo ?? '')}</textarea></div>${inbody ? `<label><input type="checkbox" id="health-link" ${row?.link_weight ? 'checked' : ''}> 이 체중을 체중 기록에도 추가</label><p>연동 시 체중·측정 일시·메모가 함께 저장됩니다. OFF로 바꾸면 연결 체중을 삭제하고, 다시 ON으로 바꾸면 같은 기록을 복원합니다.</p>` : ''}<p id="health-form-error" class="warning-text" role="alert"></p></section><div class="form-actions"><button type="button" class="button button-secondary" id="health-cancel">취소</button><button type="submit" class="button" id="health-save">저장</button></div></form>`;
   const form = root.querySelector('#health-form'); let dirty = false, busy = false;
   form.addEventListener('input', () => { dirty = true; }); form.addEventListener('change', () => { dirty = true; });
   setNavigationGuard(() => !busy && (!dirty || window.confirm('저장하지 않은 내용을 버리고 이동할까요?')));
-  actions(context, '#health-cancel', () => context.navigate('/weight'));
+  actions(context, '#health-cancel', () => context.navigate(context.returnRoute ?? '/weight'));
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); if (busy) return; busy = true; root.querySelector('#health-save').disabled = true;
     try {
@@ -86,7 +87,7 @@ export async function renderHealthForm(context, kind, id) {
       for (const m of metrics) { const element = root.querySelector(`#health-${m.key}`); if (element.validity.badInput) throw new Error(`${m.label} 값을 확인하세요.`); input[m.key] = element.value === '' ? null : Number(element.value); }
       if (inbody) input.link_weight = root.querySelector('#health-link').checked;
       const saved = await health[inbody ? 'saveInbody' : 'saveWeight'](input, id, row?.revision);
-      if (!isCurrent()) return; dirty = false; busy = false; clearNavigationGuard(); context.showToast('저장했습니다.'); context.navigate(`/weight/${inbody ? 'inbody' : 'log'}/${saved.id}`);
+      if (!isCurrent()) return; dirty = false; busy = false; clearNavigationGuard(); context.showToast('저장했습니다.'); context.navigate(context.returnRoute ?? `/weight/${inbody ? 'inbody' : 'log'}/${saved.id}`);
     } catch (error) { if (isCurrent()) { root.querySelector('#health-form-error').textContent = error.message; context.showError('저장에 실패했습니다.', error); } }
     finally { busy = false; const button = form.querySelector('#health-save'); if (button) button.disabled = false; }
   });

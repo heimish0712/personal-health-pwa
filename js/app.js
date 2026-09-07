@@ -1,5 +1,7 @@
+import { renderDashboard, releaseDashboardUrls } from './pages/dashboard.page.js';
+import { parseRoute } from './router.js';
 import { renderDietRoute, releaseDietUrls, mountMediaSettings } from './pages/diet/diet.page.js';
-import { renderWeightRoute, renderHomeHealth } from './pages/weight/weight.page.js';
+import { renderWeightRoute } from './pages/weight/weight.page.js';
 import { renderCalendar } from './pages/exercise/pass-schedule.page.js';
 import { bootstrapApplication } from './bootstrap/bootstrap.js';
 import { getActionErrorMessage, getPublicErrorMessage } from './core/errors.js';
@@ -61,7 +63,7 @@ function renderHome(meta) {
   const diagnostic = appContext.diagnostic;
   pageRoot.innerHTML = `
     <section class="card"><h2>${escapeHtml(globalThis.APP_CONFIG.APP_NAME)}</h2><p>${escapeHtml(meta.message)}</p><span class="version-chip">v${escapeHtml(globalThis.APP_CONFIG.APP_VERSION)} · DB ${escapeHtml(globalThis.APP_CONFIG.DB_VERSION)}</span></section>
-    <section class="card"><h2>현재 단계</h2><p>운동·식단·사진·체중·인바디 기록, 변화 그래프와 백업·복원을 오프라인으로 사용할 수 있습니다. 백업은 설정에서 관리합니다. 이용권은 운동 탭에서, 예약과 운동기록 기간 조회는 캘린더에서 관리합니다.</p></section>
+
     <section class="card compact-card"><div class="status-line"><span>로컬 데이터 저장소</span><strong class="status-normal">${diagnostic?.status === 'normal' ? '정상' : '확인 필요'}</strong></div></section>`;
 }
 
@@ -96,9 +98,11 @@ async function renderSettings(token) {
   }
 }
 
-async function renderPage(route) {
+async function renderPage(rawRoute) {
+  const { path: route, ...routeContext } = parseRoute(rawRoute);
   const token = ++renderToken;
   releaseDietUrls();
+  releaseDashboardUrls();
   clearNavigationGuard();
   renderBottomNav(bottomNav, route);
   const isCurrent = () => token === renderToken;
@@ -106,6 +110,7 @@ async function renderPage(route) {
   if (route.startsWith('/exercise') || route === '/calendar' || route.startsWith('/weight') || route.startsWith('/diet')) {
     try {
       await (route.startsWith('/diet') ? renderDietRoute : route.startsWith('/weight') ? renderWeightRoute : route === '/calendar' ? (r, c) => renderCalendar(c) : renderExerciseRoute)(route, {
+        ...routeContext,
         root: pageRoot,
         services: appContext.services,
         navigate,
@@ -126,7 +131,7 @@ async function renderPage(route) {
 
   const meta = PAGE_META[route] || PAGE_META[globalThis.APP_CONFIG.DEFAULT_ROUTE];
   pageTitle.textContent = meta.title;
-  if (route === '/home') { renderHome(meta); try { await renderHomeHealth(pageRoot, appContext.services.health, isCurrent); } catch (error) { if (isCurrent()) showError('최근 측정 조회에 실패했습니다.', error); } return; }
+  if (route === '/home') { renderHome(meta); try { await renderDashboard({ root: pageRoot, services: appContext.services, navigate, isCurrent }); } catch (error) { if (isCurrent()) showError('홈 요약 조회에 실패했습니다.', error); } return; }
   if (route === '/settings') { await renderSettings(token); return; }
   pageRoot.innerHTML = `<section class="card empty-state"><div><strong>${escapeHtml(meta.title)}</strong><span>${escapeHtml(meta.message)}</span></div></section>`;
 }

@@ -1,104 +1,82 @@
-# v0.7.0 Release Report
+# v0.8.0 Dashboard + Unified Calendar
 
-식단·사진 CRUD, 오프라인 사진 조회, Calendar 연결과 사진 포함 ZIP Backup v2를 구현했다. 기존 Local-first / Profile / Service / Repository / Semantic Command 구조를 유지했다.
+홈을 실제 운동·식단·측정·이용권 데이터 요약으로 연결하고 통합 캘린더에 네 종류 indicator와 선택 날짜 빠른 기록을 구현했다. 완료 예약+운동기록 및 인바디+연동 체중은 원본을 유지한 채 한 사건으로 표시한다.
 
-## 버전 / Migration
+## 버전 / 변경 범위
 
-| 항목 | 값 |
+- 기준 commit: `9d738fb91c5639da37d14c99d39a1fa986b8b4b8` (작업 전 clean).
+- APP/cache **0.8.0**, DB **2**, Portable Schema **1**, Seed **1**, Backup **2** (JSON v1 읽기/쓰기 호환).
+- **Migration 없음**, 15 Store 및 기존 Index 정의 그대로. BaseScopedRepository, Semantic Command 저장/복원/Media 구조 변경 없음.
+- 총 **56개 변경: 신규 18 / 수정 38 / 삭제 0**. 신규 검증 JSON/PNG와 문서를 포함한 수치다.
+- 사용자 운영 DB 접근/초기화 없음. Git commit/push/Pages 배포는 실행하지 않았다.
+
+## Query / Index
+
+| 조회 | 사용 경로 |
 |---|---|
-| APP / Cache | 0.7.0 / personal-health-pwa-v0.7.0 |
-| DB_VERSION | **2** (기존 1→2) |
-| Portable SCHEMA_VERSION | **1 유지** |
-| SEED_VERSION | **1 유지** |
-| Backup Format | **2 ZIP / 기존 1 JSON 호환** |
-| Store | 15 (portable 12 + local 3) |
-| Migration | media_blobs(storage_key)만 추가 |
-| git diff 기준 | `a903c75a2cd95ff0b6ead77fb14f6ae330eabba3` |
+| 운동·예약 기간 | by_profile_performed_at / by_profile_scheduled_at, [start,end) |
+| 완료 사건 연결 | uq_profile_completed_log 및 scoped getById |
+| 식단 기간 / 최신 | by_profile_eaten_at 범위 / 역방향 cursor(1건) |
+| 운동 최신 | by_profile_performed_at 역방향 cursor(1건) |
+| 체중·인바디 기간 / 최신 | by_profile_measured_at 범위 / 역방향 cursor(2/1건) |
+| 활성 pass / 사용 원장 | by_profile_status(active) / by_profile_pass; nondeleted used의 합계 |
+| 식단 첫 사진 | by_profile_diet_sort, scoped 사진/Blob point lookup |
+| 운동명 | 필요한 운동 종류 ID만 scoped getByIdIncludingDeleted |
 
-누적 Migration의 v1은 원래 14개 Store를 생성하고, v2는 local media_blobs만 추가한다. 기존 Store·Index·행·Profile·Seed를 삭제하거나 재생성하지 않는다. Portable Schema는 1을 유지하므로 기존 JSON의 UUID/revision을 바꾸는 변환도 필요 없다.
+CalendarService와 DashboardService가 원본 Repository 결과를 조합한다. 주간 범위는 Profile timezone의 월~일, 최신 측정 비교는 measured_at 순서이며 그래프/summary 데이터를 별도 저장하지 않는다. 달력 전체 Store 스캔을 없앴고 기존 activity projection을 공유해 예약일과 실제 운동일이 서로 다른 달인 경우도 원본 연결을 유지한다. 범용 list는 그대로다.
 
-## 구현 범위
+## 발견한 구조 문제 / 해결
 
-- 식단 날짜 목록·이동, 식사 구분·내용·메모, 같은 날짜/구분의 여러 기록, soft-delete/복원.
-- 카메라·갤러리 최대 12장, JPEG/PNG/WebP(25 MB/50 MP 이하). 방향을 정상화한 1280px 압축본과 320px 썸네일을 생성한다. WebP 품질은 0.82/0.75이며 미지원 시 JPEG로 재인코딩한다. 원본 저장은 하지 않는다.
-- DietCommand가 diet_logs + diet_photos + media_blobs를 한 transaction으로 저장한다. 기존·신규 사진 혼합, 순서 유지, 개별 제거와 Profile/stale/Quota 검증을 지원한다. 이미지 처리와 checksum 계산은 transaction 밖에서 완료한다.
-- Portable metadata와 Blob을 분리하고 MediaStorage Contract를 제공한다. 소유권은 scoped photo 조회로 확인한다. 목록은 thumbnail만, 상세는 큰 압축본을 읽으며 화면 이동 시 Blob URL을 해제한다.
-- 삭제 사진 파일은 복원용으로 보존한다. 식단과 함께 삭제한 사진만 복원하고, 먼저 개별 제거한 사진은 제외한다. GC는 모든 Profile·삭제 metadata에서도 참조하지 않는 진짜 고아 파일만 지운다. 설정에서 전체 usage/quota, 사진 bytes, 영구 저장 요청, GC를 제공한다.
-- Calendar에 diet_logs 원본 projection과 식단 열기를 추가했다. Calendar 썸네일은 선택사항으로 이번에는 생략하고 상세에서 사진을 확인한다. 기존 Profile+eaten_at / Profile+diet+sort 인덱스를 활용하며 범용 Repository는 유지했다.
-- 사진이 있으면 ZIP v2, 없으면 기존 JSON v1을 내보낸다. 기존 v1 import와 pristine 복원, 별도 명시적 강제 교체·초기화 규칙을 유지한다.
+- 기존 홈은 단계 안내와 측정 요약 중심이었다. 원본 Query 기반 전체 요약/원본 이동/로컬 thumbnail을 연결했다.
+- 캘린더 Page가 세 도메인 Service를 직접 조합하고 운동 종류 전체 목록을 읽었다. CalendarService로 projection을 모으고 필요한 운동 ID만 조회한다.
+- Hash Router에 날짜 문맥이 없어 특정 날짜에서 기존 폼을 열어도 오늘이 기본값이었다. 유효 날짜/date+from context를 전달하고 저장/취소 후 해당 날짜로 돌아온다. 월/선택 날짜는 hash에 남아 Back/reload에도 유지된다.
+- 운동/식단의 최근 목록 전체 스캔은 새 홈에서 사용하지 않고 기존 인덱스 cursor로 제한 조회한다. 기존 도메인 화면의 범용 조회는 임의 재작성하지 않았다.
+- thumbnail Object URL은 화면 이탈 시 해제하고 지연 조회는 현재 render token을 검사한다.
 
-## 검증 결과
+## 검증
 
-**538 PASS / 0 FAIL / 41 NOT RUN**. 최종 `node tests/run-all-tests.mjs` 종료코드 0. 기존 자동 477건을 모두 유지하고 신규 61건(구조 1 / DB·미디어 52 / 실제 UI 8)을 통과했다. 과거 결과 파일은 보존했다.
+**574 PASS / 0 FAIL / 48 NOT RUN** (622건), `node tests/run-all-tests.mjs` 종료코드0.
 
-### Migration 데이터 보존
+기존 v0.7 자동 538건의 suite+ID가 모두 PASS인 것을 비교했고 신규 36건을 추가했다. Node 207 + 실제 Chrome IndexedDB/DOM 311 + 실제 UI 56 =574. 사용자의 실제 Pages/Galaxy/설치형 PWA 신규7+기존41은 미실행이다. 과거 v0.3 FINAL 186/0/0 및 과거 결과파일은 보존했다.
 
-실제 DB1 fixture에 Template v1/v2, 운동·pass usage·예약·일반 체중·인바디 연동·tombstone을 만든 뒤 업그레이드했다. 모든 portable 행의 UUID/revision/relation/created_at/updated_at/deleted_at과 device_id가 **100% 일치**했다. 새 media store만 빈 상태로 추가됐다. 업그레이드 강제 실패 후 DB1로 다시 열어도 원본이 같았으며 DB 자동 삭제는 없었다.
+24,000개 가상 원본(5개 도메인)의 해당 월200건 Query: **43.3ms**. ObjectStore.getAll을 강제 차단해 새 홈/캘린더가 index/cursor/point 조회만으로 동작하는 것도 확인했다. 이 PC 수치는 갤럭시 성능 보증이 아니다.
 
-### Backup v1/v2 호환
+실제 네 폼 날짜 전달/저장/즉시 복귀, dirty 거절/승인, thumbnail decode, 네트워크 차단 후 완전 reload, ZIP 복원 후 두 projection/사진 일치, 기존 Backup v1/v2·원자성·revision·Media 회귀를 검증했다. 412px 홈/캘린더 스크린샷도 확인했다. Windows EPERM으로 일부 테스트용 Chrome 임시 디렉터리 정리가 실패했으며 사용자 Profile은 사용하지 않았다.
 
-기존 정상 v1 JSON을 DB2에 복원하여 data가 완전히 일치함을 확인했다. v2는 삭제 사진의 파일까지 포함하고 UUID/revision/storage_key/checksum/created_at을 보존한다. 복원 후 다시 내보낸 canonical portable hash와 mediaManifest도 원본과 일치했다.
+상세: [REGRESSION_TEST.md](REGRESSION_TEST.md), [MANUAL_QA.md](MANUAL_QA.md), `tests/results/v0.8.0.json`.
 
-실제 ZIP을 다운로드한 뒤 **두 번째 별도 Chrome Profile**에서 파일 선택 → pristine 복원 → 사진 표시까지 성공했다. 누락·변조·extra 파일·JSON 오류·중복 storage_key·삭제 식단의 active 사진은 CRC나 외부 JSON hash를 맞춰도 전체 거절했다. 강제 복원 성공, 복원 중단 시 rollback, 백업 후 초기화와 device_id 보존도 검증했다.
+## 적용 / 복구 / 산출물
 
-### 원자성 / 오프라인 / 화면
+산출물 폴더: `C:/Users/Public/Documents/ESTsoft/CreatorTemp/health-pwa-v0.8.0`.
 
-생성 4개 fault, 기존 수정·삭제·복원 3개 fault, QuotaExceeded, pristine 복원 4개 fault, 강제 복원 2개 fault에서 portable 데이터와 실제 binary hash가 모두 보존됐다.
+- `changed.zip`: 수정/신규 파일 56개, 저장소 루트 기준 상대경로.
+- `full.zip`: 추적 파일+신규 파일 208개. .git/무시 파일/산출물 자체 제외.
+- `diff.patch`: 기준 HEAD 대비 수정과 신규 파일을 포함한 binary patch. `manifest.json`에 파일 목록/크기/SHA256 및 패키지 검증 결과.
+- 적용: 기존 v0.7 코드와 데이터 백업 보관 → 해당 commit 기반 사본에 changed.zip 덮어쓰기 또는 `git apply --check diff.patch` 후 적용. full.zip은 새 빈 코드 폴더에 푼다. 배포 후 사용자 업데이트 버튼으로 v0.8 App Shell 확인 → MANUAL_QA 실행.
+- 코드 복구: 적용 전 코드 사본 복원 또는 충돌 없는 상태에서 patch reverse check 후 되돌린다. DB/Schema 변경이 없어 코드 복구에 DB 초기화가 필요하지 않다. 데이터 복구가 필요하면 검증된 백업의 기존 명시적 복원 절차를 사용한다.
 
-합성 JPEG의 EXIF 회전과 WebP 미지원 시 JPEG fallback을 자동 검증했다. 실제 UI에서는 사진 혼합·제거·삭제·복원, thumbnail/main 조회, 오프라인 CRUD·재실행·Calendar·ZIP 다운로드를 검증했다. `tests/results/v0.7.0-diet.png`를 직접 확인했으며 412px 폭에서 사진 2장과 내용·버튼에 가로 넘침이 없었다.
+## 신규 파일 (18)
 
-실제 Pages/Galaxy의 카메라·갤러리·설치·비행기 모드·PC→폰 복원은 **NOT RUN**이다. MANUAL_QA에 새 8건의 목적, 사전조건, 버튼 순서, 입력값, 단계별 예상 결과, PASS 기준, 실패 증적, 원복법을 작성했다.
+- `js/application/activity-calendar.query.js`
+- `js/application/calendar.service.js`
+- `js/application/dashboard.service.js`
+- `js/pages/dashboard.page.js`
+- `tests/browser/dashboard-test.js`
+- `tests/dashboard-ui-tests.mjs`
+- `tests/results/v0.8.0-architecture.json`
+- `tests/results/v0.8.0-backup.json`
+- `tests/results/v0.8.0-browser.json`
+- `tests/results/v0.8.0-calendar.png`
+- `tests/results/v0.8.0-dashboard.png`
+- `tests/results/v0.8.0-diet.png`
+- `tests/results/v0.8.0-exercise-service.json`
+- `tests/results/v0.8.0-mobile.png`
+- `tests/results/v0.8.0-schema.json`
+- `tests/results/v0.8.0-smoke.json`
+- `tests/results/v0.8.0-unified-calendar.png`
+- `tests/results/v0.8.0.json`
 
-한 중간 실행은 테스트용 Chrome의 DevTools 준비 시간 초과로 실패했다. 시작 대기를 30초로 보완한 최종 전체 실행은 성공했다. 임시 Profile 정리는 Windows EPERM으로 일부 디렉터리가 남을 수 있음을 로그에 기록했다. 사용자 Chrome Profile과 운영 DB는 사용하지 않았다. 최종 실행 뒤 안내 문구·문서·추적표만 정정하고 diff와 문법을 확인했다.
-
-## 발견한 기존 구조 문제와 수정
-
-1. 식단 Repository에는 범용 조회만 있었다. 기존 복합 인덱스 기반 기간/사진 Query를 추가하고 BaseScopedRepository는 유지했다.
-2. 사진 저장 추상화와 원자적 업무 경계가 없었다. MediaStorage Contract/Adapter와 DietCommand를 추가해 원본 처리·metadata·binary 책임을 분리했다.
-3. Backup Core는 사진 metadata가 있으면 거절했다. 기존 v1 정책을 유지하면서 v2 codec, 전체 사전 검증, atomic media restore와 실제 Blob 사후 검증을 추가했다.
-4. 초기화/교체 범위에 binary가 없었다. media를 같은 transaction에서 교체하고, 대상 fingerprint 및 백업 파일 재확인에 media를 포함했다.
-5. 삭제 사진의 파일 수명 정책이 없었다. 복원용 tombstone 파일 보존과 고아 GC를 분리했다. 따라서 사진 삭제만으로 공간이 즉시 회수되지는 않는다.
-
-## 적용 / 복구 / 제한
-
-업데이트 전에 v0.6 JSON을 실제 파일로 보관한다. changed.zip은 기준 commit에 적용하는 변경분, full.zip은 .git/무시 파일을 제외한 전체 소스·문서·테스트, diff.patch는 신규 파일과 바이너리도 포함한다. 실제 배포·commit·push는 하지 않았다.
-
-DB2를 연 뒤에는 DB1 전용인 이전 앱 파일만 되돌리는 downgrade를 지원하지 않는다. 문제가 생기면 원본 DB를 유지하고 업데이트 전 JSON 또는 새 ZIP을 별도 pristine 환경에서 확인한다. Migration 오류를 사용자 DB 삭제로 해결하지 않는다.
-
-ZIP v2는 이미 압축된 이미지를 다시 압축하지 않는 STORE 방식만 지원한다(최대 250 MB / 10002 entries, JSON v1은 50 MB). ZIP64·암호화·외부 재압축 파일은 거절하므로 내려받은 ZIP을 그대로 옮긴다. HEIC는 JPEG로 변환 후 선택한다. 삭제 사진의 영구 purge UI와 Supabase/Sync는 후속 범위다.
-
-## 산출물 검증
-
-`C:/Users/Public/Documents/ESTsoft/CreatorTemp/health-pwa-v0.7.0/`에 changed.zip / full.zip / diff.patch / manifest.json을 제공한다. ZIP 항목과 각 파일 bytes 일치, `git apply --check --reverse`, `git diff --check`, 과거 결과 보존을 검증한다. 파일 목록은 아래와 manifest에 제공한다.
-
-## 파일 변경: 신규 22 / 수정 47 / 삭제 0
-
-### 신규
-
-- `js/application/diet.service.js`
-- `js/application/media.service.js`
-- `js/core/backup/backup-media.js`
-- `js/core/backup/zip-store.js`
-- `js/core/media-rules.js`
-- `js/data/contracts/diet-command.contract.js`
-- `js/data/contracts/media-storage.contract.js`
-- `js/data/indexeddb/commands/diet.command.js`
-- `js/data/indexeddb/media-storage.js`
-- `js/pages/diet/diet.page.js`
-- `tests/browser/diet-test.js`
-- `tests/diet-ui-tests.mjs`
-- `tests/results/v0.7.0-architecture.json`
-- `tests/results/v0.7.0-backup.json`
-- `tests/results/v0.7.0-browser.json`
-- `tests/results/v0.7.0-calendar.png`
-- `tests/results/v0.7.0-diet.png`
-- `tests/results/v0.7.0-exercise-service.json`
-- `tests/results/v0.7.0-mobile.png`
-- `tests/results/v0.7.0-schema.json`
-- `tests/results/v0.7.0-smoke.json`
-- `tests/results/v0.7.0.json`
-
-### 수정
+## 수정 파일 (38)
 
 - `AGENTS.md`
 - `CHANGELOG.md`
@@ -108,38 +86,29 @@ ZIP v2는 이미 압축된 이미지를 다시 압축하지 않는 STORE 방식�
 - `RELEASE_REPORT.md`
 - `REQUIREMENTS.md`
 - `css/common.css`
-- `docs/ARCHITECTURE.md`
-- `docs/DATA_MODEL.md`
-- `docs/MIGRATION_POLICY.md`
 - `docs/ROADMAP.md`
 - `js/app.js`
-- `js/application/backup-export.service.js`
-- `js/application/backup-import.service.js`
-- `js/application/backup-validation.service.js`
+- `js/application/pass-schedule.service.js`
 - `js/bootstrap/bootstrap.js`
 - `js/bootstrap/container.js`
 - `js/config.js`
-- `js/core/backup/backup-format.js`
-- `js/core/backup/backup-migrations.js`
-- `js/core/backup/backup-validator.js`
-- `js/data/indexeddb/backup/backup-restore.command.js`
-- `js/data/indexeddb/backup/backup-snapshot.reader.js`
-- `js/data/indexeddb/backup/restore-target.inspector.js`
-- `js/data/indexeddb/migrations.js`
 - `js/data/indexeddb/repositories/diet-log.repository.js`
-- `js/data/indexeddb/repositories/diet-photo.repository.js`
-- `js/data/indexeddb/schema.js`
+- `js/data/indexeddb/repositories/exercise-log.repository.js`
+- `js/data/indexeddb/repositories/measurement-query.js`
+- `js/data/indexeddb/repositories/pass.repository.js`
+- `js/pages/diet/diet.page.js`
+- `js/pages/exercise/exercise-log-form.page.js`
 - `js/pages/exercise/pass-schedule.page.js`
-- `js/pages/settings/backup-restore.page.js`
+- `js/pages/weight/weight.page.js`
 - `js/router.js`
 - `service-worker.js`
 - `tests/architecture-test.mjs`
 - `tests/backup-test.mjs`
 - `tests/browser-runner.mjs`
-- `tests/browser/db-test.html`
 - `tests/browser/db-test.js`
 - `tests/browser/health-test.js`
 - `tests/browser/qa-feedback-test.js`
+- `tests/diet-ui-tests.mjs`
 - `tests/exercise-service-test.mjs`
 - `tests/qa-feedback-ui-tests.mjs`
 - `tests/run-all-tests.mjs`
@@ -148,6 +117,6 @@ ZIP v2는 이미 압축된 이미지를 다시 압축하지 않는 STORE 방식�
 - `tests/test-reporter.mjs`
 - `tests/traceability.json`
 
-### 삭제
+## 삭제 파일 (0)
 
 없음.

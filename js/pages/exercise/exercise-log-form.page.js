@@ -1,3 +1,4 @@
+import { initialRecordTime } from '../../router.js';
 import { compatibleDraft } from '../../core/exercise-draft.js';
 import { passOptions } from './pass-schedule.page.js';
 import { DirtyFormGuard } from '../../components/dirty-form-guard.js';
@@ -33,7 +34,7 @@ export async function renderExerciseLogCreate(context) {
     <form id="exercise-log-form" class="form-stack">
       <section class="card">
         <div class="form-field"><label for="exercise-type">운동</label><select id="exercise-type">${types.map((type) => `<option value="${type.id}">${escapeHtml(type.icon ?? '●')} ${escapeHtml(type.name)}</option>`).join('')}</select></div>
-        <div class="form-field"><label for="performed-at">날짜/시간</label><input id="performed-at" type="datetime-local" value="${nowLocalInput(timezone)}" required></div>
+        <div class="form-field"><label for="performed-at">날짜/시간</label><input id="performed-at" type="datetime-local" value="${initialRecordTime(context, nowLocalInput(timezone))}" required></div>
         <div id="dynamic-fields"></div>
         <div class="form-field"><label for="exercise-memo">메모</label><textarea id="exercise-memo" maxlength="2000" rows="5" placeholder="운동 상태나 느낀 점을 기록하세요."></textarea></div>
       </section>
@@ -60,7 +61,7 @@ export async function renderExerciseLogCreate(context) {
     } catch (error) { if (isCurrent() && token === templateSequence) showError('운동 기록 양식을 불러오지 못했습니다.', error); }
     finally { if (isCurrent() && token === templateSequence) button.disabled = loadingTemplate; }
   });
-  root.querySelector('[data-cancel]')?.addEventListener('click', () => navigate('/exercise'));
+  root.querySelector('[data-cancel]')?.addEventListener('click', () => navigate(context.returnRoute ?? '/exercise'));
   let busy = false;
   root.querySelector('#exercise-log-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -75,7 +76,7 @@ export async function renderExerciseLogCreate(context) {
         pass_id: root.querySelector('#exercise-pass').value || null,
         memo: root.querySelector('#exercise-memo').value
       });
-      guard.markClean(); clearNavigationGuard(); showToast('운동 기록을 저장했습니다.'); navigate(`/exercise/log/${result.id}`);
+      guard.markClean(); clearNavigationGuard(); showToast('운동 기록을 저장했습니다.'); navigate(context.returnRoute ?? `/exercise/log/${result.id}`);
     } catch (error) { showError('운동 기록 저장에 실패했습니다.', error); }
     finally { busy = false; button.disabled = false; }
   });

@@ -18,7 +18,7 @@ App `0.3.0` / DB `1` / Schema `1` / Seed `1`.
 | 3 | 체중 + 인바디 | source/source_ref_id 연동, 그래프, 기간 조회, 캘린더 표시 확장 |
 | 4 | 식단 + 사진 | media_blobs, 압축·thumbnail, 데이터 보존 Migration, 캘린더 표시 확장 |
 | 5 | Backup v2 | data.json + media/ ZIP, 사진 복원, JSON Backup v1 읽기 호환 |
-| 6 | 홈 + 통합 캘린더 완성 | 각 원본 Store를 조회하는 통합 요약과 날짜별 표시 |
+| 6 | v0.8.0 홈 + 통합 캘린더 구현 | 원본 기반 Query/Projection, 날짜별 빠른 기록. 자동/실기기 판정은 REGRESSION_TEST 참조 |
 | 7 | 운영 안정화 | 누적 데이터, 오프라인·업데이트, 저장 실패·복구, 성능, 실기기 회귀검증 |
 | 8 | Supabase/Auth/Sync | Profile 소유권 연결, Outbox, 재시도·충돌, 기기간 동기화, 원격 사진 저장 |
 

@@ -7,10 +7,10 @@ export function measurementRange({ database, identityContext }, name, start = ''
     return rows.filter((r) => includeDeleted || r.deleted_at === null);
   });
 }
-export function latestMeasurements({ database, identityContext }, name, limit) {
+export function latestMeasurements({ database, identityContext }, name, limit, indexName = 'by_profile_measured_at') {
   const profile = identityContext.getCurrentProfileId();
   return database.runTransaction([name], 'readonly', ({ store }) => new Promise((resolve, reject) => {
-    const rows = [], req = store(name).index('by_profile_measured_at').openCursor(IDBKeyRange.bound([profile, ''], [profile, '\uffff']), 'prev');
+    const rows = [], req = store(name).index(indexName).openCursor(IDBKeyRange.bound([profile, ''], [profile, '\uffff']), 'prev');
     req.onerror = () => reject(req.error);
     req.onsuccess = () => { const cursor = req.result; if (!cursor || rows.length === limit) return resolve(rows); if (cursor.value.deleted_at === null) rows.push(cursor.value); if (rows.length === limit) return resolve(rows); cursor.continue(); };
   }));

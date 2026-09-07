@@ -1,3 +1,4 @@
+import { initialRecordTime } from '../../router.js';
 import { dateKey } from '../../core/pass-rules.js';
 import { escapeHtml as e, renderDynamicFields, readDynamicValues, bindDirtyInputs } from './exercise-view.js';
 import { nowLocalInput, utcIsoToLocalInput, formatLocalDateTime } from '../../core/datetime.js';
@@ -25,7 +26,7 @@ function submit(context, selector, work) {
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); if (busy) return; busy = true;
     const button = form.querySelector('[type=submit]'); button.disabled = true;
-    try { await work(); guard.markClean(); clearNavigationGuard(); context.showToast('저장했습니다.'); context.navigate(selector === '#pass-form' ? '/exercise/passes' : '/calendar'); }
+    try { await work(); guard.markClean(); clearNavigationGuard(); context.showToast('저장했습니다.'); context.navigate(context.returnRoute ?? (selector === '#pass-form' ? '/exercise/passes' : '/calendar')); }
     catch (error) { context.showError('저장에 실패했습니다.', error); }
     finally { busy = false; button.disabled = false; }
   });
@@ -67,20 +68,21 @@ export async function renderPassForm(context, id) {
 }
 
 export async function renderCalendar(context) {
-  const { root, services, isCurrent, setTitle } = context; setTitle('예약 · 캘린더');
-  const timezone = await services.exerciseQuery.getTimezone();
+  const { root, services, isCurrent, setTitle } = context; setTitle('통합 캘린더');
+  const timezone = await services.calendar.timezone();
   const today = nowLocalInput(timezone).slice(0, 10);
-  const types = await services.exerciseQuery.listAllTypes({ includeDeleted: true });
-  const names = new Map(types.map((t) => [t.id, t.name]));
   if (!isCurrent()) return;
-  let selected = today, month = today.slice(0, 7), sequence = 0, entries = [];
-  root.innerHTML = `<section class="card"><div class="section-heading"><h2>날짜별 기록</h2><button class="button" id="new-schedule">+ 예약</button></div><div class="calendar-toolbar"><button class="button button-secondary" id="calendar-prev" aria-label="이전 달">‹</button><h3 id="calendar-month" aria-live="polite"></h3><button class="button button-secondary" id="calendar-next" aria-label="다음 달">›</button></div><button class="text-button" id="calendar-today">오늘</button><div class="calendar-grid" id="calendar-grid" aria-label="월간 달력"></div><p class="section-description">밑줄: 오늘 · 채움: 선택 날짜 · 점: 일정 있음</p></section><h2 id="calendar-selected"></h2><div id="calendar-results" aria-live="polite"></div>`;
-  action(context, '#new-schedule', () => context.navigate('/exercise/schedule/new'));
+  let selected = context.selectedDate ?? today, month = selected.slice(0, 7), sequence = 0, entries = [];
+  root.innerHTML = `<section class="card"><div class="section-heading"><h2>날짜별 기록</h2><button class="button" id="new-schedule">+ 예약</button></div><div class="calendar-toolbar"><button class="button button-secondary" id="calendar-prev" aria-label="이전 달">‹</button><h3 id="calendar-month" aria-live="polite"></h3><button class="button button-secondary" id="calendar-next" aria-label="다음 달">›</button></div><button class="text-button" id="calendar-today">오늘</button><div class="calendar-grid" id="calendar-grid" aria-label="월간 달력"></div><p class="section-description">밑줄: 오늘 · 채움: 선택 날짜 · 운: 운동/예약 · 식: 식단 · 체: 체중 · 인: 인바디</p></section><section class="card"><h2>선택 날짜에 기록</h2><div class="quick-records"><button class="button button-secondary" data-quick="/exercise/log/new">운동</button><button class="button button-secondary" data-quick="/diet/log/new">식단</button><button class="button button-secondary" data-quick="/weight/log/new">체중</button><button class="button button-secondary" data-quick="/weight/inbody/new">인바디</button></div></section><h2 id="calendar-selected"></h2><div id="calendar-results" aria-live="polite"></div>`;
+  const quick = (path) => context.navigate(`${path}?date=${selected}&from=calendar`);
+  action(context, '#new-schedule', () => quick('/exercise/schedule/new'));
+  action(context, '[data-quick]', (b) => quick(b.dataset.quick));
   const renderSelection = () => {
+    if (location.hash.startsWith('#/calendar')) history.replaceState(null, '', `#/calendar?date=${selected}`);
     root.querySelector('#calendar-selected').textContent = `${selected} 일정`;
     root.querySelectorAll('[data-calendar-date]').forEach((b) => { b.classList.toggle('selected', b.dataset.calendarDate === selected); b.setAttribute('aria-pressed', String(b.dataset.calendarDate === selected)); });
     const rows = entries.filter((r) => dateKey(r.at, timezone) === selected);
-    root.querySelector('#calendar-results').innerHTML = rows.length ? rows.map((r) => `<section class="card" data-calendar-entry="${r.id}"><h3>${r.healthRoute ? e(r.label) : `${e(names.get(r.exercise_type_id))} · ${e(r.label)}`}</h3><p>${e(formatLocalDateTime(r.at, timezone))}</p><p>${e(r.memo)}</p>${r.healthRoute ? `<p>${e(r.healthValue)}</p><button class="button" data-health-route="${r.healthRoute}">${r.healthRoute.startsWith('/diet/') ? '식단 열기' : '측정 기록 열기'}</button>` : ''}${r.schedule ? `<button class="button" data-schedule="${r.schedule.id}">예약 열기</button>` : ''} ${r.log ? `<button class="button button-secondary" data-log="${r.log.id}">기록 열기</button>` : ''}</section>`).join('') : '<section class="card">이 날짜의 기록이 없습니다.</section>';
+    root.querySelector('#calendar-results').innerHTML = rows.length ? rows.map((r) => `<section class="card" data-calendar-entry="${r.id}"><h3>${e(r.title)}</h3><p>${e(formatLocalDateTime(r.at, timezone))}</p><p>${e(r.memo)}</p>${r.healthRoute ? `<p>${e(r.healthValue)}</p><button class="button" data-health-route="${r.healthRoute}">${r.healthRoute.startsWith('/diet/') ? '식단 열기' : '측정 기록 열기'}</button>` : ''}${r.schedule ? `<button class="button" data-schedule="${r.schedule.id}">예약 열기</button>` : ''} ${r.log ? `<button class="button button-secondary" data-log="${r.log.id}">기록 열기</button>` : ''}</section>`).join('') : '<section class="card">이 날짜의 기록이 없습니다.</section>';
     action(context, '[data-health-route]', (b) => context.navigate(b.dataset.healthRoute));
     action(context, '[data-schedule]', (b) => context.navigate(`/exercise/schedule/${b.dataset.schedule}/edit`));
     action(context, '[data-log]', (b) => context.navigate(`/exercise/log/${b.dataset.log}`));
@@ -90,16 +92,16 @@ export async function renderCalendar(context) {
     const [year, m] = month.split('-').map(Number);
     const next = new Date(Date.UTC(year, m, 1)).toISOString().slice(0, 10);
     root.querySelector('#calendar-results').textContent = '일정을 불러오는 중…';
-    const groups = await Promise.all([services.activity.calendarEntries(`${month}-01T00:00`, `${next}T00:00`), services.health.calendarEntries(`${month}-01T00:00`, `${next}T00:00`), services.diet.calendarEntries(`${month}-01T00:00`, `${next}T00:00`)]);
-    const rows = groups.flat().sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id));
+    const rows = await services.calendar.entries(`${month}-01T00:00`, `${next}T00:00`);
     if (!isCurrent() || token !== sequence) return;
     entries = rows;
     root.querySelector('#calendar-month').textContent = `${year}년 ${m}월`;
     const offset = new Date(Date.UTC(year, m - 1, 1)).getUTCDay(), days = new Date(Date.UTC(year, m, 0)).getUTCDate();
-    const marked = new Set(entries.map((r) => dateKey(r.at, timezone)));
+    const marked = new Map();
+    for (const row of entries) { const day = dateKey(row.at, timezone); if (!marked.has(day)) marked.set(day, new Set()); row.categories.forEach((kind) => marked.get(day).add(kind)); }
     root.querySelector('#calendar-grid').innerHTML = ['일','월','화','수','목','금','토'].map((d) => `<span class="calendar-weekday">${d}</span>`).join('') + '<span></span>'.repeat(offset) + Array.from({ length: days }, (_, i) => {
       const day = `${requestedMonth}-${String(i + 1).padStart(2, '0')}`;
-      return `<button class="calendar-day ${day === today ? 'today' : ''}" data-calendar-date="${day}" ${day === today ? 'aria-current="date"' : ''} aria-label="${day}${day === today ? ' 오늘' : ''}${marked.has(day) ? ' 일정 있음' : ''}">${i + 1}<span class="calendar-dot">${marked.has(day) ? '•' : ''}</span></button>`;
+      return `<button class="calendar-day ${day === today ? 'today' : ''}" data-calendar-date="${day}" ${day === today ? 'aria-current="date"' : ''} aria-label="${day}${day === today ? ' 오늘' : ''}${marked.has(day) ? ' 일정 있음' : ''}">${i + 1}<span class="calendar-dot">${['exercise','diet','weight','inbody'].filter((kind) => marked.get(day)?.has(kind)).map((kind) => `<span class="calendar-indicator ${kind}" title="${({exercise:'운동/예약',diet:'식단',weight:'체중',inbody:'인바디'})[kind]}">${({exercise:'운',diet:'식',weight:'체',inbody:'인'})[kind]}</span>`).join('')}</span></button>`;
     }).join('');
     action(context, '[data-calendar-date]', (b) => { selected = b.dataset.calendarDate; renderSelection(); }); renderSelection();
   };
@@ -117,18 +119,18 @@ export async function renderScheduleForm(context, id, complete = false) {
   if (schedule?.status === 'completed') {
     root.innerHTML = `<section class="card"><h2>완료된 예약</h2><p>완료 취소하면 연결 운동기록을 삭제하고 이용권 차감을 되돌립니다.</p><button class="button" id="completed-log">운동기록 보기</button> <button class="button button-danger" id="undo-schedule">완료 취소</button></section>`;
     action(context, '#completed-log', () => context.navigate(`/exercise/log/${schedule.completed_exercise_log_id}`));
-    action(context, '#undo-schedule', async () => { if (!window.confirm('완료를 취소하고 차감을 복원할까요?')) return; await services.activity.undoSchedule(id, schedule.revision); context.navigate('/calendar'); }); return;
+    action(context, '#undo-schedule', async () => { if (!window.confirm('완료를 취소하고 차감을 복원할까요?')) return; await services.activity.undoSchedule(id, schedule.revision); context.navigate(context.returnRoute ?? '/calendar'); }); return;
   }
   root.innerHTML = `<form id="schedule-form" class="form-stack"><section class="card">
     <div class="form-field"><label for="schedule-type">운동</label><select id="schedule-type" ${complete || schedule?.completed_exercise_log_id ? 'disabled' : ''}>${types.filter((t) => t.id === schedule?.exercise_type_id || (t.status === 'active' && t.deleted_at === null)).map((t) => `<option value="${t.id}" ${t.id === schedule?.exercise_type_id ? 'selected' : ''}>${e(t.name)}</option>`).join('')}</select></div>
-    <div class="form-field"><label for="schedule-at">${complete ? '실제 운동일/시간' : '예정 날짜/시간'}</label><input id="schedule-at" type="datetime-local" required value="${schedule ? utcIsoToLocalInput(schedule.scheduled_at, timezone) : nowLocalInput(timezone)}"></div>
+    <div class="form-field"><label for="schedule-at">${complete ? '실제 운동일/시간' : '예정 날짜/시간'}</label><input id="schedule-at" type="datetime-local" required value="${schedule ? utcIsoToLocalInput(schedule.scheduled_at, timezone) : initialRecordTime(context, nowLocalInput(timezone))}"></div>
     ${complete ? `<div id="dynamic-fields">${renderDynamicFields(template.fields, { duration_minutes: schedule.expected_duration_minutes })}</div><div class="form-field"><label for="exercise-pass">차감 이용권</label><select id="exercise-pass">${options}</select></div>` : `<div class="form-field"><label for="schedule-duration">예정 시간 (분)</label><input id="schedule-duration" type="number" min="1" max="1440" required value="${schedule?.expected_duration_minutes ?? 50}"></div><div class="form-field"><label for="schedule-status">상태</label><select id="schedule-status"><option value="scheduled">예정</option><option value="cancelled" ${schedule?.status === 'cancelled' ? 'selected' : ''}>취소</option></select></div>`}
     <div class="form-field"><label for="schedule-memo">메모</label><textarea id="schedule-memo" maxlength="2000">${e(schedule?.memo ?? '')}</textarea></div>
     <p>${complete ? '저장 시 운동기록을 생성하고 선택한 이용권을 1회 차감합니다.' : '예약 저장·수정·취소는 이용권을 차감하지 않습니다.'}</p></section>${buttons}</form>
     ${id && !complete ? `<div class="form-actions"><button class="button button-danger" id="cancel-schedule">예약 취소</button><button class="button" id="complete-schedule" ${schedule.status !== 'scheduled' ? 'disabled' : ''}>예약 완료</button></div>` : ''}`;
-  action(context, '[data-back]', () => context.navigate('/calendar'));
+  action(context, '[data-back]', () => context.navigate(context.returnRoute ?? '/calendar'));
   action(context, '#complete-schedule', () => context.navigate(`/exercise/schedule/${id}/complete`));
-  action(context, '#cancel-schedule', async () => { if (!window.confirm('저장된 예약을 취소할까요?')) return; await services.activity.cancelSchedule(id, schedule.revision); clearNavigationGuard(); context.navigate('/calendar'); });
+  action(context, '#cancel-schedule', async () => { if (!window.confirm('저장된 예약을 취소할까요?')) return; await services.activity.cancelSchedule(id, schedule.revision); clearNavigationGuard(); context.navigate(context.returnRoute ?? '/calendar'); });
   const value = (key) => root.querySelector(`#schedule-${key}`).value;
   submit(context, '#schedule-form', () => complete
     ? services.activity.completeSchedule(id, { performed_at_local: value('at'), values: readDynamicValues(root, template.fields), pass_id: root.querySelector('#exercise-pass').value || null, memo: value('memo') }, schedule.revision)

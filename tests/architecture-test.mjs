@@ -5,7 +5,7 @@ import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
 const reporter = new TestReporter('architecture');
-const output = path.join(root, 'tests/results/v0.7.0-architecture.json');
+const output = path.join(root, 'tests/results/v0.8.0-architecture.json');
 
 function walk(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

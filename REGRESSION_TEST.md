@@ -1,5 +1,34 @@
 # Regression Test
 
+## v0.8.0 Dashboard + Unified Calendar
+
+최종 `node tests/run-all-tests.mjs` 종료코드 0. **574 PASS / 0 FAIL / 48 NOT RUN** (총 622). 기존 v0.7 자동 PASS 538건의 suite+Test ID를 모두 유지했고 신규 36건(실제 IndexedDB/DOM 27 + UI 9)을 추가했다. v0.3 FINAL 186/0/0 및 과거 결과 JSON은 변경하지 않았다.
+
+APP/cache 0.8.0 / DB2 / Portable Schema1 / Seed1 / Backup2(v1 호환). **Migration 없음**, Store/index 정의와 BaseScopedRepository 변경 없음. Node v24.16.0, Chrome 실제 IndexedDB, localhost Pages형 subpath, 격리 테스트 DB 및 임시 Chrome Profile 사용. 운영 DB 사용 없음.
+
+| Suite | PASS | FAIL | NOT RUN |
+|---|---:|---:|---:|
+| smoke | 72 | 0 | 0 |
+| architecture | 29 | 0 | 0 |
+| schema | 61 | 0 | 0 |
+| exercise-service | 19 | 0 | 0 |
+| backup | 26 | 0 | 0 |
+| browser-runtime (DB/DOM 311 + 실제 UI 56) | 367 | 0 | 0 |
+| 실제 Pages/Galaxy/설치 QA | 0 | 0 | 48 |
+| **합계** | **574** | **0** | **48** |
+
+- DASH-01~16: 빈 상태, 최신/직전, 월요일 지역 경계/실제 운동시간, used 원장, 오늘 식단/사진, 최근 인바디, 예정 예약, 원본 삭제/복원/수정 및 inactive/삭제 source 제외, Profile 격리, ObjectStore.getAll 차단 상태에서 조회 성공, ZIP 복원 후 전체 projection 동등성, 재개 후 동등성, 실제 DOM escaping/thumbnail.
+- CAL-01~11: 완료 예약 단일 사건, 직접 운동 별도, 연동 체중/인바디 단일 사건 및 두 indicator, 식단, 완료취소, 예약일/실제일이 다른 달인 완료 조회, 날짜 선택/빠른 기록 전달/잘못된 날짜 무시/오늘 기본값/대량 조회.
+- 대량 결과: 24,000 synthetic rows across five domains, 200 month matches: 43.3 ms; bounded measurement index. 이는 해당 테스트 PC/Chrome의 측정이며 갤럭시 성능 보증으로 해석하지 않는다.
+- DASH-UI-01~02, CAL-UI-01~03/QUICK 4종: 실제 화면 숫자, thumbnail decode 1장, 월 이동, 네 기존 폼의 날짜 기본값/저장/복귀/즉시 표시, dirty 거절/승인, 실제 네트워크 차단+완전 reload 후 동일 달력과 홈.
+- 기존 자동 회귀 538건 전체 유지: 다중 Store 원자성, stale revision, media resize/삭제/복원, Backup v1/v2/force/reset, 두 번째 Chrome Profile의 ZIP 파일 복원 포함.
+- 412px 스크린샷 `v0.8.0-dashboard.png`, `v0.8.0-unified-calendar.png`를 확인했다. 날짜/indicator/빠른 기록/홈 카드의 가로넘침 없음. 실제 기기 QA로 계산하지 않는다.
+- 실기기 신규 DASH-MANUAL-01~07과 기존 41건은 모두 이번 버전 **NOT RUN**. 실제 사용자가 결과를 보고하면 버전·범위·출처를 함께 추가한다.
+- Windows가 일부 임시 Chrome Profile 디렉터리 정리를 EPERM으로 거부했다. 테스트 프로세스/DB는 종료했고 사용자 Chrome Profile은 사용하거나 삭제하지 않았다.
+
+증적: `tests/results/v0.8.0.json`, 개별 suite JSON, `tests/traceability.json`, `MANUAL_QA.md`. 최종 실행 뒤 문서/산출물 정합성을 별도 검증하며 제품 테스트를 불필요하게 반복하지 않는다.
+
+
 ## v0.7.0 Diet + Media + Backup v2
 
 최종 `node tests/run-all-tests.mjs` 종료코드0. **538 PASS / 0 FAIL / 41 NOT RUN** (총579). 기존477개 자동검증을 유지하고 새61개(Diet/Media52 + 실제 UI8 + 신규Store 구조1)가 통과했다. 버전 고정 기대값은 DB2/15Store/Backup v2 지원에 맞게 갱신했으며 과거 결과 JSON은 그대로 보존했다.

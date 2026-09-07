@@ -215,3 +215,11 @@ button:disabled { cursor: default; opacity: .55; }
 .diet-full-photos img { display:block; width:100%; height:auto; border-radius:12px; margin-bottom:12px; }
 .diet-text { white-space:pre-wrap; overflow-wrap:anywhere; }
 #diet-form input[type=file] { max-width:100%; }
+
+.quick-records { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; }
+.quick-records .button { padding:10px 4px; min-width:0; }
+.dashboard-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.dashboard-stats strong { font-size:24px; }
+#dashboard { overflow-wrap:anywhere; }
+.calendar-dot { display:flex; justify-content:center; gap:1px; height:14px; line-height:14px; margin-top:5px; }
+.calendar-indicator { font-size:9px; font-weight:600; }

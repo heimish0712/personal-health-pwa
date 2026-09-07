@@ -242,3 +242,17 @@
 - **BACKUP-V1-COMPAT** 기존 정상 JSON v1 계속 검증/복원한다. Portable Schema는1로 유지하므로 UUID/revision을 바꾸는 데이터 변환이 필요 없다. 기존 v1이 원래 지원하지 않던 사진 metadata-only 백업은 계속 거절한다. v1 파일의 빈 새 media store를 포함한 DB2 복원 허용.
 - **DIET-MIGRATION** DB1→2 누적 Migration은 media_blobs만 추가. 기존14 Store/Index/행/Profile/Seed를 삭제·clear·재생성하지 않는다. 새 설치는 v1 생성 후 v2 추가. Portable Schema1/Seed1 유지. Migration 실패는 upgrade transaction abort, DB 자동 삭제 없음. 이전 버전 앱 파일만 다시 배포하여 DB2를 DB1로 downgrade하지 않는다.
 - **DIET-QA** v0.6 원본 데이터(Template v1/v2, 로그, 이용권/usage, 예약, 인바디 연동, tombstone) upgrade 전후100% 비교. 실패 upgrade도 보존. 이미지/수정/삭제/복원/Quota/restore/force rollback, offline UI, 실제 ZIP 다운로드와 별도 Chrome Profile 복원 검증. 사용자 카메라·갤러리·PC→폰·Pages/Galaxy는 별도8건 NOT RUN.
+
+## v0.8.0 Dashboard / Unified Calendar
+
+- **DASH-001** 홈은 현재 Profile의 오늘 예정 운동, 월~일 실제 운동 횟수/분, 최근 운동, 활성 이용권 잔여횟수, 오늘 식단 수/최근 식단/첫 thumbnail, 최근 체중/직전 대비/최근 인바디를 표시한다. 기록 없는 값은 0 또는 없음으로 구분한다.
+- **DASH-002** 잔여횟수는 total_count에서 nondeleted used 원장의 used_count 합계를 뺀 값이다. inactive/삭제 pass는 제외하며 활성 상태의 기간 만료/시작 전 pass는 기간 안내를 붙인다.
+- **DASH-003** 최신값은 측정/운동/식사 시각 기준으로 결정한다. 같은 시각은 IndexedDB의 primary key 순서로 결정하며 같은 날 다른 측정은 직전 비교에 포함한다. 체중은 weight_logs만 원본으로 삼는다.
+- **CAL-001** 월간 달력은 Profile timezone의 오늘을 기본 선택하며 월 이동, 오늘, 날짜 선택, 운동/예약·식단·체중·인바디 indicator를 지원한다.
+- **CAL-002** 완료 예약과 linked exercise는 실제 운동일에 한 사건으로 표시하고 예약/운동 양쪽 원본으로 이동한다. 예약일과 실제일이 다른 달이어도 중복/누락되지 않는다. 직접 운동은 별도 사건이다.
+- **CAL-003** 인바디+연동 체중은 인바디 사건 하나와 체중/인바디 두 indicator로 표현한다. 원본 관계를 바꾸지 않으며 체중 값 편집은 원본 인바디 화면으로 이동한다.
+- **CAL-004** 홈/선택 날짜의 운동·식단·체중·인바디 빠른 기록은 기존 폼을 사용한다. 선택 날짜는 hash date parameter로 전달하고 신규 저장/취소 후 해당 날짜 캘린더로 돌아온다. 유효하지 않은 날짜는 무시하며 dirty guard를 유지한다.
+- **VIEW-QUERY-001** CalendarService/DashboardService는 Application Query Service이며 Domain Repository의 기존 Profile+date 범위, pass 상태, pass usage, 사진 순서 index 및 scoped point lookup을 사용한다. 새 View에서 ObjectStore 전체 getAll/filter를 사용하지 않는다.
+- **VIEW-QUERY-002** 원본 재조회로 delete/restore/완료취소/수정 결과를 반영한다. calendar_logs/dashboard_summary/저장된 집계 필드와 중복 원본을 생성하지 않는다.
+- **VIEW-QUERY-003** DB2/Schema1/Seed1, Migration 없음. 기존 일반 Repository/Command/Media/Backup 경계를 유지하며 외부 CDN을 추가하지 않는다.
+- **VIEW-QA-001** 수치/중복/원본 변경/Profile/index/대량 월간 Query/모바일 화면/오프라인 재실행/Backup 복원 동등성을 자동검증하고 실제 Pages/Galaxy/설치 QA는 별도 NOT RUN으로 기록한다.

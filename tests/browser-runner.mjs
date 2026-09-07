@@ -1,3 +1,4 @@
+import { runDashboardUiTests } from './dashboard-ui-tests.mjs';
 import { runDietUiTests } from './diet-ui-tests.mjs';
 import { runHealthUiTests } from './health-ui-tests.mjs';
 import { runQaFeedbackUiTests } from './qa-feedback-ui-tests.mjs';
@@ -10,8 +11,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.7.0-browser.json');
-const basePath = '/personal-health-pwa-v0.7.0/';
+const outputPath = path.join(root, 'tests/results/v0.8.0-browser.json');
+const basePath = '/personal-health-pwa-v0.8.0/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -70,7 +71,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.7.0',
+    version: '0.8.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -375,7 +376,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.7.0 · DB 2'),
+      (value) => value?.title === '홈' && value.body.includes('v0.8.0 · DB 2'),
       30000
     );
 
@@ -488,8 +489,8 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.7.0');
-    }, 'The v0.7.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.8.0');
+    }, 'The v0.8.0 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
@@ -520,7 +521,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.7.0 · DB 2'),
+        (state) => state?.title === '홈' && state.body.includes('v0.8.0 · DB 2'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -610,8 +611,9 @@ try {
         try { fs.rmSync(resolved,{recursive:true,force:true,maxRetries:5,retryDelay:200}); } catch(error) { console.error(`Temporary second browser profile cleanup failed (${error.code}).`); }
       }
     } });
+    await runDashboardUiTests({ cdp, pollEvaluate, runtimeTest, root });
     const screenshot = await cdp.send('Page.captureScreenshot' , { format: 'png' });
-    fs.writeFileSync(path.join(root, 'tests/results/v0.7.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
+    fs.writeFileSync(path.join(root, 'tests/results/v0.8.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
 
     await cdp.send('Network.emulateNetworkConditions', {
       offline: false,
@@ -627,7 +629,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.7.0',
+      version: '0.8.0',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -645,7 +647,7 @@ try {
   })(), 600000, 'Browser runtime suite exceeded the 600 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.7.0',
+    version: '0.8.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },

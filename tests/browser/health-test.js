@@ -103,7 +103,7 @@ export async function runHealthTests(test) {
     const calendar = await make('calendar'), day = nowLocalInput('Asia/Seoul').slice(0, 10), health = calendar.healthService;
     const cb = await health.saveInbody({ ...input, measured_at_local: `${day}T08:00`, link_weight: true });
     const cw = await health.saveWeight({ ...input, measured_at_local: `${day}T10:00` });
-    const context = { root, services: { diet: calendar.dietService, health, activity: calendar.passScheduleService, exerciseQuery: calendar.exerciseQueryService }, setTitle() {}, showToast() {}, showError(m, error) { throw error; }, navigate() {}, isCurrent: () => true };
+    const context = { root, services: { calendar: calendar.calendarService, diet: calendar.dietService, health, activity: calendar.passScheduleService, exerciseQuery: calendar.exerciseQueryService }, setTitle() {}, showToast() {}, showError(m, error) { throw error; }, navigate() {}, isCurrent: () => true };
     await renderCalendar(context);
     await test('HEALTH-35-CALENDAR', () => root.querySelectorAll('[data-calendar-entry]').length === 2 && root.textContent.includes('인바디 · 체중 연동') && root.querySelector(`[data-health-route="/weight/log/${cw.id}"]`), 'Calendar displays manual weight and one combined InBody/weight entry with real routes.');
     await renderHealthForm(context, 'inbody', cb.id);

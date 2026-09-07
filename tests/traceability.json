@@ -798,5 +798,64 @@
     "DIET-MANUAL-06",
     "DIET-MANUAL-07",
     "DIET-MANUAL-08"
+  ],
+  "DASH-001": [
+    "DASH-02-WEIGHT",
+    "DASH-03-WEEK",
+    "DASH-05-DIET",
+    "DASH-06-INBODY",
+    "DASH-07-SCHEDULE",
+    "DASH-UI-01-SUMMARY",
+    "DASH-UI-02-THUMBNAIL"
+  ],
+  "DASH-002": [
+    "DASH-04-PASS",
+    "DASH-16-DELETED-SOURCES"
+  ],
+  "DASH-003": [
+    "DASH-02-WEIGHT",
+    "DASH-06-INBODY"
+  ],
+  "CAL-001": [
+    "CAL-10-TODAY",
+    "CAL-UI-01-MONTH"
+  ],
+  "CAL-002": [
+    "CAL-01-COMPLETED",
+    "CAL-02-DIRECT",
+    "CAL-06-CROSS-MONTH"
+  ],
+  "CAL-003": [
+    "CAL-03-HEALTH"
+  ],
+  "CAL-004": [
+    "CAL-08-QUICK",
+    "CAL-09-INVALID-DATE",
+    "CAL-UI-QUICK-weight",
+    "CAL-UI-QUICK-inbody",
+    "CAL-UI-QUICK-diet",
+    "CAL-UI-QUICK-exercise",
+    "CAL-UI-02-DIRTY"
+  ],
+  "VIEW-QUERY-001": [
+    "DASH-12-INDEX",
+    "CAL-11-LARGE"
+  ],
+  "VIEW-QUERY-002": [
+    "DASH-08-DELETE",
+    "DASH-09-RESTORE",
+    "CAL-05-UNDO",
+    "DASH-10-EDIT"
+  ],
+  "VIEW-QUERY-003": [
+    "ARCH-001",
+    "ARCH-002",
+    "CACHE-ASSET-002"
+  ],
+  "VIEW-QA-001": [
+    "DASH-11-PROFILE",
+    "DASH-13-BACKUP-V2",
+    "DASH-14-REOPEN",
+    "CAL-UI-03-OFFLINE"
   ]
 }

@@ -1,3 +1,5 @@
+import { DashboardService } from '../application/dashboard.service.js';
+import { CalendarService } from '../application/calendar.service.js';
 import { IndexedDbDietCommand } from '../data/indexeddb/commands/diet.command.js';
 import { IndexedDbMediaStorage } from '../data/indexeddb/media-storage.js';
 import { MediaService } from '../application/media.service.js';
@@ -145,7 +147,11 @@ export function createContainer({
     schemaVersion: SCHEMA_VERSION
   });
 
+  const dashboardService = new DashboardService({ repositories, identityContext, clock });
+  const calendarService = new CalendarService({ repositories, identityContext });
+
   return Object.freeze({
+    dashboardService, calendarService,
     database,
     unitOfWork,
     clock,

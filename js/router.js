@@ -20,7 +20,8 @@ let navigationGuard = null;
 let suppressNextHashChange = false;
 
 export function isSupportedRoute(route) {
-  return STATIC_ROUTES.has(route) || DYNAMIC_ROUTE_PATTERNS.some((pattern) => pattern.test(route));
+  const { path } = parseRoute(route);
+  return STATIC_ROUTES.has(path) || DYNAMIC_ROUTE_PATTERNS.some((pattern) => pattern.test(path));
 }
 
 export function normalizeRoute(hash) {
@@ -90,3 +91,12 @@ export function startRouter(onRoute) {
     renderCurrent();
   }
 }
+
+// Date context lives in the hash, so browser Back and reload retain the selected day.
+export function parseRoute(route) {
+  const [path, query = ''] = String(route).split('?');
+  const params = new URLSearchParams(query), value = params.get('date');
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(value ?? '') && Number.isFinite(Date.parse(`${value}T00:00:00Z`)) && new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value ? value : null;
+  return { path, selectedDate: date, returnRoute: date && params.get('from') === 'calendar' ? `/calendar?date=${date}` : null };
+}
+export function initialRecordTime(context, now) { return context.selectedDate ? `${context.selectedDate}T${now.slice(11)}` : now; }
