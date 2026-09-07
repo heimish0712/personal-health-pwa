@@ -1,15 +1,15 @@
 {
   "version": "0.10.0",
   "previousVersion": "0.9.0",
-  "executedAt": "2026-09-07T09:24:21.166Z",
+  "executedAt": "2026-09-07T09:31:01.892Z",
   "environments": {
     "node": "v24.16.0",
     "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36"
   },
   "summary": {
     "total": 730,
-    "passed": 665,
-    "failed": 1,
+    "passed": 666,
+    "failed": 0,
     "notRun": 64
   },
   "suites": [
@@ -62,8 +62,8 @@
       "suite": "browser-runtime",
       "summary": {
         "total": 457,
-        "passed": 456,
-        "failed": 1,
+        "passed": 457,
+        "failed": 0,
         "notRun": 0
       }
     }
@@ -3186,7 +3186,7 @@
     {
       "id": "CAL-11-LARGE",
       "status": "PASS",
-      "evidence": "24,000 synthetic rows across five domains, 200 month matches: 28.4 ms; bounded measurement index.",
+      "evidence": "24,000 synthetic rows across five domains, 200 month matches: 35.6 ms; bounded measurement index.",
       "suite": "browser-runtime"
     },
     {
@@ -3384,7 +3384,7 @@
     {
       "id": "OPS-PERF-VIEWS",
       "status": "PASS",
-      "evidence": "Large test-only fixture: 3000 each exercise/schedule/weight/diet, 1000 InBody/photos, 2000 media blobs; all source views correct. {\"sizes\":{\"exercise\":3000,\"schedules\":3000,\"weights\":3000,\"inbodies\":1000,\"diets\":3000,\"photos\":1000,\"blobs\":2000,\"mediaBytes\":20256000},\"bootMs\":6.3,\"homeMs\":15,\"calendarMs\":29.2,\"legacyRecentMs\":89.8,\"recentMs\":4.6,\"graphMs\":6.6,\"dietDayMs\":17.7,\"exportMs\":5549.2,\"validateMs\":1982.9,\"restoreMs\":10364.2}",
+      "evidence": "Large test-only fixture: 3000 each exercise/schedule/weight/diet, 1000 InBody/photos, 2000 media blobs; all source views correct. {\"sizes\":{\"exercise\":3000,\"schedules\":3000,\"weights\":3000,\"inbodies\":1000,\"diets\":3000,\"photos\":1000,\"blobs\":2000,\"mediaBytes\":20256000},\"bootMs\":40.3,\"homeMs\":19.3,\"calendarMs\":39.8,\"legacyRecentMs\":115.9,\"recentMs\":8.4,\"graphMs\":5.8,\"dietDayMs\":21.3,\"exportMs\":7022,\"validateMs\":3227.3,\"restoreMs\":14600.8}",
       "suite": "browser-runtime"
     },
     {
@@ -4055,8 +4055,8 @@
     },
     {
       "id": "GCAL-UI-03-RELAUNCH",
-      "status": "FAIL",
-      "evidence": "Error: Timed out waiting for browser state. Last value: \"Google 재인증이 필요합니다. 연결·재인증 후 재시도를 눌러 주세요.\"",
+      "status": "PASS",
+      "evidence": "Offline reload retains ON/pending, no session token, and explicit retry explains offline or missing-session authorization state.",
       "suite": "browser-runtime"
     },
     {

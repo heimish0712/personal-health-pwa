@@ -2,6 +2,17 @@
 
 이 문서는 구현 중 임의 회귀를 방지하기 위한 요구사항 기준선입니다.
 
+## v0.10.0 Google Calendar
+
+- **GCAL-LOCAL** 원본은 IndexedDB 예약이며 외부 실패가 로컬 저장 성공을 뒤집지 않는다. 예약+device-local 최신 desired outbox를 Semantic Command transaction으로 저장하고 commit 후 gateway 실행. Page API 호출/Service generic IDB transaction 금지.
+- **GCAL-AUTH** GIS initTokenClient/requestAccessToken 사용자 gesture, calendar.events.owned/primary. access token은 private memory만 사용하고 refresh token/client secret/service account 금지. ON과 현재 인증 상태 분리, 재실행/만료/취소 시 로컬 CRUD 유지.
+- **GCAL-EVENT** 운동명·정확한 start/end·Profile timezone·일반 설명·private app/profile/schedule UUID만 투영한다. 메모 전송 금지, duration 미유효 시 명시적 pending 오류. 완료/완료 취소로 이벤트 추가 생성 금지.
+- **GCAL-IDEMPOTENCY** linked ID + privateExtendedProperty 검색 + 결정적 생성 ID, schedule별 최신 desired version. 응답 유실/ack 실패 시 먼저 reconciliation. cancelled Google ID 재사용 금지. 중간 변경을 오래된 응답이 완료 처리하지 않는다.
+- **GCAL-OFFLINE** OFF 신규 action 0/기존 링크 유지/일괄 Google 삭제와 revoke 없음. offline pending 보존·재실행 후 명시적 재인증/재시도·로컬 저장 성공 및 대기 안내.
+- **GCAL-ISOLATION** Profile별 기기 ON 설정/대기 조회, token도 인증 Profile에 한정. 다른 앱/프로필의 Google 이벤트를 patch/delete하지 않는다. Web Locks 미지원은 원격 실행을 거부하고 로컬 CRUD는 유지한다.
+- **GCAL-BACKUP** DB3/Schema2의 portable calendar_event_links를 UUID/revision/관계 그대로 보관. Schema1 읽기 유지. calendar_outbox/device 설정/token은 portable 제외. restore/reset은 기기 큐 제거·OFF, 원격 호출 없음.
+- **GCAL-QA** 자동 REST/GIS 모의 검증과 실제 Google/Pages/PWA 검증을 분리한다. 실계정 미검증은 NOT RUN. 공개 Client ID 및 실제 origin 설정은 운영자가 입력한다.
+
 ## Application / Navigation
 
 - **APP-001** 앱은 GitHub Pages에서 실행 가능해야 한다.

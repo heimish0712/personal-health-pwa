@@ -74,3 +74,7 @@ v0.5 데이터가 생긴 뒤 v0.4에서 운동을 수정/삭제하면 원장을 
 ## DB2: media_blobs만 추가
 
 oldVersion<1이면 원래14Store를 생성하고, oldVersion<2이면 media_blobs(storage_key)를 추가한다. 기존 Store/Index 삭제·재생성/clear/사용자row수정 없음. 실패는 versionchange abort이며 DB자동삭제 금지. 실제 DB1 fixture의 portable JSON/UUID/revision/relation/tombstone/device_id를 전후 비교하고 실패후DB1재개도 검증한다. DB2를 연 뒤 v0.6(DB1전용) 앱 파일만 되돌리는 downgrade는 지원하지 않는다. 복구는 원본을 유지하고 업데이트전JSON을 별도환경에서 확인하는 경로를 따른다.
+
+## v0.10.0 — DB2 → DB3 / Portable Schema1 → Schema2
+
+기존15 Store/Index/row 불변, calendar_event_links와 calendar_outbox 및 해당4개 Index만 생성한다. 0→3/1→3/2→3 누적 경로를 유지하고 v1/v2 실제 historical fixture는 기존 Store 수로 생성한다. link 추가로 portable Store가13개가 되어 Schema2를 선언한다. Schema1 파일은 원래12 Store hash로 검증 후 restore하고 새link는 빈 상태다. 기기 대기열/ON설정은 복원 대상이 아니며 restore/reset 전용 transaction에서 비운다. 자세한 정책·다운그레이드 제한은 GOOGLE_CALENDAR.md 참조.

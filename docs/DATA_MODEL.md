@@ -1,3 +1,10 @@
+# Data Model — v0.10.0
+
+현재 APP0.10.0 / DB3 / Portable Schema2 / Seed1 / Backup2(JSONv1 호환), 전체17 Store = portable13 + local4.
+새 calendar_event_links는 UUID scoped portable entity이며 by_profile과 UNIQUE(profile_id,provider,schedule_id), calendar_outbox는 schedule UUID 기기 전용 작업이며 by_profile/by_profile_status를 사용한다. 나머지15 Store의 정의는 변경하지 않았다. link/outbox 필드, 누적 Migration 및 Schema1 백업 읽기 정책은 [Google Calendar 설계](GOOGLE_CALENDAR.md)에 명시한다.
+
+아래는 기존 도메인 설계 이력이며 과거 버전 값은 현재 실행 버전과 구분한다.
+
 # Data Model - v0.5.0
 
 ## 버전

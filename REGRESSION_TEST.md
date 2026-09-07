@@ -1,5 +1,28 @@
 # Regression Test
 
+## v0.10.0 Google Calendar One-way Integration
+
+최종 `node tests/run-all-tests.mjs` 종료코드0: **666 PASS / 0 FAIL / 64 NOT RUN** (총730).
+Node209 + Chrome IndexedDB/DOM391 + 실제 로컬 UI66 =666. 기존 v0.9 자동618건의 suite+Test ID를 전부 다시 실행해 PASS임을 비교했다. 신규48건은 Schema Store 검사2 + Google 모의 API/GIS/Command42 + 실제 오프라인 UI4다. 기존 v0.3 FINAL186/0/0과 과거 결과 JSON/PNG는 변경하지 않았다.
+
+APP/cache0.10.0 / DB3 / Portable Schema2 / Seed1 / Backup2(JSONv1 호환). 누적 Migration은 calendar_event_links + calendar_outbox 두 Store/4개 Index 추가이며 기존15 Store 불변. DB2→3 강제 실패 후 원본 유지, 성공 후 UUID/revision/tombstone/관계/기기ID 보존을 비교했다. 기존 DB1→2 Migration 회귀도 유지한다.
+
+| 검증 | 결과 |
+|---|---|
+| smoke / architecture / schema / exercise-service / backup | 72 / 29 / 63 / 19 / 26 PASS |
+| 기존 IndexedDB/DOM + Google42 | 391 PASS |
+| 기존 로컬 UI62 + Google UI4 | 66 PASS |
+| 사용자 Google/Pages/Galaxy/설치형 PWA | 64 NOT RUN (기존56 + 신규8) |
+
+GCAL-01~42: OFF CRUD 호출0, OAuth 거절/ON, payload시각/메모 제외/private IDs, insert/patch/delete/재예약, 같은 요청 멱등성, 완료/완료취소 추가0, pending create 취소, 반복수정 coalesce, 응답유실/ack rollback/reconciliation, 로컬 저장+큐 원자성, HTTP500/401/재인증, OFF이력/재연결 최신값, Profile/token 격리, invalid duration, in-flight 수정, backup portability/restore OFF/reopen/reset, 실제 GIS adapter의 모의 API 호출·메모리 토큰/만료, foreign event 거부, remote tombstone generation, maintenance lock/index 경로를 검증했다.
+
+GCAL-UI-01~04: 실제 설정 OFF/GIS lazy 미호출, 네트워크 차단 후 실제 예약 폼 저장+대기 안내, 재실행 ON/대기1/인증부재 유지, OFF 버튼 후 대기 이력 유지. 공개 Client ID는 미설정이다. 화면 테스트는 기기 enabled fixture만 주입하며 OAuth 승인이라고 주장하지 않는다. Chrome network emulation 후 navigator의 연결 보고가 다를 수 있으므로 재시도 안내는 오프라인 또는 재인증 필요를 확인한다. 둘 다 로컬 저장 성공과 pending 보존이 전제다. screenshot `tests/results/v0.10.0-google-calendar.png` 412px 입력/버튼/상태를 시각 확인했다.
+
+중간 실행에서 구버전 Store 개수 고정/가짜 legacy fixture, 비동기 설정 준비 전 버튼 접근, offline 시 인증 안내의 엄격한 문구 단정 때문에 FAIL이 있었다. 실제 버전별 fixture와 요소 준비 대기, 연결/인증 상태 판정을 고친 최종 전체 실행은 FAIL0이다. Windows가 일부 테스트 임시 Chrome Profile 정리를 EPERM으로 거부했으며 사용자 Profile을 삭제하지 않았다.
+
+실제 Google API의 OAuth 승인/HTTP/이벤트/기기 동작은 미실행이다. mock PASS는 실제 Google PASS로 승계하지 않는다. GCAL-MANUAL-01~08과 기존56 항목은 사용자 보고 전까지 NOT RUN.
+증적은 `tests/results/v0.10.0.json` 및 각 suite/PNG, `tests/traceability.json`, `MANUAL_QA.md`, `docs/GOOGLE_CALENDAR.md`다. 최종 제품 테스트 이후에는 문서/diff/패키지 정합성을 검증한다.
+
 ## v0.9.0 Operational Hardening
 
 최종 `node tests/run-all-tests.mjs` 종료코드0. **618 PASS / 0 FAIL / 56 NOT RUN** (총674). 기존 v0.8 자동574건의 suite+Test ID가 전부 PASS인 것을 비교했고 신규44건(DB/DOM38 + 실제 UI6)을 추가했다. 과거 v0.3 FINAL186/0/0 및 확정 버전 결과는 보존했다.

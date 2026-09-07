@@ -48,4 +48,3 @@ export const GOOGLE_MESSAGES = Object.freeze({
 });
 
 export const googleMessage = (error) => GOOGLE_MESSAGES[error?.message] ?? (error?.code === 'MAINTENANCE_BUSY' ? GOOGLE_MESSAGES.LOCK_UNAVAILABLE : null) ?? GOOGLE_MESSAGES.REMOTE_FAILED;
-

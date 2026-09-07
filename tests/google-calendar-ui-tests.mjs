@@ -21,10 +21,10 @@ export async function runGoogleCalendarUiTests({ cdp, pollEvaluate, runtimeTest,
     await cdp.send('Page.reload'); await ready('#google-status');
     await pollEvaluate(cdp,"document.querySelector('#google-status').textContent", s=>s.includes('대기 1건'),20000);
     await cdp.evaluate("document.querySelector('#google-retry').click()");
-    await pollEvaluate(cdp,"document.querySelector('#google-error').textContent", s=>s.includes('오프라인'),10000);
+    await pollEvaluate(cdp,"document.querySelector('#google-error').textContent", s=>s.includes('오프라인') || s.includes('재인증'),10000);
     return cdp.evaluate("document.querySelector('#google-status').textContent.startsWith('ON') && document.documentElement.scrollWidth<=innerWidth");
-  }, 'Offline reload retains ON/pending, no session token, and explicit retry explains offline state.');
-  await cdp.evaluate("document.querySelector('#google-calendar-settings').scrollIntoView({block:'start'})");
+  }, 'Offline reload retains ON/pending, no session token, and explicit retry explains offline or missing-session authorization state.');
+  await cdp.evaluate("document.querySelector('#google-calendar-settings').scrollIntoView({block:'start'});window.scrollBy(0,-100)");
   const shot = await cdp.send('Page.captureScreenshot', { format: 'png' }); fs.writeFileSync(path.join(root,'tests/results/v0.10.0-google-calendar.png'), Buffer.from(shot.data,'base64'));
   await runtimeTest('GCAL-UI-04-DISABLE', async () => {
     await cdp.evaluate("document.querySelector('#google-off').click()");

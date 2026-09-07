@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.10.0 — Google Calendar One-way Integration
+
+- 설정에서 Google 연결 준비 → 사용자 팝업 인증 → ON, OFF, 상태/대기/재시도 제공. 공개 Web Client ID는 config 또는 현재 화면 입력을 사용한다. 실제 ID 미제공으로 배포 설정은 빈 값이다.
+- GIS token client와 Calendar REST gateway 분리. owned-events scope/primary만 사용하고 token은 메모리에만 보관한다. OFF/재실행/만료와 현재 인증 상태를 구분한다.
+- 예약과 최신 desired outbox를 같은 transaction에 저장한 후 전송. 실패 시 로컬 성공 유지 및 대기 안내. 완료/완료 취소는 추가 Google 이벤트를 생성하지 않는다.
+- portable calendar_event_links와 device-local calendar_outbox 추가. 이벤트 ID/private properties 검색/결정적 ID 및 generation으로 응답 유실·취소 후 재예약을 복구한다.
+- Web Locks로 Google 전송을 다른 전송 및 백업/복원/GC와 상호 배제. 전송 중 바뀐 예약의 최신 대기열을 이전 응답이 지우지 않는다.
+- DB3/Schema2 최소 누적 Migration(기존 15 Store 불변), Schema1 JSON/ZIP 읽기 호환. 복원/초기화 시 기기 대기열 제거·연동 OFF, portable 연결/UUID/revision 보존.
+- 실제 Google 계정·GitHub Pages·Galaxy/설치형 PWA QA는 NOT RUN. 자동 검증과 설정/QA 절차는 REGRESSION_TEST, MANUAL_QA, docs/GOOGLE_CALENDAR.md 참조.
+
 ## v0.9.0 — Operational Hardening
 
 - 운동 최근기록을 기존 Profile/운동/시간 인덱스 cursor로 제한 조회. 백업 media 읽기와 복원 add 요청을 같은 transaction 내 묶음으로 처리. Media 통계/GC는 Blob 전체 목록 보관 대신 cursor 누계.
