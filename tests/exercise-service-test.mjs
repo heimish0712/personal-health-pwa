@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { TestReporter } from './test-reporter.mjs';
 
 const root = path.resolve(process.cwd());
-const output = path.join(root, 'tests/results/v0.3.0-exercise-service.json');
+const output = path.join(root, 'tests/results/v0.4.0-exercise-service.json');
 const reporter = new TestReporter('exercise-service');
 await import(pathToFileURL(path.join(root, 'js/config.js')));
 const { ExerciseManagementService } = await import(pathToFileURL(path.join(root, 'js/application/exercise-management.service.js')));

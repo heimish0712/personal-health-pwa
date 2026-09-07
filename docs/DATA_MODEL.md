@@ -1,11 +1,12 @@
-# Data Model - v0.3.0
+# Data Model - v0.4.0
 
 ## 버전
 
 - IndexedDB DB Version: **1**
 - Logical Schema Version: **1**
 - Seed Version: **1**
-- v0.3.0 DB Migration: **없음**
+- v0.4.0 DB Migration: **없음**
+- Backup Format Version: **1**
 
 ## Object Store
 
@@ -160,3 +161,9 @@ revision             -> integer/bigint
 ```
 
 IndexedDB는 제거하지 않고 향후 Sync Outbox와 Remote Gateway를 추가한다.
+
+## Backup Core
+
+현재 Profile의 12 portable Store를 삭제 행까지 포함하여 원본 metadata 그대로 JSON으로 보존한다. device_settings/app_logs는 제외한다. diet_photos가 있으면 사진 파일을 누락한 백업을 만들지 않도록 v1 Export/Import를 거절한다.
+
+파일의 data/counts/scope 형식과 pristine 복원 정의는 [BACKUP_CORE_DESIGN.md](BACKUP_CORE_DESIGN.md)를 따른다.

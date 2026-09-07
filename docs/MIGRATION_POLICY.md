@@ -52,3 +52,9 @@ v1 -> v2부터 다음 절차를 고정한다.
 ```
 
 IndexedDB Migration과 향후 Supabase PostgreSQL Migration은 별도 이력으로 관리한다.
+
+## v0.4.0 Backup Core
+
+App/cache만 0.4.0으로 올리고 DB/Schema/Seed는 1을 유지한다. 기존 14 Store와 Index 변경이 없으므로 IndexedDB Migration은 없다. BackupMigrationRegistry도 v1→v1 no-op이며 데이터 변환은 없다.
+
+복원은 Schema Migration이 아니라 사용자 실행 업무 Command다. 검증된 pristine 자동생성 Profile/Seed 3행을 하나의 transaction에서 교체한다. 실패 시 기존 세 행까지 rollback하며 DB 삭제/clear는 사용하지 않는다.

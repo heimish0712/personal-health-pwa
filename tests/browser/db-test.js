@@ -1,4 +1,5 @@
 import { createContainer } from '../../js/bootstrap/container.js';
+import { runBackupBrowserTests } from './backup-test.js';
 import { ConflictError } from '../../js/core/errors.js';
 import { isUuid } from '../../js/core/id-generator.js';
 import { requestToPromise } from '../../js/data/indexeddb/idb-request.js';
@@ -8,9 +9,9 @@ import {
   STORE_NAMES
 } from '../../js/data/indexeddb/schema.js';
 
-const TEST_DB_NAME = 'personal-health-pwa-test-v0.3.0';
-const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.3.0-rollback';
-const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.3.0-exercise-rollback';
+const TEST_DB_NAME = 'personal-health-pwa-test-v0.4.0';
+const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.4.0-rollback';
+const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.4.0-exercise-rollback';
 const resultNode = document.querySelector('#test-result');
 const cases = [];
 
@@ -360,7 +361,7 @@ async function run() {
   const persisted = await container.repositories.exerciseType.getById(created.id);
   await test('DB-004', () => persisted?.name === '달리기' && persisted.revision === 4, 'Record survives database close and reopen.');
 
-  // v0.3.0 Exercise Core
+  // v0.4.0 Exercise Core
   const currentTypesBeforeExercise = await container.exerciseQueryService.listActiveTypes();
   await test('EX-TYPE-001', () => currentTypesBeforeExercise.some((item) => item.system_key === 'default.pilates'), 'Default Pilates seed is visible through the exercise query service.');
 
@@ -540,6 +541,7 @@ async function run() {
 
 try {
   await run();
+  await runBackupBrowserTests(test);
 } catch (error) {
   record('BROWSER-HARNESS', false, `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}`);
 }
@@ -547,7 +549,7 @@ try {
 const passed = cases.filter((item) => item.status === 'PASS').length;
 const failed = cases.filter((item) => item.status === 'FAIL').length;
 const result = {
-  version: '0.3.0',
+  version: '0.4.0',
   suite: 'browser-indexeddb',
   executedAt: new Date().toISOString(),
   userAgent: navigator.userAgent,

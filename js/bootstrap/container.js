@@ -27,6 +27,12 @@ import { InbodyRepository } from '../data/indexeddb/repositories/inbody.reposito
 import { UserSettingsRepository } from '../data/indexeddb/repositories/user-settings.repository.js';
 import { DeviceSettingsRepository } from '../data/indexeddb/repositories/device-settings.repository.js';
 import { AppLogRepository } from '../data/indexeddb/repositories/app-log.repository.js';
+import { BackupValidationService } from '../application/backup-validation.service.js';
+import { BackupExportService } from '../application/backup-export.service.js';
+import { BackupImportService } from '../application/backup-import.service.js';
+import { IndexedDbBackupSnapshotReader } from '../data/indexeddb/backup/backup-snapshot.reader.js';
+import { IndexedDbBackupRestoreCommand } from '../data/indexeddb/backup/backup-restore.command.js';
+import { RestoreTargetInspector } from '../data/indexeddb/backup/restore-target.inspector.js';
 
 export function createContainer({
   dbName = globalThis.APP_CONFIG.DB_NAME,
@@ -71,6 +77,11 @@ export function createContainer({
   };
 
   const repositoryProvider = new RepositoryProvider(repositories);
+  const backupSnapshotReader = new IndexedDbBackupSnapshotReader({ unitOfWork, identityContext });
+  const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(), clock, faultInjector });
+  const backupValidationService = new BackupValidationService();
+  const backupExportService = new BackupExportService({ snapshotReader: backupSnapshotReader, validationService: backupValidationService, clock });
+  const backupImportService = new BackupImportService({ validationService: backupValidationService, restoreCommand: backupRestoreCommand, snapshotReader: backupSnapshotReader, identityContext, idGenerator });
   const bootstrapCommand = new IndexedDbBootstrapCommand({
     unitOfWork,
     clock,
@@ -131,6 +142,11 @@ export function createContainer({
     databaseDiagnosticService,
     exerciseManagementService,
     exerciseLogService,
-    exerciseQueryService
+    exerciseQueryService,
+    backupSnapshotReader,
+    backupRestoreCommand,
+    backupValidationService,
+    backupExportService,
+    backupImportService
   });
 }

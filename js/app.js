@@ -3,6 +3,7 @@ import { getActionErrorMessage, getPublicErrorMessage } from './core/errors.js';
 import { canLeaveCurrentRoute, clearNavigationGuard, navigate, startRouter } from './router.js';
 import { renderBottomNav } from './components/bottom-nav.js';
 import { renderExerciseRoute } from './pages/exercise/exercise.router.js';
+import { mountBackupSettings } from './pages/settings/backup-restore.page.js';
 
 const pageRoot = document.querySelector('#page-root');
 const pageTitle = document.querySelector('#page-title');
@@ -57,7 +58,7 @@ function renderHome(meta) {
   const diagnostic = appContext.diagnostic;
   pageRoot.innerHTML = `
     <section class="card"><h2>${escapeHtml(globalThis.APP_CONFIG.APP_NAME)}</h2><p>${escapeHtml(meta.message)}</p><span class="version-chip">v${escapeHtml(globalThis.APP_CONFIG.APP_VERSION)} · DB ${escapeHtml(globalThis.APP_CONFIG.DB_VERSION)}</span></section>
-    <section class="card"><h2>현재 단계</h2><p>운동 종류·동적 기록 양식·운동 기록 CRUD를 오프라인으로 사용할 수 있습니다. 횟수권과 예약은 다음 버전에서 연결합니다.</p></section>
+    <section class="card"><h2>현재 단계</h2><p>운동 기록과 JSON 백업·복원을 오프라인으로 사용할 수 있습니다. 백업은 설정에서 관리합니다. 이용권과 예약은 v0.5.0에서 연결합니다.</p></section>
     <section class="card compact-card"><div class="status-line"><span>로컬 데이터 저장소</span><strong class="status-normal">${diagnostic?.status === 'normal' ? '정상' : '확인 필요'}</strong></div></section>`;
 }
 
@@ -79,8 +80,9 @@ async function renderSettings(token) {
         <div><dt>최근 DB 오류</dt><dd>${escapeHtml(recentError)}</dd></div></dl>
         ${diagnostic.missingStores.length ? `<p class="warning-text">누락 Store: ${escapeHtml(diagnostic.missingStores.join(', '))}</p>` : ''}
         <button id="diagnose-again" class="button full-width-button" type="button">저장소 다시 진단</button></section>
-      <section class="card"><h2>보호 정책</h2><p>이 화면은 읽기 전용입니다. DB 초기화·전체 삭제 버튼은 제공하지 않습니다.</p></section>`;
-    document.querySelector('#diagnose-again')?.addEventListener('click', () => { const nextToken = ++renderToken; void renderSettings(nextToken); });
+      <section class="card"><h2>데이터 보호</h2><p>저장소 진단은 데이터를 변경하지 않습니다. 백업 복원은 초기 상태에서만 실행할 수 있습니다.</p></section>`;
+    document.querySelector('#diagnose-again')?.addEventListener('click', () => { if (!canLeaveCurrentRoute()) return; const nextToken = ++renderToken; void renderSettings(nextToken); });
+    mountBackupSettings(pageRoot, { services: appContext.services, showToast, isCurrent: () => token === renderToken });
   } catch (error) {
     if (token !== renderToken) return;
     showError('저장소 진단에 실패했습니다.', error);

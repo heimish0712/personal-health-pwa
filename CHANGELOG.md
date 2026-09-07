@@ -1,5 +1,43 @@
 # Changelog
 
+## v0.4.0 - 2026-09-07
+
+### Added
+- 설정의 현재 Profile JSON v1 백업 내보내기, 파일 검증, 미리보기, pristine 복원
+- 12 Store 단일 readonly snapshot, scope/counts/data canonical JSON SHA-256
+- UUID·revision·created_at·updated_at·deleted_at·역사적 Template 보존
+- 50 MB 제한, format/버전/건수/행/소유권/참조/현재 고유키 검증, 사진 메타데이터 거절
+- 13 Store 복원 전용 Command: 초기 자동생성 3행만 교체, 원본 add, device_id 유지
+- commit 후 전체 portable snapshot hash 재검증, 재실행·동시 복원·변경된 대상 차단
+- 오프라인 다운로드/복원 UI 및 실제 IndexedDB rollback·동일성·화면 회귀 테스트
+- 실제 백업 파일의 .gitignore 제외 규칙
+
+### Changed
+- App/cache 0.3.0 → 0.4.0, BACKUP_FORMAT_VERSION 1 추가
+- 사용자 최종 지시에 따라 기존 자동 Seed 부팅 유지, 설정에서 pristine 복원
+- 테스트 출력은 v0.4.0 경로 사용; v0.3 FINAL과 과거 자동결과 보존
+- 이용권·예약 개발은 v0.5.0으로 순연
+
+### DB / Migration
+- DB 1 / Schema 1 / Seed 1 / 14 Store 및 인덱스 유지, Migration 없음
+- 일반 CRUD Repository와 운동 업무 로직 유지, 삭제 파일 없음
+
+### Verification
+- 최신 PASS/FAIL/NOT RUN은 REGRESSION_TEST.md와 tests/results/v0.4.0.json 참조
+- 사용자 실기기 QA는 별도이며 v0.3 사용자 PASS를 v0.4에 자동 승계하지 않음
+
+
+## 문서 정정 및 후속 설계 - 2026-09-07
+
+- 사용자 QA 보고를 반영하여 v0.3.0 FINAL BASELINE을 `186 PASS / 0 FAIL / 0 NOT RUN`으로 확정
+- 기존 `180 PASS / 0 FAIL / 6 NOT RUN` 자동결과 JSON은 당시 실행 이력으로 보존하고 최종 문서와 출처를 구분
+- Backup Core → 이용권·예약 → 체중·인바디 → 식단·사진 → Backup v2 → 홈·통합 캘린더 완성 → 운영 안정화 → Supabase/Auth/Sync 순서 기록
+- JSON Backup v1의 12 Store 범위, 메타데이터·관계 보존, 검증, 병합 없는 빈 환경 복원 상세 설계 추가
+- 이용권의 운동기록별 `status = used` 최대 1건 규칙, 취소 이력 보존, 기능별 기간 인덱스 조회 원칙 기록
+- `AGENTS.md`에 협업·변경·회귀검증 작업 규칙 기록
+- 문서만 변경. App `0.3.0` / DB `1` / Schema `1` / Seed `1` 유지, Migration 없음, 삭제 파일 없음
+- Backup Core 기능과 해당 인수 테스트는 미구현·미실행
+
 ## v0.3.0 - 2026-09-05
 
 ### Added
@@ -50,17 +88,17 @@
 
 ### Verification
 - Node 정적/아키텍처/Schema/Application Service: `180 PASS / 0 FAIL`
-- Browser runtime suite: 실행 환경의 Chromium 관리정책으로 로컬 URL이 차단되어 `1 NOT RUN`
-- GitHub Pages/갤럭시 실기기: `5 NOT RUN`
-- 총합: `186 cases / 180 PASS / 0 FAIL / 6 NOT RUN`
-- 브라우저 Suite를 PASS로 허위기록하지 않고 정책 제한을 증적으로 유지
+- 당시 자동검증: Browser runtime `1 NOT RUN`, GitHub Pages/갤럭시 `5 NOT RUN`; 총합 `180 PASS / 0 FAIL / 6 NOT RUN` 원본 JSON 보존
+- 이후 사용자 QA: GitHub Pages·갤럭시·오프라인·`db-test.html` 통과, 기존 미실행 6건 해소
+- 최종 회귀 기준: **`186 PASS / 0 FAIL / 0 NOT RUN`** (2026-09-07 문서 반영)
+- 추가 6건은 사용자 보고에 따른 QA PASS이며 자동검증 재실행 결과가 아님
 
 ### Known Issues
-- 필라테스 횟수권 차감과 운동 예약/예정은 v0.4.0 예정
+- 다음 개발은 Backup Core이며 이용권 차감과 운동 예약/예정은 그 이후 구현
 - 캘린더 실제 데이터 연결, 홈 통계 확장은 후속 버전 예정
 - 운동 기록 휴지통/복원 UI는 아직 없으며 Service/Repository 기반만 유지
 - 식단, 사진 Blob, 체중, 인바디, 백업/복원, Supabase Sync 미구현
-- 실제 GitHub Pages 및 갤럭시에서 v0.2.0 -> v0.3.0 업데이트 검증 필요
+- 실제 GitHub Pages 및 갤럭시에서 v0.2.0 -> v0.3.0 업데이트 검증은 사용자 QA로 통과 확인
 
 ## v0.2.0 - 2026-09-04
 

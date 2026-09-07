@@ -160,6 +160,8 @@ button { cursor: pointer; }
 .form-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
 .form-section h3 { margin: 0 0 10px; font-size: 15px; }
 .form-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.backup-actions { margin-top: 16px; }
+button:disabled { cursor: default; opacity: .55; }
 .field-with-unit { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
 .field-unit { color: var(--muted); font-size: 13px; }
 .toggle-row { display: flex !important; align-items: center; gap: 8px; min-height: 38px; }

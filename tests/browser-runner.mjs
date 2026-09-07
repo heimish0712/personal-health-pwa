@@ -6,8 +6,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.3.0-browser.json');
-const basePath = '/personal-health-pwa-v0.3.0/';
+const outputPath = path.join(root, 'tests/results/v0.4.0-browser.json');
+const basePath = '/personal-health-pwa-v0.4.0/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -66,7 +66,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.3.0',
+    version: '0.4.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -311,6 +311,7 @@ try {
 
   child = spawn(browser, args, {
     detached: process.platform !== 'win32',
+    windowsHide: true,
     stdio: ['ignore', 'ignore', 'ignore']
   });
 
@@ -340,11 +341,12 @@ try {
 
     const dbResultText = await cdp.evaluate("document.querySelector('#test-result')?.textContent ?? ''");
     const dbResult = JSON.parse(dbResultText);
+    const backupUiDocument = await cdp.evaluate('globalThis.__BACKUP_TEST_DOCUMENT__ ?? null');
     const runtimeCases = [];
     const runtimeTest = makeRuntimeRecorder(runtimeCases);
 
     await cdp.evaluate(`(async () => {
-      const legacyCache = await caches.open('personal-health-pwa-v0.1.0');
+      const legacyCache = await caches.open('personal-health-pwa-v0.3.0');
       await legacyCache.put(
         '${origin}${basePath}legacy-cache-marker',
         new Response('legacy')
@@ -364,7 +366,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.3.0 · DB 1'),
+      (value) => value?.title === '홈' && value.body.includes('v0.4.0 · DB 1'),
       30000
     );
 
@@ -477,15 +479,15 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.3.0');
-    }, 'The v0.3.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.4.0');
+    }, 'The v0.4.0 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
       return Array.isArray(keys)
-        && !keys.includes('personal-health-pwa-v0.1.0')
+        && !keys.includes('personal-health-pwa-v0.3.0')
         && keys.includes('unrelated-app-cache');
-    }, 'Activation removes the simulated v0.1.0 App Shell cache without clearing unrelated cache names.');
+    }, 'Activation removes the simulated v0.3.0 App Shell cache without clearing unrelated cache names.');
 
     await cdp.send('Page.navigate', { url: appUrl });
     await pollEvaluate(
@@ -509,7 +511,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.3.0 · DB 1'),
+        (state) => state?.title === '홈' && state.body.includes('v0.4.0 · DB 1'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -526,6 +528,51 @@ try {
       return value.body.includes('Current Profile') && value.body.includes('연결됨');
     }, 'The Profile and 14-store diagnostic remain available offline.');
 
+    // All UI backup flows run offline in this disposable browser profile.
+    await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: profileDirectory });
+    await runtimeTest('BACKUP-UI-EXPORT', async () => {
+      await cdp.evaluate("document.querySelector('#backup-export').click()");
+      await pollEvaluate(cdp, "document.querySelector('#backup-status')?.textContent ?? ''", (value) => value.includes('백업을 생성했습니다.'), 10000);
+      const deadline = Date.now() + 10000;
+      let downloaded;
+      while (Date.now() < deadline) {
+        downloaded = fs.readdirSync(profileDirectory).find((name) => /^personal-health-backup-v1-.*\.json$/.test(name));
+        if (downloaded) break;
+        await wait(100);
+      }
+      if (!downloaded) return false;
+      const doc = JSON.parse(fs.readFileSync(path.join(profileDirectory, downloaded), 'utf8'));
+      return doc.format === 'personal-health-pwa-backup' && doc.counts.profiles === 1 && doc.integrity.payloadHash.length === 64;
+    }, 'Offline settings export downloads an actual JSON file in the disposable browser profile.');
+
+    const selectBackup = async () => {
+      if (!backupUiDocument) throw new Error('Synthetic backup fixture unavailable.');
+      await cdp.evaluate(`(() => {
+        const transfer = new DataTransfer();
+        transfer.items.add(new File([${JSON.stringify(JSON.stringify(backupUiDocument))}], 'synthetic.backup.json', { type: 'application/json' }));
+        const input = document.querySelector('#backup-file');
+        input.files = transfer.files;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      })()`);
+      return pollEvaluate(cdp, `({ preview: Boolean(document.querySelector('#backup-confirm')), busy: document.querySelector('#backup-settings')?.getAttribute('aria-busy'), disabled: document.querySelector('#backup-confirm')?.disabled, text: document.querySelector('#backup-status')?.textContent })`, (state) => state.preview && state.busy === 'false', 10000);
+    };
+    await runtimeTest('BACKUP-UI-PRISTINE-PREVIEW', async () => !(await selectBackup()).disabled, 'Valid file previews on the seeded target and enables restore.');
+    await runtimeTest('BACKUP-UI-OFFLINE-RESTORE', async () => {
+      await cdp.evaluate("document.querySelector('#backup-confirm').click()");
+      const result = await pollEvaluate(cdp, `({ profile: document.querySelector('.diagnostic-list')?.textContent ?? '', ready: Boolean(document.querySelector('#backup-settings')) })`, (state) => state.ready && state.profile.includes(backupUiDocument.scope.profileId.slice(0, 8)), 15000);
+      return result.ready;
+    }, 'Offline UI restore commits, verifies and reloads with the original Profile ID.');
+    await runtimeTest('BACKUP-UI-POPULATED-PREVIEW', async () => (await selectBackup()).disabled, 'Same valid file is previewable on populated data but restore is disabled.');
+    await runtimeTest('BACKUP-UI-RESTORED-HASH', async () => {
+      const hash = await cdp.evaluate(`(async () => {
+        const { bootstrapApplication } = await import('./js/bootstrap/bootstrap.js');
+        const app = await bootstrapApplication();
+        const exported = await app.services.backupExport.exportCurrentProfile();
+        return exported.document.integrity.payloadHash;
+      })()`);
+      return hash === backupUiDocument.integrity.payloadHash;
+    }, 'After offline UI reload, full portable payload hash still matches the imported file.');
+
     await cdp.send('Network.emulateNetworkConditions', {
       offline: false,
       latency: 0,
@@ -540,7 +587,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.3.0',
+      version: '0.4.0',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -558,7 +605,7 @@ try {
   })(), 120000, 'Browser runtime suite exceeded the 120 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.3.0',
+    version: '0.4.0',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },
@@ -584,5 +631,11 @@ try {
   cdp?.close();
   stopBrowser(child);
   await closeServer(server);
-  if (profileDirectory) fs.rmSync(profileDirectory, { recursive: true, force: true });
+  if (profileDirectory) {
+    const resolved = path.resolve(profileDirectory);
+    const tempRoot = path.resolve(os.tmpdir());
+    if (path.dirname(resolved) !== tempRoot || !path.basename(resolved).startsWith('health-pwa-browser-test-')) throw new Error('Unsafe test profile cleanup path.');
+    try { fs.rmSync(resolved, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); }
+    catch (error) { console.error(`Temporary browser profile cleanup failed (${error.code}).`); }
+  }
 }

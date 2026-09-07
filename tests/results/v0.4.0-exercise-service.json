@@ -1,0 +1,108 @@
+{
+  "version": "0.4.0",
+  "suite": "exercise-service",
+  "executedAt": "2026-09-07T02:31:33.030Z",
+  "summary": {
+    "total": 19,
+    "passed": 19,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "UNIT-EX-001",
+      "status": "PASS",
+      "evidence": "Exercise type and template v1 are created through contracts."
+    },
+    {
+      "id": "UNIT-EX-002",
+      "status": "PASS",
+      "evidence": "Custom field receives stable generated key."
+    },
+    {
+      "id": "UNIT-LOG-001",
+      "status": "PASS",
+      "evidence": "New log uses active template and normalizes numeric values."
+    },
+    {
+      "id": "UNIT-TIME-001",
+      "status": "PASS",
+      "evidence": "Asia/Seoul datetime conversion is deterministic."
+    },
+    {
+      "id": "UNIT-TPL-001",
+      "status": "PASS",
+      "evidence": "Template change creates v2 and supersedes v1."
+    },
+    {
+      "id": "UNIT-TPL-002",
+      "status": "PASS",
+      "evidence": "Custom field label change preserves key."
+    },
+    {
+      "id": "UNIT-TPL-003",
+      "status": "PASS",
+      "evidence": "Stale template ID/revision pair is rejected."
+    },
+    {
+      "id": "UNIT-LOG-002",
+      "status": "PASS",
+      "evidence": "Historical log keeps template v1."
+    },
+    {
+      "id": "UNIT-LOG-003",
+      "status": "PASS",
+      "evidence": "Historical log update keeps original template ID and increments revision."
+    },
+    {
+      "id": "UNIT-LOG-004",
+      "status": "PASS",
+      "evidence": "Stale log revision is rejected."
+    },
+    {
+      "id": "UNIT-LOG-005",
+      "status": "PASS",
+      "evidence": "New log uses latest active template."
+    },
+    {
+      "id": "UNIT-VAL-001",
+      "status": "PASS",
+      "evidence": "Invalid number is rejected."
+    },
+    {
+      "id": "UNIT-TYPE-001",
+      "status": "PASS",
+      "evidence": "Exercise type can be deactivated."
+    },
+    {
+      "id": "UNIT-VAL-002",
+      "status": "PASS",
+      "evidence": "Inactive exercise rejects new logs."
+    },
+    {
+      "id": "UNIT-TYPE-002",
+      "status": "PASS",
+      "evidence": "Exercise type soft-delete is used."
+    },
+    {
+      "id": "UNIT-TYPE-003",
+      "status": "PASS",
+      "evidence": "Exercise type restore keeps ID."
+    },
+    {
+      "id": "UNIT-LOG-006",
+      "status": "PASS",
+      "evidence": "Deleted log is hidden from normal read."
+    },
+    {
+      "id": "UNIT-LOG-007",
+      "status": "PASS",
+      "evidence": "Deleted log can be restored."
+    },
+    {
+      "id": "UNIT-QUERY-001",
+      "status": "PASS",
+      "evidence": "Weekly summary is calculated from source logs, not stored counters."
+    }
+  ]
+}

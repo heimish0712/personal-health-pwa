@@ -1,0 +1,313 @@
+{
+  "version": "0.4.0",
+  "suite": "schema",
+  "executedAt": "2026-09-07T02:31:32.031Z",
+  "summary": {
+    "total": 60,
+    "passed": 60,
+    "failed": 0,
+    "notRun": 0
+  },
+  "cases": [
+    {
+      "id": "SCHEMA-001",
+      "status": "PASS",
+      "evidence": "Exactly 14 Object Stores are defined."
+    },
+    {
+      "id": "SCHEMA-002",
+      "status": "PASS",
+      "evidence": "Store definition count matches expected count."
+    },
+    {
+      "id": "SCHEMA-003",
+      "status": "PASS",
+      "evidence": "12 stores are classified as future sync targets."
+    },
+    {
+      "id": "SCHEMA-004",
+      "status": "PASS",
+      "evidence": "2 stores are classified as local-only."
+    },
+    {
+      "id": "SCHEMA-005",
+      "status": "PASS",
+      "evidence": "Profile keyPath is id."
+    },
+    {
+      "id": "SCHEMA-006",
+      "status": "PASS",
+      "evidence": "Device settings keyPath is key."
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile_status_sort",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_types:by_profile_name",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_types:uq_profile_system_key",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_templates:by_profile_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_templates:by_profile_exercise_status",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_templates:uq_profile_exercise_version",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_performed_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_exercise_performed_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_logs:by_profile_template",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_status_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_schedules:by_profile_exercise_scheduled_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:exercise_schedules:uq_profile_completed_log",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:passes:by_profile_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:passes:by_profile_status",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:passes:by_profile_expiry",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_pass",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_pass_status",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:pass_usage_logs:by_profile_exercise_log",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:pass_usage_logs:uq_profile_pass_exercise",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:diet_logs:by_profile_eaten_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:diet_logs:by_profile_meal_eaten_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:diet_photos:by_profile_diet_sort",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:diet_photos:uq_profile_storage_key",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:weight_logs:by_profile_measured_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:weight_logs:by_profile_source",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:weight_logs:uq_profile_source_ref",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:inbody_logs:by_profile_measured_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:user_settings:uq_profile_key",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:app_logs:by_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:app_logs:by_level_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX:app_logs:by_event_created_at",
+      "status": "PASS",
+      "evidence": "Required index is defined."
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_types:uq_profile_system_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_templates:uq_profile_exercise_version",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE:exercise_schedules:uq_profile_completed_log",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE:pass_usage_logs:uq_profile_pass_exercise",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE:diet_photos:uq_profile_storage_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE:weight_logs:uq_profile_source_ref",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE:user_settings:uq_profile_key",
+      "status": "PASS",
+      "evidence": "Unique compound index definition and key path match the approved schema."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:profiles",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_types",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_templates",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:exercise_schedules",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:passes",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:pass_usage_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:diet_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:diet_photos",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:weight_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:inbody_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:user_settings",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:device_settings",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    },
+    {
+      "id": "INDEX-UNIQUE-NAME:app_logs",
+      "status": "PASS",
+      "evidence": "Index names are unique within the store."
+    }
+  ]
+}

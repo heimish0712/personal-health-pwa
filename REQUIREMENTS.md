@@ -144,5 +144,31 @@
 - **TEST-002** 예상 결과 파일이 생성되지 않으면 누락을 FAIL로 기록한다.
 - **TEST-003** 실행하지 못한 브라우저·실기기 검증은 PASS가 아니라 NOT RUN으로 기록한다.
 - **TEST-004** 브라우저 자동검증은 운영 DB와 다른 테스트 DB 및 임시 브라우저 Profile을 사용한다.
-- **REL-001** 코드 릴리스는 변경 파일 ZIP, 전체 소스 ZIP, 이전 버전 대비 diff patch를 기본 산출물로 제공한다.
+- **REL-001** 코드 릴리스는 변경 파일 ZIP·전체 소스 ZIP·diff patch 또는 검토 가능한 git diff를 제공한다. 신규 파일도 검토 대상에 포함한다.
 - **REL-002** 릴리스마다 변경 파일 수, DB Version, Migration, 영향 범위, 적용·복구 절차를 기록한다.
+- **TEST-005** v0.3 FINAL 회귀 기준은 `186 PASS / 0 FAIL / 0 NOT RUN`, App `0.3.0` / DB `1` / Schema `1` / Seed `1`이다. 당시 자동검증 JSON과 이후 사용자 QA를 출처별로 구분한다.
+- **TEST-006** 후속 버전은 새 실행 결과를 별도로 기록한다. 미실행 항목에 과거 PASS를 승계하지 않고 사용자 실기기 QA를 자동 PASS 처리하지 않는다.
+- **REL-003** 기존 정상 기능을 임의 재작성하지 않으며 실제 코드 기준으로 작업하고 삭제 파일을 명시한다. CHANGELOG·REQUIREMENTS·REGRESSION_TEST를 갱신한다.
+
+## Backup Core — v0.4.0
+
+2026-09-07 사용자 최종 지시로 구현한 범위다. 이전 Seed 생성 전 복원 설계를 대체한다. 상세 설계는 [BACKUP_CORE_DESIGN.md](docs/BACKUP_CORE_DESIGN.md), 실행 결과는 REGRESSION_TEST.md를 따른다.
+
+- **BACKUP-001** 현재 Profile의 12개 동기화 대상 Store를 JSON으로 내보낸다. Profile 범위를 강제하며 device_settings·app_logs·사진 Blob은 포함하지 않는다.
+- **BACKUP-002** ID, profile_id, created_at, updated_at, revision, deleted_at, 역사적 Template 및 참조 관계를 보존한다. 내보내기와 복원에서 행을 정규화하거나 메타데이터를 재생성하지 않는다.
+- **BACKUP-003** format=personal-health-pwa-backup, backupVersion, source, exportedAt, scope, counts, data, integrity 구조를 사용한다. scope+counts+data의 canonical JSON SHA-256을 검사한다. 입력 한도는 50 MB이며 appVersion/dbVersion 차이는 거절 기준이 아니다.
+- **BACKUP-004** 파일 구조, 지원 버전, checksum, UUID·메타데이터, Profile 범위, 관계, 현재 고유 인덱스 조건을 검증하고 오류가 있으면 복원 쓰기를 시작하지 않는다.
+- **BACKUP-005** 병합 없는 pristine 환경 복원만 지원한다. 수정되지 않은 최초 Profile·필라테스·Template 3행과 사용자 데이터 0행을 transaction 안에서 재확인한다. 확인된 초기 3행만 복원 전용 Adapter에서 제거하고 원본 데이터를 삽입한다. soft-delete·사용자 설정·변경 Seed가 있으면 거절한다.
+- **BACKUP-006** Snapshot은 하나의 readonly transaction으로 읽는다. 복원은 전용 Semantic Command의 단일 readwrite transaction에서 대상 조건 재검사, 행 삽입, 현재 Profile 포인터 연결을 함께 처리한다.
+- **BACKUP-007** 일반 Repository의 create/update API를 import에 사용하지 않는다. 부분 복원, UUID 재발급, stale 미리보기 기반 덮어쓰기를 허용하지 않는다.
+- **BACKUP-008** 기존 자동 Profile/Seed 부팅을 유지하고 설정에서 복원한다. 취소·실패 시 최초 Profile/Seed와 기기 설정을 보존한다. commit 후 전체 portable snapshot hash를 원본과 비교하고 성공 후 새로고침한다.
+- **BACKUP-009** 복원 미리보기에 Profile·시각·항목 수·삭제 포함 수·검증 결과를 보여주고 사용자가 복원 실행을 선택한 뒤 저장한다. 중복 실행과 저장 중 이동·업데이트를 제어한다.
+- **BACKUP-010** 기존 기능, 실패 rollback, 재시도·동시성, close/reopen·오프라인, 실제 파일 저장·선택·복원 흐름을 검증한다. 자동검증과 사용자 QA를 분리한다.
+- **BACKUP-011** 사진 도입 후 Backup v2를 ZIP(data.json + media/)으로 확장하고 JSON Backup v1 읽기 호환을 유지한다. v2 구현은 Backup Core 범위 밖이다.
+- **BACKUP-012** diet_photos에 한 행이라도 있으면 Backup v1 Export/Import를 BACKUP_MEDIA_UNSUPPORTED로 거절한다. device_id는 복원 중 변경하지 않는다. 실제 백업 파일 패턴은 .gitignore로 제외한다.
+
+## 후속 설계 원칙 (해당 기능 개발 시 적용)
+
+- **PASS-FUTURE-001** 운동기록 하나에 `status = used` 사용로그는 최대 1건, cancelled 이력은 여러 건 허용한다. Command transaction에서 검사하고 운동기록·사용원장·예약 완료를 원자적으로 처리한다.
+- **PASS-FUTURE-002** A 취소 → B 사용·취소 → A 재사용 이력을 별도 행으로 보존한다. 현재 `UNIQUE-003`의 쌍 고유 인덱스는 v0.3 기준으로 유지하고, 이용권 개발 시 누적 Migration으로 교체하여 이력 정책과 멱등성 규칙을 함께 검증한다. exercise_log_id 단독 UNIQUE를 추가하지 않는다.
+- **QUERY-FUTURE-001** BaseScopedRepository.list()는 유지하고 기간 조회가 필요한 기능별 Repository에 기존 Profile+날짜 인덱스 메서드를 추가한다.

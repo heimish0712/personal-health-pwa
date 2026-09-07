@@ -1,4 +1,4 @@
-# Architecture - v0.3.0
+# Architecture - v0.4.0
 
 ## 목적
 
@@ -42,7 +42,17 @@ ExerciseManagementCommandPort
 
 `운동 종류 + Template v1 생성`, `기존 Template supersede + 신규 Template 생성`은 multi-store 원자성이 필요하므로 semantic Command로 처리한다.
 
-단일 `exercise_logs` 행 CRUD는 Repository Contract로 처리한다. v0.4에서 운동기록과 이용권 사용로그가 동시에 바뀌면 별도 `ExerciseCommandPort`를 추가한다.
+단일 `exercise_logs` 행 CRUD는 Repository Contract로 처리한다. Backup Core 다음의 이용권·예약 단계에서 운동기록과 이용권 사용로그가 동시에 바뀌면 별도 `ExerciseCommandPort`를 추가한다. 예약 완료는 예약 + 운동기록 + 사용로그를 동일 transaction으로 처리한다.
+
+## Backup Core 및 후속 구현 경계
+
+- Backup Core는 snapshot 읽기 Port와 복원 전용 Semantic Command Port를 추가했다. ID와 메타데이터를 재생성하는 일반 Repository `create()`를 import에 사용하지 않는다.
+- 기존 자동 부팅을 유지한다. pristine 초기 Profile/Seed만 복원 전용 13 Store transaction에서 교체하고, commit 후 IdentityContext 연결과 전체 snapshot hash 재검증을 수행한다. 세부 조건은 [BACKUP_CORE_DESIGN.md](BACKUP_CORE_DESIGN.md)를 따른다.
+- 이용권은 운동기록별 `status = used` 최대 1건을 Command transaction에서 검사하고 cancelled 이력을 보존한다. 기존 쌍 UNIQUE 인덱스의 변경은 이용권 단계의 Migration으로 다룬다.
+- 범용 `list()`는 유지한다. 기간 조회는 기능별 Repository에 기존 인덱스를 사용하는 메서드를 추가한다.
+- 사진은 메타데이터와 로컬 Blob Store를 분리하고 향후 Storage Adapter로 확장한다.
+
+Backup Core는 v0.4.0에 구현했다. 이용권·기간 조회·사진 확장은 후속 설계다. v0.3의 14 Store/Index와 일반 CRUD는 유지한다. 구현 순서는 [ROADMAP.md](ROADMAP.md)를 따른다.
 
 ## Template 동시성
 
