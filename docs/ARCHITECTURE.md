@@ -102,3 +102,8 @@ Supabase 연결 후에도 IndexedDB는 즉시 읽고 쓰는 로컬 원장으로 
 ## v0.5.0 Activity Command
 
 운동기록과 예약·이용권 정합성은 ActivityCommandContract → IndexedDbActivityCommand에서 처리한다. Service에 generic transaction을 노출하지 않는다. 자세한 상태 전이·멱등성·조회·RPC 경계는 [PASS_SCHEDULE_DESIGN.md](PASS_SCHEDULE_DESIGN.md)를 따른다.
+
+
+## v0.5.1 사용자 QA에 따른 명시적 확장
+
+일반 pristine 복원 경로를 유지하면서 별도 replace restore와 전체 초기화를 지원한다. portable Store 삭제/삽입과 current_profile_id 전환은 전용 BackupRestore Command transaction 한 번으로 수행한다. 일반 CRUD나 DB Migration에 clear를 추가하지 않으며 device_id 등 기기 데이터는 유지한다. 백업 후 실행은 저장된 파일 재검증, 대상 fingerprint 재확인 후에만 진행한다. DB1/Schema1/Seed1/Backup1 유지, Migration 없음. 자세한 구현은 [QA_V051_DESIGN.md](QA_V051_DESIGN.md)를 따른다.

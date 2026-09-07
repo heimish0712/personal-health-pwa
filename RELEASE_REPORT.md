@@ -1,52 +1,59 @@
-# Release Report — v0.5.0 Pass & Schedule
+# Release Report — v0.5.1 QA 피드백 반영
 
-## 상태와 기준
+## 요약
 
-- 기준: 사용자 지정 v0.4.0 검증 완료본, 작업 시작 시 clean HEAD `f05d0be5c12def44741b6a30e863db776ca03b7e`.
-- 구현 완료 및 자동검증: **386 PASS / 0 FAIL / 17 NOT RUN**. Pages/Galaxy 실기기 항목은 사용자 검증 대기.
-- App/cache 0.5.0 / DB1 / Schema1 / Seed1 / Backup1. **Migration 없음, 삭제 파일 0개**.
-- 기존 범용 Repository, Store/Index, 과거 v0.3/v0.4 테스트 결과는 유지.
+사용자 요청6개를 반영했다: 예약 완료 이용권 기본 선택, 실제 월간 캘린더 및 연결 완료 단일 표시, 운동 종류 전환 입력 보존, 상태별 이용권 버튼, 전체 초기화, 별도 강제 복원(replace).
 
-## 변경 결과
+- 기준 HEAD: `16ad3fe27a1a77d4efc6b8597ae49b5ed7dac0e5` (작업 시작 시 clean).
+- App/cache0.5.1 / DB_VERSION1 / Schema1 / Seed1 / Backup1. **Migration 없음**, Store/Index 변화 없음.
+- **424 PASS / 0 FAIL / 25 NOT RUN**. 이전 자동386개 유지 + 신규38개. 실제 Pages/Galaxy QA25건 대기.
+- 일반 pristine 복원, Local-first/Service/Repository/Semantic Command 구조, 기존 운동/예약 원장 transaction을 유지한다.
 
-운동별 이용권 및 계산 잔여량, 운동기록 선택 차감·해제·교체·삭제·복원, 예약 생성·수정·취소·완료·완료 취소를 제공한다. 캘린더에서 기간별 예약과 실제 기록을 조회한다. 같은 pass 재적용은 기존 usage를 재활성화하고 완료 취소 후 재완료는 연결 log ID를 재사용한다.
-
-Service는 입력 정규화와 업무 호출을 담당한다. ActivityCommand가 다중 Store 정합성/동시성/expectedRevision/원자성을 보장한다. 기존 Profile 날짜 인덱스를 사용하는 Query를 추가했으며 BaseScopedRepository를 전면 수정하지 않았다.
-
-| 구분 | PASS | FAIL | NOT RUN |
+| Suite | PASS | FAIL | NOT RUN |
 |---|---:|---:|---:|
 | smoke | 72 | 0 | 0 |
 | architecture | 29 | 0 | 0 |
 | schema | 60 | 0 | 0 |
 | exercise-service | 19 | 0 | 0 |
 | backup | 26 | 0 | 0 |
-| browser-runtime | 180 | 0 | 0 |
-| 사용자 배포·실기기 QA | 0 | 0 | 17 |
-| **합계 (403건)** | **386** | **0** | **17** |
+| browser-runtime | 218 | 0 | 0 |
+| 실제 Pages/Galaxy QA | 0 | 0 | 25 |
+| **합계** | **424** | **0** | **25** |
 
-## 적용 및 산출물
+## 발견한 기존 구조 문제와 수정 여부
 
-- changed.zip: 기준 HEAD 대비 수정·추가 파일의 현재 내용. 저장소 루트에 경로를 유지하여 적용한다.
-- full.zip: 현재 배포 소스·문서·테스트 전체(.git 및 ignored 개인 파일 제외).
-- diff.patch: 기준 HEAD 대비 신규 파일과 모바일 이미지까지 포함한 binary-capable patch. changed.zip과 patch 중 한 방법만 사용한다.
-- manifest.json: 기준 commit, 변경/전체 목록, 삭제 목록, ZIP/patch SHA-256.
-- 배포 전 기존 앱에서 JSON 백업을 보관한다. 변경 전체 적용 후 App/cache 0.5.0 확인 → 사용자 선택 업데이트 → MANUAL_QA.md 순서로 실행한다.
-- 저장소 소스 수정과 산출물 생성까지만 수행했다. commit/push/실제 Pages 배포는 수행하지 않았다.
+1. 캘린더의 schedule/log 단순 합산 → Calendar projection에서 연결 해석/단일 표시로 수정. 실제 운동일과 월 경계 연결도 기존 index로 조회한다.
+2. 동적 필드 빈 값 재생성/비동기 응답 경쟁 → compatibleDraft와 응답 순서 검사로 수정. 날짜/시간/메모 DOM 유지.
+3. 사용이력 기반 상태 버튼 → status 전용 toggle로 수정. usage/remaining은 그대로, pass revision만 증가.
+4. non-pristine fingerprint가 null → 모든 portable 값과 pointer 값/device 정보로 대상 변경 검사 확장.
+5. 브라우저 다운로드 클릭은 저장 완료 증거가 아님 → 내려받은 파일 재선택·validator/hash 일치 후에만 초기화/교체 허용. 다운로드/백업 실패로 데이터 삭제하지 않음.
 
-## 검증과 제한
+reset/replace에서만 전용 Command의 portable clear를 허용하며 일반 Repository API는 변경하지 않았다. 같은 transaction에 현재 데이터 제거+원본 삽입 또는 정상 Seed 생성+pointer 전환을 포함한다. device_id 및 다른 device_settings/app_logs는 유지한다. 강제 복원은 merge나 Sync 충돌 해결이 아니다.
 
-실제 Chrome의 격리 DB에서 11개 transaction 실패 지점에 대한 전후 전체 portable 동일성, 잔여1 동시 차감, 중복 완료, Profile 격리, 재복원/재실행 hash를 확인했다. 오프라인 UI 8건과 412px 캡처를 검사했다. 실기기 미실행 17건은 자동 PASS로 처리하지 않았다.
+## 적용과 산출물
 
-캘린더는 기간별 예약/운동 목록이며 체중·식단 통합과 월간 요약은 후속 작업이다. 동일 쌍 usage는 재활성화하므로 모든 취소/재사용 이벤트를 별도 행으로 쌓는 감사 이벤트 스트림은 아니다.
+- changed.zip: 기준 HEAD 대비 수정/추가 파일만 포함, 저장소 루트에 경로 유지 적용.
+- full.zip: 현재 전체 소스·문서·테스트, .git/ignored 개인 파일 제외.
+- diff.patch: 신규 파일과 이미지 포함 binary patch. changed.zip과 patch 중 하나만 적용.
+- manifest.json: 기준 commit, 변경/전체 목록, 삭제 목록, SHA-256과 검증 내용.
+- 기존 환경에서 JSON 보호 백업 보관 → 변경 파일 적용 → 온라인 앱 업데이트 선택 → 홈 v0.5.1/DB1 확인 → MANUAL_QA.md 절차.
+- 코드 수정/테스트/패키징까지만 수행했다. commit/push/실제 Pages 배포/운영 데이터 초기화는 수행하지 않았다.
 
-## 원복
+## 안전 및 원복
 
-일반 운동은 삭제하면 차감 취소, 완료 예약은 완료 취소 후 예약 취소한다. 테스트 내역은 soft-delete/cancelled로 남기는 것이 정상이다. 기존 데이터와 백업은 삭제하지 않는다.
-**v0.5에서 이용권을 연동한 뒤 v0.4 코드로 운동을 수정/삭제하면 v0.4에는 원장 갱신이 없어 불일치할 수 있다.** 문제가 생기면 백업을 보관하고 쓰기를 중지한 채 수정 릴리스를 적용한다. 단순 DB downgrade/초기화는 하지 않는다. v0.5 사용 전 코드 검토 원복에는 reverse patch를 사용할 수 있으나 사용자 데이터까지 원복하지는 않는다.
+초기화/강제 복원은 모든 Profile의 portable 데이터를 대상으로 한다. Backup v1은 한 Profile만 export하므로 여러 Profile이 있는 경우 백업 후 전체 교체 경로는 차단한다. 각 Profile을 따로 보관하거나 명시적 백업 없는 전체 교체 경고/최종 확인을 따른다.
+
+백업 후 초기화/교체에는 저장된 JSON을 다시 선택하는 한 단계가 있다. 모바일 브라우저가 다운로드 완료 이벤트를 제공한다고 가정하지 않기 위한 검증이다. 잘못된 파일·미선택·대상 변경·백업 실패는 기존 데이터를 유지한다.
+
+실패 transaction은 전부 rollback한다. 성공한 초기화/교체를 되돌리려면 보호 JSON으로 복원한다(빈 상태=일반 복원, 데이터 있음=강제 복원). 코드 reverse patch만으로 삭제된 사용자 데이터가 되살아나지는 않는다. DB 자체 삭제/downgrade는 하지 않는다.
+
+## 검증 제한
+
+실기기25건 NOT RUN. 412px 자동 캡처는 Galaxy 실기기 PASS가 아니다. 사진 Blob/ZIP 백업, merge/Sync 정책 추가 없음. 백업 v1의 사진 metadata 거절 정책 유지.
 
 ## 변경 파일 목록
 
-총 57개: 수정 39 / 신규 18 / 삭제 0.
+총 51개: 신규 13 / 수정 38 / 삭제 0개.
 
 - AGENTS.md
 - CHANGELOG.md
@@ -55,51 +62,45 @@ Service는 입력 정규화와 업무 호출을 담당한다. ActivityCommand가
 - REGRESSION_TEST.md
 - RELEASE_REPORT.md
 - REQUIREMENTS.md
+- css/common.css
 - docs/ARCHITECTURE.md
-- docs/DATA_MODEL.md
+- docs/BACKUP_CORE_DESIGN.md
 - docs/MIGRATION_POLICY.md
-- docs/PASS_SCHEDULE_DESIGN.md
+- docs/QA_V051_DESIGN.md
 - docs/ROADMAP.md
 - js/app.js
-- js/application/exercise-log.service.js
-- js/application/exercise-query.service.js
+- js/application/backup-import.service.js
 - js/application/pass-schedule.service.js
-- js/bootstrap/bootstrap.js
 - js/bootstrap/container.js
 - js/config.js
-- js/core/backup/backup-validator.js
-- js/core/datetime.js
-- js/core/pass-rules.js
-- js/data/contracts/activity-command.contract.js
-- js/data/indexeddb/commands/activity.command.js
-- js/data/indexeddb/repositories/exercise-log.repository.js
+- js/core/backup/backup-format.js
+- js/core/exercise-draft.js
+- js/data/contracts/backup-restore-command.contract.js
+- js/data/indexeddb/backup/backup-restore.command.js
+- js/data/indexeddb/backup/restore-target.inspector.js
 - js/data/indexeddb/repositories/exercise-schedule.repository.js
-- js/data/indexeddb/repositories/pass-usage.repository.js
-- js/data/indexeddb/repositories/pass.repository.js
-- js/data/indexeddb/repositories/scoped-index-query.js
-- js/pages/exercise/exercise-log-detail.page.js
 - js/pages/exercise/exercise-log-form.page.js
-- js/pages/exercise/exercise.page.js
-- js/pages/exercise/exercise.router.js
 - js/pages/exercise/pass-schedule.page.js
-- js/router.js
+- js/pages/settings/backup-restore.page.js
 - service-worker.js
 - tests/activity-ui-tests.mjs
 - tests/architecture-test.mjs
 - tests/backup-test.mjs
 - tests/browser-runner.mjs
-- tests/browser/activity-test.js
 - tests/browser/db-test.html
 - tests/browser/db-test.js
+- tests/browser/qa-feedback-test.js
 - tests/exercise-service-test.mjs
-- tests/results/v0.5.0-architecture.json
-- tests/results/v0.5.0-backup.json
-- tests/results/v0.5.0-browser.json
-- tests/results/v0.5.0-exercise-service.json
-- tests/results/v0.5.0-mobile.png
-- tests/results/v0.5.0-schema.json
-- tests/results/v0.5.0-smoke.json
-- tests/results/v0.5.0.json
+- tests/qa-feedback-ui-tests.mjs
+- tests/results/v0.5.1-architecture.json
+- tests/results/v0.5.1-backup.json
+- tests/results/v0.5.1-browser.json
+- tests/results/v0.5.1-calendar.png
+- tests/results/v0.5.1-exercise-service.json
+- tests/results/v0.5.1-mobile.png
+- tests/results/v0.5.1-schema.json
+- tests/results/v0.5.1-smoke.json
+- tests/results/v0.5.1.json
 - tests/run-all-tests.mjs
 - tests/schema-test.mjs
 - tests/smoke-test.mjs

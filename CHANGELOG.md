@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.1 - 2026-09-07
+
+- 예약 완료에서 실제 운동일에 사용할 수 있는 활성/잔여 이용권 중 목록 첫 항목 기본 선택. 차감 없음 및 다른 이용권 선택 유지.
+- 월간 달력, 오늘/선택 날짜 구분, 이전·다음 달과 오늘 이동. 날짜별 예약/운동 projection 및 완료 연결 중복 제거.
+- 완료 건은 실제 운동일 기준 표시; 월 경계 밖 예약 연결도 기존 unique index로 조회.
+- 운동 종류 전환 시 날짜/시간/메모와 호환 field key 유지, 비호환/제거 필드 제외 및 비동기 응답 순서 보호.
+- 이용권 상태에 맞는 활성화/비활성화 버튼. 사용원장/잔여량 유지 및 revision 증가.
+- 설정 전체 초기화, 검증된 백업의 별도 강제 복원(replace). 일반 pristine 복원은 유지.
+- 초기화/교체는 portable 12 Store와 current_profile_id를 전용 Command transaction으로 처리. device_id 및 나머지 device_settings/app_logs 유지.
+- 백업 후 실행은 실제 저장된 JSON을 재선택하여 hash 검증을 통과해야 허용. 백업 실패·파일 미확인·대상 변경 시 데이터 삭제 금지.
+- App/cache 0.5.1, DB1/Schema1/Seed1/Backup1 유지. Store/Index 변경 및 Migration 없음.
+- 테스트 및 실기기 미실행 항목은 REGRESSION_TEST.md, 사용자 절차는 MANUAL_QA.md 참조.
+
 ## v0.5.0 - 2026-09-07
 
 - 운동별 이용권 추가·수정·비활성화, 총/사용/잔여횟수와 원장 조회.

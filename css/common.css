@@ -189,3 +189,13 @@ button:disabled { cursor: default; opacity: .55; }
   .management-item { align-items: flex-start; flex-direction: column; }
   .mini-actions { justify-content: flex-start; }
 }
+
+/* Monthly calendar: today and selection remain visually distinct. */
+.calendar-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; margin-top:12px; }
+.calendar-weekday { text-align:center; font-size:12px; padding:8px 0; color:#64748b; }
+.calendar-day { min-width:0; min-height:48px; padding:5px 0; border:1px solid transparent; border-radius:10px; color:#263140; background:transparent; font:inherit; cursor:pointer; }
+.calendar-day.today { text-decoration:underline; text-underline-offset:4px; font-weight:800; border-color:#64748b; }
+.calendar-day.selected { background:#202c3b; color:white; }
+.calendar-day:focus-visible { outline:3px solid #4686c6; outline-offset:1px; }
+.calendar-dot { display:block; height:10px; line-height:10px; font-size:13px; }

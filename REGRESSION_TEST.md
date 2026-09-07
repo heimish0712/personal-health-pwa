@@ -1,5 +1,41 @@
 # Regression Test
 
+## v0.5.1 사용자 QA 반영
+
+- 실행일: 2026-09-07T04:30:44.026Z
+- `node tests/run-all-tests.mjs` 최종 종료코드0. Node v24.16.0, 격리된 Chrome/실제 IndexedDB, Pages형 localhost 하위 경로.
+- App/cache 0.5.1 / DB1 / Schema1 / Seed1 / Backup1. Migration 없음.
+
+| Suite | PASS | FAIL | NOT RUN |
+|---|---:|---:|---:|
+| smoke | 72 | 0 | 0 |
+| architecture | 29 | 0 | 0 |
+| schema | 60 | 0 | 0 |
+| exercise-service | 19 | 0 | 0 |
+| backup | 26 | 0 | 0 |
+| browser-runtime | 218 | 0 | 0 |
+| 실제 Pages/Galaxy QA | 0 | 0 | 25 |
+| **합계** | **424** | **0** | **25** |
+
+기존 v0.5 자동 386개와 신규 38개가 통과했다. 이전 v0.3/v0.4/v0.5.0 결과 파일은 변경하지 않았다. 실제 Pages 배포와 Galaxy 설치형 QA는 실행하지 않았으며 이전 PASS도 승계하지 않는다.
+
+### 검증 범위
+
+- QA051-01~12: 유효 이용권 기본 선택/없음, 월간 오늘 선택·월 이동·선택일 필터·연결 중복 제거·월 경계 실제 운동일, 공통 입력/호환키 유지·비호환 제거, 상태 버튼/usage·remaining/revision.
+- QA051-13~22: 백업 파일 재검증 후 초기화, 백업 실패 차단, 백업 없이 초기화, 정상 초기 Profile/Seed, 일반 복원 차단 유지, non-pristine 강제 replace와 원본 metadata/hash/device_id 보존.
+- reset/replace 8개 중간 실패 지점의 전체 fingerprint 동일성. stale reset 차단, 다른 파일로 백업 완료 확인 우회 차단, 백업 후 강제 복원.
+- QA051-23-OFFLINE-*: 실제 브라우저 다운로드 파일 존재/내용 확인 → 재선택 → 초기화, 오프라인 강제 복원/hash, 백업 없는 초기화와 정상 재실행.
+- QA051-24는 전체 suite의 FAIL0으로 판정한다. UI/Command/API 테스트와 실제 실기기 판정은 구분한다.
+- 캡처: tests/results/v0.5.1-calendar.png (412px 월간 달력), v0.5.1-mobile.png (설정). 월간 달력 캡처를 직접 확인했다.
+
+초기 실행에서 Chrome Runtime.enable 시간 초과 및 120초 harness 제한 초과가 발생했다. 진단 출력과 30초 CDP/600초 전체 제한을 적용한 후 브라우저 단독과 최종 전체 suite 모두 통과했다. 최종 임시 Chrome Profile 정리에서 EPERM 경고가 발생했으나 테스트는 종료코드0으로 완료되었으며 사용자 브라우저/운영 DB는 사용하지 않았다.
+
+실기기 25건: 기존 배포/백업/이용권·예약 회귀17건 + QA051-MANUAL-01~08. [MANUAL_QA.md](MANUAL_QA.md)에 사전조건, 버튼 순서, 값, 기대 결과, PASS 기준, 실패 증적 및 원복 절차를 기록했다. 모두 NOT RUN.
+
+기계 판독: [v0.5.1.json](tests/results/v0.5.1.json). 구조 설명: [QA_V051_DESIGN.md](docs/QA_V051_DESIGN.md).
+
+---
+
 ## v0.5.0 Pass & Schedule
 
 - 검증일: 2026-09-07T03:13:30.583Z

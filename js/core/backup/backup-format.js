@@ -7,6 +7,12 @@ export const BACKUP_STORE_NAMES = Object.freeze([
 ]);
 export const BACKUP_MAX_BYTES = 50 * 1000 * 1000;
 export const BACKUP_MESSAGES = Object.freeze({
+  BACKUP_DOWNLOAD_REQUIRED: '다운로드한 현재 데이터 백업 파일을 다시 선택해 확인해야 합니다. 아직 초기화하거나 교체하지 않았습니다.',
+  BACKUP_MULTIPLE_PROFILES: '현재 JSON 백업은 한 Profile만 포함합니다. 여러 Profile이 있는 전체 데이터는 먼저 각각 보관해야 합니다. 초기화하거나 교체하지 않았습니다.',
+  RESTORE_TARGET_CHANGED: '확인 중 현재 데이터가 변경되었습니다. 다시 미리보고 백업한 뒤 실행하세요. 기존 데이터는 유지됩니다.',
+  RESET_TRANSACTION_FAILED: '초기화에 실패했습니다. 초기화 전 데이터는 그대로 유지됩니다.',
+  RESET_VERIFY_FAILED: '초기 상태 확인에 실패했습니다. 앱을 다시 열어 확인하세요.',
+
   BACKUP_FILE_TOO_LARGE: '백업 파일은 50 MB 이하만 선택할 수 있습니다.',
   BACKUP_JSON_INVALID: '백업 JSON 파일을 읽을 수 없습니다.',
   BACKUP_FORMAT_INVALID: '이 앱의 백업 파일 형식이 아닙니다.',

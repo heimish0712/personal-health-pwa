@@ -1,3 +1,4 @@
+import { compatibleDraft } from '../../core/exercise-draft.js';
 import { passOptions } from './pass-schedule.page.js';
 import { DirtyFormGuard } from '../../components/dirty-form-guard.js';
 import { nowLocalInput, utcIsoToLocalInput } from '../../core/datetime.js';
@@ -42,15 +43,28 @@ export async function renderExerciseLogCreate(context) {
   root.querySelector('#dynamic-fields').insertAdjacentHTML('afterend', '<div class="form-field"><label for="exercise-pass">차감 이용권</label><select id="exercise-pass"></select></div>');
   root.querySelector('#exercise-pass').innerHTML = await passOptions(services, types[0].id);
   const guard = bindGuard(root);
+  let loadingTemplate = false, templateSequence = 0;
   root.querySelector('#exercise-type').addEventListener('change', async (event) => {
-    try { template = await renderFields(root, services, event.target.value); root.querySelector('#exercise-pass').innerHTML = await passOptions(services, event.target.value); guard.markDirty(); bindDirtyInputs(root.querySelector('#dynamic-fields'), () => guard.markDirty()); }
-    catch (error) { showError('운동 기록 양식을 불러오지 못했습니다.', error); }
+    const token = ++templateSequence, typeId = event.target.value;
+    const previousFields = template.fields, draft = readDynamicValues(root, previousFields);
+    loadingTemplate = true;
+    const button = root.querySelector('[type=submit]'); button.disabled = true;
+    try {
+      const [next, options] = await Promise.all([services.exerciseQuery.getActiveTemplate(typeId), passOptions(services, typeId)]);
+      if (!isCurrent() || token !== templateSequence) return;
+      if (!next) throw new Error('활성 운동 양식을 찾을 수 없습니다.');
+      root.querySelector('#dynamic-fields').innerHTML = renderDynamicFields(next.fields, compatibleDraft(previousFields, next.fields, draft));
+      root.querySelector('#exercise-pass').innerHTML = options; template = next;
+      guard.markDirty(); bindDirtyInputs(root.querySelector('#dynamic-fields'), () => guard.markDirty());
+      loadingTemplate = false;
+    } catch (error) { if (isCurrent() && token === templateSequence) showError('운동 기록 양식을 불러오지 못했습니다.', error); }
+    finally { if (isCurrent() && token === templateSequence) button.disabled = loadingTemplate; }
   });
   root.querySelector('[data-cancel]')?.addEventListener('click', () => navigate('/exercise'));
   let busy = false;
   root.querySelector('#exercise-log-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (busy) return; busy = true;
+    if (busy || loadingTemplate) return; busy = true;
     const button = event.currentTarget.querySelector('[type=submit]'); button.disabled = true;
     try {
       const typeId = root.querySelector('#exercise-type').value;

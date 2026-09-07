@@ -1,3 +1,4 @@
+import { runQaFeedbackTests } from './qa-feedback-test.js';
 import { runActivityTests } from './activity-test.js';
 import { createContainer } from '../../js/bootstrap/container.js';
 import { runBackupBrowserTests } from './backup-test.js';
@@ -10,9 +11,9 @@ import {
   STORE_NAMES
 } from '../../js/data/indexeddb/schema.js';
 
-const TEST_DB_NAME = 'personal-health-pwa-test-v0.5.0';
-const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.5.0-rollback';
-const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.5.0-exercise-rollback';
+const TEST_DB_NAME = 'personal-health-pwa-test-v0.5.1';
+const ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.5.1-rollback';
+const EXERCISE_ROLLBACK_DB_NAME = 'personal-health-pwa-test-v0.5.1-exercise-rollback';
 const resultNode = document.querySelector('#test-result');
 const cases = [];
 
@@ -29,6 +30,7 @@ class StepClock {
 }
 
 function record(id, pass, evidence) {
+  document.body.dataset.lastCase = id;
   cases.push({ id, status: pass ? 'PASS' : 'FAIL', evidence });
 }
 
@@ -362,7 +364,7 @@ async function run() {
   const persisted = await container.repositories.exerciseType.getById(created.id);
   await test('DB-004', () => persisted?.name === '달리기' && persisted.revision === 4, 'Record survives database close and reopen.');
 
-  // v0.5.0 Exercise Core
+  // v0.5.1 Exercise Core
   const currentTypesBeforeExercise = await container.exerciseQueryService.listActiveTypes();
   await test('EX-TYPE-001', () => currentTypesBeforeExercise.some((item) => item.system_key === 'default.pilates'), 'Default Pilates seed is visible through the exercise query service.');
 
@@ -544,6 +546,7 @@ try {
   await run();
   await runBackupBrowserTests(test);
   await runActivityTests(test);
+  await runQaFeedbackTests(test);
 } catch (error) {
   record('BROWSER-HARNESS', false, `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}`);
 }
@@ -551,7 +554,7 @@ try {
 const passed = cases.filter((item) => item.status === 'PASS').length;
 const failed = cases.filter((item) => item.status === 'FAIL').length;
 const result = {
-  version: '0.5.0',
+  version: '0.5.1',
   suite: 'browser-indexeddb',
   executedAt: new Date().toISOString(),
   userAgent: navigator.userAgent,

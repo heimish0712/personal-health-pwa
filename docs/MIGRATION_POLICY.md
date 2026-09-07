@@ -64,3 +64,8 @@ App/cache만 0.4.0으로 올리고 DB/Schema/Seed는 1을 유지한다. 기존 1
 
 DB/Schema/Seed 1 유지, 새 Store·인덱스·누적 Migration 없음. 선택적 JSON 필드 pass_id/completion_revision 추가만 수행한다. 기존 백업 v1의 필드 누락은 허용한다. 최신 규칙은 같은 pass cancelled 행 재활성화이므로 기존 pair UNIQUE 제거 계획은 폐기한다.
 v0.5 데이터가 생긴 뒤 v0.4에서 운동을 수정/삭제하면 원장을 갱신하지 않으므로 코드 downgrade 후 쓰기는 안전하지 않다. 백업 후 쓰기 중지 및 수정 릴리스로 복구하며 DB 삭제/downgrade는 하지 않는다.
+
+
+## v0.5.1 사용자 QA에 따른 명시적 확장
+
+일반 pristine 복원 경로를 유지하면서 별도 replace restore와 전체 초기화를 지원한다. portable Store 삭제/삽입과 current_profile_id 전환은 전용 BackupRestore Command transaction 한 번으로 수행한다. 일반 CRUD나 DB Migration에 clear를 추가하지 않으며 device_id 등 기기 데이터는 유지한다. 백업 후 실행은 저장된 파일 재검증, 대상 fingerprint 재확인 후에만 진행한다. DB1/Schema1/Seed1/Backup1 유지, Migration 없음. 자세한 구현은 [QA_V051_DESIGN.md](QA_V051_DESIGN.md)를 따른다.

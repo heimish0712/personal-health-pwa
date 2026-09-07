@@ -80,10 +80,10 @@ export function createContainer({
 
   const repositoryProvider = new RepositoryProvider(repositories);
   const backupSnapshotReader = new IndexedDbBackupSnapshotReader({ unitOfWork, identityContext });
-  const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(), clock, faultInjector });
+  const backupRestoreCommand = new IndexedDbBackupRestoreCommand({ unitOfWork, inspector: new RestoreTargetInspector(), clock, idGenerator, faultInjector });
   const backupValidationService = new BackupValidationService();
   const backupExportService = new BackupExportService({ snapshotReader: backupSnapshotReader, validationService: backupValidationService, clock });
-  const backupImportService = new BackupImportService({ validationService: backupValidationService, restoreCommand: backupRestoreCommand, snapshotReader: backupSnapshotReader, identityContext, idGenerator });
+  const backupImportService = new BackupImportService({ validationService: backupValidationService, restoreCommand: backupRestoreCommand, snapshotReader: backupSnapshotReader, identityContext, idGenerator, exportService: backupExportService });
   const bootstrapCommand = new IndexedDbBootstrapCommand({
     unitOfWork,
     clock,

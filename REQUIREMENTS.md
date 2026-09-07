@@ -191,3 +191,19 @@
 - **V05-ATOMIC-001** Service는 일반 transaction에 접근하지 않음. ActivityCommand Port가 다중 Store 검증·쓰기·동시성·rollback 담당, 향후 Supabase RPC로 대체 가능.
 - **V05-BACKUP-001** Backup v1의 ID·revision·관계·삭제 상태 보존을 유지하고 pass_id 및 한 기록의 중복 active usage 검증. 새 Store/인덱스/Migration 없음.
 - **V05-QA-001** 실제 IndexedDB 실패 주입, 중복 완료, 마지막 잔여 동시 사용, 오프라인 UI·재실행, v0.4 전체 자동 회귀. Pages/Galaxy 미실행은 NOT RUN.
+
+
+## v0.5.1 QA 피드백 — 최신 규칙
+
+이 절이 과거의 pristine 복원만 지원/초기화 미지원/기간 목록 캘린더 설명을 대체한다. 기존 일반 복원과 일반 CRUD 안전 경계는 유지한다.
+
+- **QA051-01/02** 완료 화면에서 actual local exercise day에 유효한 active/remaining>0 이용권을 생성시각·ID 순서로 표시하고 첫 항목 기본 선택. 없으면 차감 없음. 사용자가 선택 변경 가능, 최종 검증은 기존 Command.
+- **QA051-03/04** 월간 달력 첫 진입은 Profile timezone 오늘 선택. 오늘/선택 표시는 별개. 이전/다음 달·오늘 이동, 날짜별 하단 목록. 기존 날짜 인덱스 사용.
+- **QA051-05/06** 연결 완료 예약+운동기록은 projection에서 한 항목. 실제 운동일에 완료 · 운동기록 표시, 직접 기록은 별도. 엔티티/관계 수정 없음.
+- **QA051-07/08/09** 운동 전환 시 날짜·시간·메모 유지. 같은 field key/동일 type 값만 전달, 삭제/타입 변경/허용되지 않는 select 옵션은 전달하지 않음. 오래된 비동기 응답은 UI에 반영하지 않음.
+- **QA051-10/11/12** active→비활성화, inactive→활성화. status 변경으로 soft-delete 금지; usage/remaining 불변, expectedRevision 검증.
+- **QA051-13/14/15/16** 전체 초기화는 백업 여부 선택 및 명시적 확인. 백업 후 진행 시 생성/검증/다운로드한 파일 재검증 후에만 삭제. 예외/취소는 삭제 금지. 기본 Profile/Seed를 같은 transaction에서 재생성, device_id 유지.
+- **QA051-17/18/19/20/21/22** 일반 복원은 non-pristine 차단. 별도 강제 복원은 검증 파일로 모든 portable user data를 교체, merge 없음. 삭제+삽입+pointer 전환 원자 처리, 실패 rollback, 원본 ID/metadata 보존, commit 후 hash 검증. 기기/진단 데이터 유지.
+- **QA051-23/24** 오프라인 백업·초기화·강제 복원, 기존 전체 회귀 FAIL0. 실제 Pages/Galaxy 검증은 별도 NOT RUN.
+- 초기화/강제 교체 범위는 전체 portable Store(모든 Profile)다. Backup v1은 한 Profile만 export하므로 복수 Profile이 감지된 경우 백업 후 전체 교체 경로는 차단하고 별도 보관하도록 안내한다. 백업 없이 실행은 모든 Profile 삭제 경고와 최종 확인을 거친다.
+- 대상 fingerprint를 준비 및 transaction 시점에 비교한다. 다른 탭의 변경·먼저 완료된 교체가 있으면 오래된 계획으로 덮어쓰지 않는다.

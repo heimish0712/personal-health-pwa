@@ -130,3 +130,8 @@ DB를 삭제/초기화하여 위 조건을 만들지 않는다. 새 브라우저
 - 결과와 실기기 미실행 항목은 [REGRESSION_TEST.md](../REGRESSION_TEST.md) 및 tests/results/v0.4.0.json을 따른다. 이전 20개 계획 ID는 실제 BACKUP/RESTORE 테스트로 대체했다.
 
 사진 단계의 Backup v2는 ZIP 안에 manifest.json/data.json/media를 포함하는 방향이며, JSON Backup v1 reader는 유지한다. 이용권·예약은 v0.5.0에서 별도로 구현한다.
+
+
+## v0.5.1 사용자 QA에 따른 명시적 확장
+
+일반 pristine 복원 경로를 유지하면서 별도 replace restore와 전체 초기화를 지원한다. portable Store 삭제/삽입과 current_profile_id 전환은 전용 BackupRestore Command transaction 한 번으로 수행한다. 일반 CRUD나 DB Migration에 clear를 추가하지 않으며 device_id 등 기기 데이터는 유지한다. 백업 후 실행은 저장된 파일 재검증, 대상 fingerprint 재확인 후에만 진행한다. DB1/Schema1/Seed1/Backup1 유지, Migration 없음. 자세한 구현은 [QA_V051_DESIGN.md](QA_V051_DESIGN.md)를 따른다.

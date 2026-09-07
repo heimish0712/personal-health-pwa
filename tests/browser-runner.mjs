@@ -1,3 +1,4 @@
+import { runQaFeedbackUiTests } from './qa-feedback-ui-tests.mjs';
 import { runActivityUiTests } from './activity-ui-tests.mjs';
 import fs from 'node:fs';
 import http from 'node:http';
@@ -7,8 +8,8 @@ import process from 'node:process';
 import { spawn, spawnSync } from 'node:child_process';
 
 const root = path.resolve(process.cwd());
-const outputPath = path.join(root, 'tests/results/v0.5.0-browser.json');
-const basePath = '/personal-health-pwa-v0.5.0/';
+const outputPath = path.join(root, 'tests/results/v0.5.1-browser.json');
+const basePath = '/personal-health-pwa-v0.5.1/';
 const suiteName = 'browser-runtime';
 
 const mimeTypes = {
@@ -67,7 +68,7 @@ function writeResult(result) {
 
 function writeNotRun(id, evidence) {
   const result = {
-    version: '0.5.0',
+    version: '0.5.1',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 0, notRun: 1 },
@@ -153,7 +154,7 @@ class CdpClient {
       const timer = setTimeout(() => {
         this.pending.delete(id);
         reject(new Error(`CDP command timed out: ${method}`));
-      }, 10000);
+      }, 30000);
       this.pending.set(id, { resolve, reject, timer });
       this.socket.send(JSON.stringify({ id, method, params }));
     });
@@ -204,7 +205,7 @@ async function pollEvaluate(cdp, expression, predicate, timeoutMs = 30000) {
 function stopBrowser(child) {
   if (!child || child.exitCode != null) return;
   if (process.platform === 'win32') {
-    spawnSync('taskkill', ['/pid', String(child.pid), '/T', '/F'], { stdio: 'ignore' });
+    spawnSync('taskkill', ['/pid', String(child.pid), '/T', '/F'], { stdio: 'ignore', timeout: 15000, windowsHide: true });
     return;
   }
   try {
@@ -235,8 +236,10 @@ function makeRuntimeRecorder(cases) {
       const value = await callback();
       const pass = value === undefined ? true : Boolean(value);
       cases.push({ id, status: pass ? 'PASS' : 'FAIL', evidence: pass ? evidence : 'Returned false.' });
+      console.log(`${pass ? 'PASS' : 'FAIL'} ${id}`);
     } catch (error) {
       cases.push({ id, status: 'FAIL', evidence: `${error?.name ?? 'Error'}: ${error?.message ?? String(error)}` });
+      console.log(`FAIL ${id}: ${error.message}`);
     }
   };
 }
@@ -321,6 +324,7 @@ try {
     const pageTarget = await findPageTarget(port);
     cdp = new CdpClient(pageTarget.webSocketDebuggerUrl);
     await cdp.connect();
+    console.log('BROWSER: connected, enabling runtime');
     await cdp.send('Runtime.enable');
     await cdp.send('Page.enable');
     await cdp.send('Network.enable');
@@ -333,7 +337,7 @@ try {
         body: document.body?.innerText?.slice(0, 1200) ?? ''
       })`,
       (state) => state?.status === 'done' || isAdministrativeBlock(state),
-      60000
+      180000
     );
     if (isAdministrativeBlock(initialState)) {
       writeNotRun('BROWSER-POLICY', 'The installed browser blocked the local test URL by administrative policy.');
@@ -342,12 +346,14 @@ try {
 
     const dbResultText = await cdp.evaluate("document.querySelector('#test-result')?.textContent ?? ''");
     const dbResult = JSON.parse(dbResultText);
+    console.log('BROWSER: IndexedDB suites', JSON.stringify(dbResult.summary));
+    for (const row of dbResult.cases.filter((c) => c.status !== 'PASS')) console.log(JSON.stringify(row));
     const backupUiDocument = await cdp.evaluate('globalThis.__BACKUP_TEST_DOCUMENT__ ?? null');
     const runtimeCases = [];
     const runtimeTest = makeRuntimeRecorder(runtimeCases);
 
     await cdp.evaluate(`(async () => {
-      const legacyCache = await caches.open('personal-health-pwa-v0.4.0');
+      const legacyCache = await caches.open('personal-health-pwa-v0.5.0');
       await legacyCache.put(
         '${origin}${basePath}legacy-cache-marker',
         new Response('legacy')
@@ -367,7 +373,7 @@ try {
         title: document.querySelector('#page-title')?.textContent ?? '',
         body: document.body?.innerText ?? ''
       })`,
-      (value) => value?.title === '홈' && value.body.includes('v0.5.0 · DB 1'),
+      (value) => value?.title === '홈' && value.body.includes('v0.5.1 · DB 1'),
       30000
     );
 
@@ -480,15 +486,15 @@ try {
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-001', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
-      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.5.0');
-    }, 'The v0.5.0 App Shell cache exists.');
+      return Array.isArray(keys) && keys.includes('personal-health-pwa-v0.5.1');
+    }, 'The v0.5.1 App Shell cache exists.');
 
     await runtimeTest('CACHE-RUNTIME-LOCAL-002', async () => {
       const keys = await cdp.evaluate('(async () => await caches.keys())()');
       return Array.isArray(keys)
-        && !keys.includes('personal-health-pwa-v0.4.0')
+        && !keys.includes('personal-health-pwa-v0.5.0')
         && keys.includes('unrelated-app-cache');
-    }, 'Activation removes the simulated v0.4.0 App Shell cache without clearing unrelated cache names.');
+    }, 'Activation removes the simulated v0.5.0 App Shell cache without clearing unrelated cache names.');
 
     await cdp.send('Page.navigate', { url: appUrl });
     await pollEvaluate(
@@ -512,7 +518,7 @@ try {
       const value = await pollEvaluate(
         cdp,
         `({ title: document.querySelector('#page-title')?.textContent ?? '', body: document.body?.innerText ?? '' })`,
-        (state) => state?.title === '홈' && state.body.includes('v0.5.0 · DB 1'),
+        (state) => state?.title === '홈' && state.body.includes('v0.5.1 · DB 1'),
         30000
       );
       return value.body.includes('로컬 데이터 저장소') && value.body.includes('정상');
@@ -575,8 +581,9 @@ try {
     }, 'After offline UI reload, full portable payload hash still matches the imported file.');
 
     await runActivityUiTests({ cdp, pollEvaluate, runtimeTest });
+    await runQaFeedbackUiTests({ cdp, pollEvaluate, runtimeTest, profileDirectory, root });
     const screenshot = await cdp.send('Page.captureScreenshot', { format: 'png' });
-    fs.writeFileSync(path.join(root, 'tests/results/v0.5.0-mobile.png'), Buffer.from(screenshot.data, 'base64'));
+    fs.writeFileSync(path.join(root, 'tests/results/v0.5.1-mobile.png'), Buffer.from(screenshot.data, 'base64'));
 
     await cdp.send('Network.emulateNetworkConditions', {
       offline: false,
@@ -592,7 +599,7 @@ try {
     const failed = cases.filter((item) => item.status === 'FAIL').length;
     const notRun = cases.filter((item) => item.status === 'NOT_RUN').length;
     const result = {
-      version: '0.5.0',
+      version: '0.5.1',
       suite: suiteName,
       executedAt: new Date().toISOString(),
       userAgent: await cdp.evaluate('navigator.userAgent'),
@@ -607,10 +614,10 @@ try {
     }
     console.log(`\n${suiteName}: TOTAL ${cases.length} / PASS ${passed} / FAIL ${failed} / NOT_RUN ${notRun}`);
     if (failed > 0) process.exitCode = 1;
-  })(), 120000, 'Browser runtime suite exceeded the 120 second hard limit.');
+  })(), 600000, 'Browser runtime suite exceeded the 600 second hard limit.');
 } catch (error) {
   const result = {
-    version: '0.5.0',
+    version: '0.5.1',
     suite: suiteName,
     executedAt: new Date().toISOString(),
     summary: { total: 1, passed: 0, failed: 1, notRun: 0 },

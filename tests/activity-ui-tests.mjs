@@ -29,7 +29,7 @@ export async function runActivityUiTests({ cdp, pollEvaluate, runtimeTest }) {
   await runtimeTest('ACTIVITY-UI-SCHEDULE', async () => {
     await go('/exercise/schedule/new', '#schedule-form');
     await fill({ '#schedule-type': typeId, '#schedule-at': '2026-09-07T11:00', '#schedule-duration': '50', '#schedule-memo': 'UI 예약' });
-    await click('#schedule-form [type=submit]'); await ready('#calendar-search');
+    await click('#schedule-form [type=submit]'); await ready('#calendar-grid');
     const doc = await snapshot(); scheduleId = doc.data.exercise_schedules.find((s) => s.memo === 'UI 예약')?.id;
     return Boolean(scheduleId) && doc.data.pass_usage_logs.filter((u) => u.pass_id === passId && u.status === 'used').length === 0;
   }, 'Offline schedule form saves without any charge.');
@@ -37,18 +37,18 @@ export async function runActivityUiTests({ cdp, pollEvaluate, runtimeTest }) {
     await go(`/exercise/schedule/${scheduleId}/edit`, '#complete-schedule'); await click('#complete-schedule'); await ready('#exercise-pass');
     await fill({ '#exercise-pass': passId });
     await cdp.evaluate("document.querySelector('#schedule-form').requestSubmit(); document.querySelector('#schedule-form').requestSubmit()");
-    await ready('#calendar-search');
+    await ready('#calendar-grid');
     const doc = await snapshot(); const schedule = doc.data.exercise_schedules.find((s) => s.id === scheduleId);
     return schedule.status === 'completed' && doc.data.pass_usage_logs.filter((u) => u.pass_id === passId && u.status === 'used').length === 1;
   }, 'Double-submit completion UI commits exactly one log and one debit offline.');
   await runtimeTest('ACTIVITY-UI-UNDO', async () => {
     await go(`/exercise/schedule/${scheduleId}/edit`, '#undo-schedule');
-    await cdp.evaluate('window.confirm = () => true'); await click('#undo-schedule'); await ready('#calendar-search');
+    await cdp.evaluate('window.confirm = () => true'); await click('#undo-schedule'); await ready('#calendar-grid');
     const doc = await snapshot(); return doc.data.exercise_schedules.find((s) => s.id === scheduleId).status === 'scheduled' && doc.data.pass_usage_logs.filter((u) => u.pass_id === passId && u.status === 'used').length === 0;
   }, 'Completed schedule UI undo returns remaining to 60.');
   await runtimeTest('ACTIVITY-UI-RECOMPLETE', async () => {
-    await go(`/exercise/schedule/${scheduleId}/complete`, '#exercise-pass'); await fill({ '#exercise-pass': passId }); await click('#schedule-form [type=submit]'); await ready('#calendar-search');
-    const before = await snapshot(); await cdp.send('Page.reload'); await ready('#calendar-search');
+    await go(`/exercise/schedule/${scheduleId}/complete`, '#exercise-pass'); await fill({ '#exercise-pass': passId }); await click('#schedule-form [type=submit]'); await ready('#calendar-grid');
+    const before = await snapshot(); await cdp.send('Page.reload'); await ready('#calendar-grid');
     const after = await snapshot(); return before.integrity.payloadHash === after.integrity.payloadHash && after.data.pass_usage_logs.filter((u) => u.pass_id === passId && u.status === 'used').length === 1;
   }, 'Re-complete then offline app reload preserves exact data hash and 59 remaining.');
   await runtimeTest('ACTIVITY-UI-MOBILE', async () => {

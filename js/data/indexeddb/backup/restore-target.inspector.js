@@ -16,7 +16,8 @@ export class RestoreTargetInspector {
     return {
       pristine,
       // Includes identities and all row values; a stale preview cannot replace a new pristine target.
-      fingerprint: pristine ? canonicalJson({ data, pointer, device }) : null,
+      fingerprint: canonicalJson({ data, pointer: pointer?.value ?? null, device }),
+      profileCount: data.profiles.length,
       profileId: data.profiles[0]?.id ?? null,
       typeId: data.exercise_types[0]?.id ?? null,
       templateId: data.exercise_templates[0]?.id ?? null

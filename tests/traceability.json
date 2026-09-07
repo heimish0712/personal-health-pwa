@@ -518,5 +518,102 @@
     "V05-QA-HISTORY",
     "V05-QA-BACKUP",
     "V05-QA-REGRESSION"
+  ],
+  "QA051-01": [
+    "QA051-01"
+  ],
+  "QA051-02": [
+    "QA051-02"
+  ],
+  "QA051-03": [
+    "QA051-03"
+  ],
+  "QA051-04": [
+    "QA051-04"
+  ],
+  "QA051-05": [
+    "QA051-05"
+  ],
+  "QA051-06": [
+    "QA051-06"
+  ],
+  "QA051-07": [
+    "QA051-07"
+  ],
+  "QA051-08": [
+    "QA051-08"
+  ],
+  "QA051-09": [
+    "QA051-09"
+  ],
+  "QA051-10": [
+    "QA051-10"
+  ],
+  "QA051-11": [
+    "QA051-11"
+  ],
+  "QA051-12": [
+    "QA051-12"
+  ],
+  "QA051-13": [
+    "QA051-13"
+  ],
+  "QA051-14": [
+    "QA051-14"
+  ],
+  "QA051-15": [
+    "QA051-15"
+  ],
+  "QA051-16": [
+    "QA051-16"
+  ],
+  "QA051-17": [
+    "QA051-17"
+  ],
+  "QA051-18": [
+    "QA051-18"
+  ],
+  "QA051-19": [
+    "QA051-19"
+  ],
+  "QA051-20": [
+    "QA051-20-replace-cleared:profiles",
+    "QA051-20-replace-cleared:pass_usage_logs",
+    "QA051-20-restore-after:exercise_logs",
+    "QA051-20-restore-before-commit"
+  ],
+  "QA051-21": [
+    "QA051-21"
+  ],
+  "QA051-22": [
+    "QA051-22"
+  ],
+  "QA051-23": [
+    "QA051-23-OFFLINE-BACKUP-RESET",
+    "QA051-23-OFFLINE-FORCE"
+  ],
+  "QA051-MANUAL-01": [
+    "QA051-MANUAL-01"
+  ],
+  "QA051-MANUAL-02": [
+    "QA051-MANUAL-02"
+  ],
+  "QA051-MANUAL-03": [
+    "QA051-MANUAL-03"
+  ],
+  "QA051-MANUAL-04": [
+    "QA051-MANUAL-04"
+  ],
+  "QA051-MANUAL-05": [
+    "QA051-MANUAL-05"
+  ],
+  "QA051-MANUAL-06": [
+    "QA051-MANUAL-06"
+  ],
+  "QA051-MANUAL-07": [
+    "QA051-MANUAL-07"
+  ],
+  "QA051-MANUAL-08": [
+    "QA051-MANUAL-08"
   ]
 }

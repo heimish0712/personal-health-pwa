@@ -53,3 +53,6 @@ App `0.3.0` / DB `1` / Schema `1` / Seed `1`.
 ## 작업 규칙
 
 기존 기능 보존, 코드 기반 검토, Migration 사전 명시, 삭제 파일 명시, diff 제공, CHANGELOG/REQUIREMENTS/REGRESSION_TEST 갱신, PASS/FAIL/NOT RUN 및 사용자 QA 출처 구분은 [AGENTS.md](../AGENTS.md)를 따른다.
+
+
+v0.5.1 QA 패치에서 월간 캘린더 projection, 입력 유지, 상태 버튼, 안전한 초기화·명시적 강제 복원을 추가했다. 기능 간 데이터 통합/merge/Sync는 도입하지 않았다.

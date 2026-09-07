@@ -81,7 +81,7 @@ async function renderSettings(token) {
         <div><dt>최근 DB 오류</dt><dd>${escapeHtml(recentError)}</dd></div></dl>
         ${diagnostic.missingStores.length ? `<p class="warning-text">누락 Store: ${escapeHtml(diagnostic.missingStores.join(', '))}</p>` : ''}
         <button id="diagnose-again" class="button full-width-button" type="button">저장소 다시 진단</button></section>
-      <section class="card"><h2>데이터 보호</h2><p>저장소 진단은 데이터를 변경하지 않습니다. 백업 복원은 초기 상태에서만 실행할 수 있습니다.</p></section>`;
+      <section class="card"><h2>데이터 보호</h2><p>저장소 진단은 데이터를 변경하지 않습니다. 일반 복원은 초기 상태에서 실행할 수 있습니다. 강제 복원과 전체 초기화는 아래에서 별도로 확인 후 실행합니다.</p></section>`;
     document.querySelector('#diagnose-again')?.addEventListener('click', () => { if (!canLeaveCurrentRoute()) return; const nextToken = ++renderToken; void renderSettings(nextToken); });
     mountBackupSettings(pageRoot, { services: appContext.services, showToast, isCurrent: () => token === renderToken });
   } catch (error) {
